@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'telephone.main_app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'telephone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,8 +77,12 @@ WSGI_APPLICATION = 'telephone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'telephonedb',
+        'USER': 'postgres',
+        'PASSWORD': 'qwaszx@1',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -99,8 +104,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+STATICFILES_DIRS = (
+	'static/content/themes/',
+	'static/content/themes/default',
+	# 'static/content/scripts/coffee',
+	'static/content/scripts/javascript',
+	'static/content/scripts/shared',
+)
+
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR,  'templates'),
+	os.path.join(BASE_DIR,  'templates'),
+	os.path.join(BASE_DIR,  'main_app/templates'),
+	os.path.join(BASE_DIR,  'auth_app/templates'),
 )

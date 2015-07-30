@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    {% load staticfiles %}
+	<script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "bootstrap.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "default/bootstrap.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "site.css" %}" />
+	{% block resources %}
+
+	{% endblock %}
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="../" class="navbar-brand">telephone</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="../help/">Help</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+	            {% if user.is_authenticated == False %}
+		            <li>
+		                <a href="/auth/login/">Sign in / Sign up</a>
+	                </li>
+	            {% else %}
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/user/{{ user.id }}">My profile</a></li>
+							<li class="divider"></li>
+							<li><a href="/auth/logout/">Exit</a></li>
+						</ul>
+					</li>
+	            {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container body">
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+{% block footer %}
+<footer align="center">
+    <div class="container footer" align="center">
+        <span>All right reserved | <a href="/">Home</a></span>
+    </div>
+</footer>
+{% endblock %}
+
+</body>
+</html>

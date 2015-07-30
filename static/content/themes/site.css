@@ -1,0 +1,167 @@
+/*redefined bootstrap glyphicons path*/
+@font-face {
+    font-family: 'Glyphicons Halflings' !important;
+    src: url('content/fonts/glyphicons-halflings-regular.eot') !important;
+    src: url('content/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('content/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('content/fonts/glyphicons-halflings-regular.woff') format('woff'), url('content/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('content/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg') !important;
+}
+
+a {
+    color: #202020;
+    cursor: pointer;
+}
+
+a.producer {
+    color: #777777;
+}
+
+a:hover, a:focus {
+    color: #2E6DA4;
+    text-decoration: none;
+}
+
+.container.body {
+    padding-top: 70px;
+}
+
+.footer {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+footer {
+    background-color: #F8F8F8;
+    border-top: 1px solid #E7E7E7;
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+}
+
+.field-search {
+    width: 45px !important;
+    transition: width 0.6s;
+    -webkit-transition: width 0.6s;
+    padding-left: 35px;
+}
+
+.field-search:focus {
+    width: 250px !important;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+
+.right-inner-addon i {
+    position: absolute;
+    left: 0px;
+    padding: 9px 12px 10px 12px;
+    pointer-events: none;
+}
+
+.product-list-item {
+    padding: 10px;
+    border: 1px solid #E7E7E7;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.product-list-item:hover {
+
+}
+
+.product-list-item-image {
+    margin-bottom: 10px;
+}
+
+.price {
+    color: #C32F00;
+}
+
+.product-list-item-price {
+    margin: 0;
+}
+
+.producer-name {
+    font-family: Verdana;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.product-list-item-title {
+    font-weight: bold;
+    margin: 0;
+}
+
+.rating > div {
+    display: inline-block;
+    border-radius: 15px;
+    background: #E7E7E7;
+    width: 13px;
+    height: 13px;
+    margin-right: 3px;
+}
+
+.rated {
+    background-color: #F5C98C !important;
+}
+
+.product-info-title {
+    font-size: 24px;
+    margin: 0;
+}
+
+.product-info-description {
+    text-align: justify;
+}
+
+.btn-add-to-cart {
+    color: #5BC0DE;
+    background-color: #fff;
+    border-color: #46B8DA;
+    margin: 10px 0;
+    width: 124px;
+}
+
+.btn-add-to-cart:hover, .btn-add-to-cart:focus {
+    color: #FFF;
+    background-color: #5BC0DE;
+    border-color: #46B8DA;
+}
+
+.product-info-price {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.product-manage-group-container {
+    min-height: 240px;
+    display:table;
+    height: 240px;
+}
+
+.product-manage-group-content{
+    display:table-cell;
+    vertical-align:middle;
+}
+
+.form-group {
+    margin: 15px !important;
+}
+
+.auth-block {
+    background-color: #F8F8F8;
+    border: 1px solid #E7E7E7;
+    padding: 15px;
+    /*opacity: 0.4;*/
+    transition: opacity 0.3s;
+    -webkit-transition: opacity 0.3s: 0.5;
+    margin-top: 15px;
+}
+
+.auth-block:hover {
+    opacity: 1 !important;
+}
+
+.auth-submit-btn {
+    margin-top: 15px;
+}
