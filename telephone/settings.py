@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'telephone.main_app',
+    'telephone.auth_app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -119,3 +120,5 @@ TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'main_app/templates'),
 	os.path.join(BASE_DIR,  'auth_app/templates'),
 )
+
+LOGIN_URL = '/auth/login/'
