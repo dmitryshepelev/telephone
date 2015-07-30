@@ -165,3 +165,11 @@ footer {
 .auth-submit-btn {
     margin-top: 15px;
 }
+
+.error {
+    border-color: #A94442;
+}
+
+.error-text  {
+    color: #A94442;
+}

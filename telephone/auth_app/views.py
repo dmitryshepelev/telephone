@@ -1,8 +1,9 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
+from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
+
 from telephone.auth_app.forms import AuthUserForm
 from telephone.auth_app.services import get_redirect_url, get_redirect_url_prop, sing_in
 
@@ -18,8 +19,8 @@ def sign_in(request):
 	if auth_user_form.errors:
 		# TODO: show errors
 		# _refresh_with_errors(redirect_url, {AuthUserForm.get_form_name(): auth_user_form})
-		return HttpResponse()
-	return redirect(redirect_url) if sing_in(username=auth_user_form.data['username'], password=auth_user_form.data['password'], request=request) else redirect(request.path)
+		return JsonResponse({'errors': auth_user_form.errors})
+	return JsonResponse({get_redirect_url_prop(): redirect_url}) if sing_in(username=auth_user_form.data['username'], password=auth_user_form.data['password'], request=request) else JsonResponse({'errors': auth_user_form.errors})
 
 
 @login_required
