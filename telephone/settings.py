@@ -112,6 +112,7 @@ STATICFILES_DIRS = (
 	'static/content/scripts/javascript',
 	'static/content/scripts/javascript/angular_app',
 	'static/content/scripts/shared',
+	'static/content',
 )
 
 STATIC_URL = '/static/'

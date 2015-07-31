@@ -1,0 +1,15 @@
+{% extends 'main_layout.html' %}
+
+{% block resources %}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static "stat.js" %}"></script>
+	<script type="text/javascript" src="{% static "csv-to-json-conventer.js" %}"></script>
+{% endblock %}
+
+{% block title %}
+    About
+{% endblock %}
+
+{% block content %}
+    about
+{% endblock %}
