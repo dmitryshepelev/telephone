@@ -10,24 +10,22 @@
 		<h3>Sign in with the code and password</h3>
 	</div>
 
-	<div class="auth-group" align="center">
-		<div class="col-sm-6">
-			<div class="auth-block">
-				<form class="form-horizontal" >
+	<div align="center">
+		<div class="auth-group">
+			<form class="form-horizontal" >
 {#					method="post", action="/auth/login/">#}
-					{% csrf_token %}
-					<input type="hidden" id="redirect_url" name="redirect_url" value="{{ redirect_url }}">
-					<div class="form-group">
-						<input class="form-control input-lg" id="username" name="username" type="text" placeholder="Username">
-					</div>
-					<div class="form-group">
-						<input class="form-control input-lg" id="password" name="password" type="password" placeholder="Password">
-					</div>
-					<div class="form-group">
-						<button type="button" onclick="auth.login()" class="btn btn-primary btn-lg pull-right auth-submit-btn">Sign in</button>
-					</div>
-				</form>
-			</div>
+				{% csrf_token %}
+				<input type="hidden" id="redirect_url" name="redirect_url" value="{{ redirect_url }}">
+				<div class="form-group">
+					<input class="form-control input-lg" id="username" onfocus="validate.hideError($(event.target))" name="username" type="text" placeholder="Code">
+				</div>
+				<div class="form-group">
+					<input class="form-control input-lg" id="password" onfocus="validate.hideError($(event.target))" name="password" type="password" placeholder="Password">
+				</div>
+				<div class="form-group">
+					<button type="button" onclick="auth.login(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Sign in</button>
+				</div>
+			</form>
 		</div>
 	</div>
 {% endblock %}
