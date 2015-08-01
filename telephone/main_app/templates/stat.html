@@ -3,7 +3,7 @@
 {% block resources %}
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "stat.js" %}"></script>
-	<script type="text/javascript" src="{% static "csv-to-json-conventer.js" %}"></script>
+	<script type="text/javascript" src="{% static "converter.js" %}"></script>
     <script type="text/javascript" src="{% static "table.js" %}"></script>
 {% endblock %}
 
@@ -13,6 +13,20 @@
 
 {% block content %}
     <div id="calls">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Время</th>
+                    <th>Номер</th>
+                    <th>Время звонка</th>
+                    <th>Время разговора</th>
+                    <th>Запись</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
 
+            </tbody>
+        </table>
     </div>
 {% endblock %}

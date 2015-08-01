@@ -5,58 +5,27 @@ var table = (function () {
         body: 'tbody'
     };
 
-    /**
-     * Fill the row of the table with values of the object
-     * @param rowElement - DOM element to fill
-     * @param valuesObj - object with values to fill
-     * @param template - HTML template with 'val' to replace with value
-     * @param excludeIndexes - exclude some values by their indexes. Starts from 1.
-     */
-    function fillRow (rowElement, valuesObj, template, isHeader, excludeIndexes) {
-        var index = 1;
-        for (var value in valuesObj) {
-            if (excludeIndexes && !excludeIndexes.filter(function (i) {
-                    return i === index;
-                })[0]) {
-                rowElement.append(template.replace(/val/g, isHeader ? value : valuesObj[value]));
-            }
-            index++;
-        }
-    }
+
 
     return {
-        generateTable: function (container) {
-            var template =
-                '<table id="' + tableIds.table + '" class="table table-striped table-hover">' +
-                    '<thead id="' + tableIds.header + '" >' +
-                        '<tr>' +
-                        '</tr>' +
-                    '</thead>' +
-                    '<tbody id="' + tableIds.body + '">' +
-                    '</tbody>' +
-                '</table>';
-            container.append(template);
-            return tableIds;
-        },
-
-        /**
-         * generateHeader
-         * @param valuesObj - object of header labels names
-         * @param excludeIndexesArray - array of indexes to exclude from header. Starts from 1.
-         */
-        generateHeader: function (valuesObj, excludeIndexesArray) {
-            var headerRow = $('#' + tableIds.header + ' tr');
-            var template = '<th>val</th>';
-            fillRow(headerRow, valuesObj, template ,true, excludeIndexesArray);
-        },
-
         fillTable: function (values, excludeIndexesArray) {
+            var columns = ['Время', 'Откуда', 'Продолжительность звонка', 'Продолжительность разговора', 'ID записи'];
             var body = $('#' + tableIds.body);
-            var template = '<td>val</td>';
-            values.forEach(function (value) {
-                body.append('<tr></tr>');
+            var template = '<td id="val">val</td>';
+            values.forEach(function (value, index) {
+                body.append('<tr><td>' + (index + 1) + '</td></tr>');
                 var contentRow = $('#' + tableIds.body + ' tr:last-child');
-                fillRow(contentRow, value, template, false, excludeIndexesArray);
+                for (var v in value) {
+                    var valueIndex = columns.indexOf(v);
+                    if (valueIndex !== -1) {
+                        var valueToInsert = value[v];
+                        if (valueIndex === 2 || valueIndex === 3) {
+                            var time = converter.fromSeconds(valueToInsert);
+                            valueToInsert = (time[0] > 0 ? time[0] + ' мин ' : '') + (time[1] + ' сек');
+                        }
+                        contentRow.append(template.replace(/val/g, valueToInsert));
+                    }
+                }
             })
         }
     }

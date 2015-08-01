@@ -7,7 +7,7 @@ var stat = (function () {
         // TODO: params array to request request
         $.get(baseUrl, function (result) {
             if (result) {
-                var calls = conventer.csv_to_json(result);
+                var calls = converter.csv_to_json(result);
                 successCallback.call(this, calls);
             } else {
                 throw 'Empty response';
@@ -21,8 +21,8 @@ var stat = (function () {
         if (calls.length === 0) {
             // TODO: if no calls was found
         } else {
-            var tableIds = table.generateTable(container);
-            table.generateHeader(calls[0], []);
+            //var tableIds = table.generateTable(container);
+            //table.generateHeader(calls[0], []);
             table.fillTable(calls, []);
 
         }
