@@ -11,7 +11,7 @@ def main(request, template):
 
 
 @login_required
-def about(request, template):
+def stat(request, template):
 	return render_to_response(template, {}, context_instance=RequestContext(request))
 
 
@@ -20,5 +20,4 @@ def get_test_file(request):
 	abspath = open(BASE_DIR + '/static/content/test.csv', 'r')
 	response = HttpResponse(content=abspath.read())
 	response['Content-Type'] = 'text'
-	# response['Content-Disposition'] = 'attachment; filename=%s.pdf'
 	return response

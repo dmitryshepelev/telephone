@@ -110,7 +110,6 @@ STATICFILES_DIRS = (
 	'static/content/themes/default',
 	# 'static/content/scripts/coffee',
 	'static/content/scripts/javascript',
-	'static/content/scripts/javascript/angular_app',
 	'static/content/scripts/shared',
 	'static/content',
 )
