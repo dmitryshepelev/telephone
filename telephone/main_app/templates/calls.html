@@ -1,0 +1,40 @@
+{% extends 'main_layout.html' %}
+
+{% block resources %}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static "angular-1.4.3.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "main-module.js" %}"></script>
+	<script type="text/javascript" src="{% static "converter.js" %}"></script>
+{% endblock %}
+
+{% block title %}
+    Calls
+{% endblock %}
+
+{% block content %}
+	{% load ng_filter %}
+	<div ng-app="mainApp" ng-controller="ctrl">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Время</th>
+                    <th>Номер</th>
+                    <th>Время звонка</th>
+                    <th>Время разговора</th>
+                    <th>Запись</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="call in calls track by $index">
+	                <td>{{ '$index + 1' | ng }}</td>
+	                <td>{{ 'call["Время"]' | ng }}</td>
+	                <td>{{ 'call["Откуда"]' | ng }}</td>
+	                <td>{{ 'call["Продолжительность звонка"] | fromSeconds' | ng }}</td>
+	                <td>{{ 'call["Продолжительность разговора"] | fromSeconds' | ng }}</td>
+	                <td>{{ 'call["ID записи"]' | ng }}</td>
+                </tr>
+            </tbody>
+        </table>
+	</div>
+{% endblock %}

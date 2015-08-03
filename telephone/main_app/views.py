@@ -11,7 +11,7 @@ def main(request, template):
 
 
 @login_required
-def stat(request, template):
+def calls(request, template):
 	return render_to_response(template, {}, context_instance=RequestContext(request))
 
 

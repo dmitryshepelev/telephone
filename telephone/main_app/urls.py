@@ -1,8 +1,8 @@
 from django.conf.urls import url
-from telephone.main_app.views import main, stat, get_test_file
+from telephone.main_app.views import main, get_test_file, calls
 
 urlpatterns = [
 	url(r'^$', main, {'template': 'main.html'}),
-	url(r'^stat/$', stat, {'template': 'stat.html'}),
+	url(r'^calls/$', calls, {'template': 'calls.html'}),
 	url(r'^test/$', get_test_file),
 ]

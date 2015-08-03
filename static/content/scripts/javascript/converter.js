@@ -14,15 +14,6 @@ var converter = (function () {
             var json = JSON.stringify(objArray);
             var str = json.replace(/},/g, "},\r\n");
             return JSON.parse(str);
-        },
-        /**
-         * Convert from seconds to minutes and seconds
-         * @param seconds - value of seconds
-         * @returns {*[]} Array [min, sec]
-         */
-        fromSeconds: function (seconds) {
-            var min = Math.floor(seconds / 60);
-            return [min, seconds - min * 60];
         }
     };
 

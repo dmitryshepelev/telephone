@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'telephone.main_app.templatetags',
     'telephone.main_app',
     'telephone.auth_app',
 )
