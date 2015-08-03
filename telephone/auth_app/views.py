@@ -9,11 +9,23 @@ from telephone.auth_app.services import get_redirect_url, get_redirect_url_prop,
 
 
 def login_page(request, template):
+	"""
+	Controller to show login page
+	:param request: HTTP GET request
+	:param template: html template
+	:return: HttpResponse
+	"""
 	redirect_url = request.GET.get('next') if request.GET.get('next') else '/'
 	return render_to_response(template, {get_redirect_url_prop(): redirect_url}, context_instance=RequestContext(request))
 
 
 def sign_in(request):
+	"""
+	Controller to authenticate and sign in user
+	:param request: HTTP POST request
+	:return: JsonResponse with the result of the authentication. Returns object with redirect url property,
+	if user was signed in successfully.
+	"""
 	auth_user_form = AuthUserForm(request.POST)
 	redirect_url = get_redirect_url(request)
 	if auth_user_form.errors:
@@ -23,5 +35,10 @@ def sign_in(request):
 
 @login_required
 def logout_user(request):
+	"""
+	Controller to logout current user
+	:param request: HTTP GET request
+	:return: redirect to the main page
+	"""
 	logout(request)
-	return redirect(get_redirect_url(request))
+	return redirect('/')

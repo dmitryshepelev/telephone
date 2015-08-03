@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login
-from telephone.auth_app.forms import AuthUserForm
+
+from telephone import settings
 
 
 def sing_in(username, password, request):
 	"""
-		Authenticate and Sign in user by login and password
+	Authenticate and Sign in user by login and password
 	:param username: username, string
 	:param password: password, string
 	:param request: HTTP request
@@ -18,17 +19,21 @@ def sing_in(username, password, request):
 
 
 def get_redirect_url_prop():
+	"""
+	Returns name of the redirect url property
+	:return: type 'string', redirect url property name
+	"""
 	__redirect_url_prop__ = 'redirect_url'
 	return __redirect_url_prop__
 
 
 def get_redirect_url(request):
 	"""
-		Returns redirect URL string after GET or POST requests.
-		Redirect to the Main page if redirect URL is undefined.
+	Returns redirect URL string after GET or POST requests.
+	Redirect to the Main page if redirect URL is undefined.
 	:param request: HTTP request
 	:return: URL string
 	"""
 	if request.method == 'GET':
-		return request.GET.get('next') if request.GET.get('next') else '/'
+		return request.GET.get('next') if request.GET.get('next') else settings.SCHEMA_URL
 	return request.POST.get(get_redirect_url_prop())
