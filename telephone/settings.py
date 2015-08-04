@@ -107,6 +107,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATICFILES_DIRS = (
+	'static/content/fonts',
 	'static/content/themes/',
 	'static/content/themes/default',
 	# 'static/content/scripts/coffee',

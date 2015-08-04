@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -27,7 +29,7 @@ def calls(request, template):
 	return render_to_response(template, {}, context_instance=RequestContext(request))
 
 
-@login_required()
+@login_required
 def get_test_file(request):
 	"""
 	Controller to get test calls file
@@ -37,4 +39,18 @@ def get_test_file(request):
 	abspath = open(BASE_DIR + '/static/content/test.csv', 'r')
 	response = HttpResponse(content=abspath.read())
 	response['Content-Type'] = 'text'
+	return response
+
+
+@login_required
+def get_test_record(request):
+	"""
+	Controller to get test call record file
+	:param request: HTTP GET request
+	:return: mp3 file
+	"""
+	path = BASE_DIR + '/static/content/test.mp3'
+	response = HttpResponse(content=open(path, 'rb'), content_type='audio/mp3')
+	response['Content-Length'] = os.path.getsize(path)
+	response['Content-Disposition'] = 'attachment; filename=%s' % 'test.mp3'
 	return response

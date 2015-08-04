@@ -29,7 +29,7 @@ def get_redirect_url_prop():
 
 def get_redirect_url(request):
 	"""
-	Returns redirect URL string after GET or POST requests.
+	Returns redirect URL string after GET or POST request.
 	Redirect to the Main page if redirect URL is undefined.
 	:param request: HTTP request
 	:return: URL string

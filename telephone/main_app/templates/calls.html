@@ -3,6 +3,8 @@
 {% block resources %}
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "angular-1.4.3.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "ui-bootstrap-tpls-0.13.2.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "angular.audio.js" %}"></script>
 	<script type="text/javascript" src="{% static "main-module.js" %}"></script>
 	<script type="text/javascript" src="{% static "converter.js" %}"></script>
 {% endblock %}
@@ -18,21 +20,35 @@
             <thead>
                 <tr>
                     <th></th>
+                    <th></th>
+                    <th></th>
                     <th>Время</th>
                     <th>Номер</th>
+                    <th>Кто ответил</th>
                     <th>Время звонка</th>
                     <th>Время разговора</th>
                     <th>Запись</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="call in calls track by $index">
+                <tr ng-repeat="call in calls | callsFilter track by $index">
 	                <td>{{ '$index + 1' | ng }}</td>
-	                <td>{{ 'call["Время"]' | ng }}</td>
-	                <td>{{ 'call["Откуда"]' | ng }}</td>
-	                <td>{{ 'call["Продолжительность звонка"] | fromSeconds' | ng }}</td>
-	                <td>{{ 'call["Продолжительность разговора"] | fromSeconds' | ng }}</td>
-	                <td>{{ 'call["ID записи"]' | ng }}</td>
+	                <td>
+	                    <span class="glyphicon glyphicon-arrow-down" ng-if="call.type == 'входящий'" tooltip-placement="bottom" tooltip="{{ 'call.type | capitalize' | ng }}"></span>
+	                    <span class="glyphicon glyphicon-arrow-up" ng-if="call.type == 'исходящий'"  tooltip-placement="bottom" tooltip="{{ 'call.type | capitalize' | ng }}"></span>
+                    </td>
+	                <td>
+	                    <span class="glyphicon glyphicon-earphone" ng-if="call.status" tooltip-placement="bottom" tooltip="Отвечен"></span>
+                    </td>
+	                <td>{{ 'call.time | date: "dd.MM.yyyy HH:mm:ss" : "+0"' | ng }}</td>
+	                <td>{{ 'call.from' | ng }}</td>
+	                <td>{{ 'call.responder' | ng }}</td>
+	                <td>{{ 'call.callTime | fromSeconds' | ng }}</td>
+	                <td>{{ 'call.talkTime | fromSeconds' | ng }}</td>
+	                <td>
+	                    <button class="btn btn-default btn-xs" ng-click="currentRecord.playing ? record(call.record.id).pause() : record(call.record.id).play()"><span class="glyphicon" ng-class="{'glyphicon-play': !call.record.playing, 'glyphicon-pause': call.record.playing}"></span></button>
+	                    <button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></button>
+                    </td>
                 </tr>
             </tbody>
         </table>

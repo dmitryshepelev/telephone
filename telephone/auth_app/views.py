@@ -15,7 +15,7 @@ def login_page(request, template):
 	:param template: html template
 	:return: HttpResponse
 	"""
-	redirect_url = request.GET.get('next') if request.GET.get('next') else '/'
+	redirect_url = get_redirect_url(request)
 	return render_to_response(template, {get_redirect_url_prop(): redirect_url}, context_instance=RequestContext(request))
 
 
