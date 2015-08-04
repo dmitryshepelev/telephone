@@ -45,9 +45,9 @@ mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scop
 
         if (!$scope.currentRecord || $scope.currentRecord.id !=  recordId) {
             if (!call.record.audio) {
+                // New audio will be played
                 // TODO: get record request to the api
-                $scope.currentRecord = ngAudio.load('/testrecord?recordId=' + recordId);
-                call.record.audio = $scope.currentRecord;
+                call.record.audio = ngAudio.load('/testrecord?recordId=' + recordId);
             } else {
                 $scope.currentRecord = call.record.audio;
             }
