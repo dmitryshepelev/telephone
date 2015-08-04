@@ -1,60 +1,4 @@
-var mainApp = angular.module('mainApp', ['ui.bootstrap', 'ngAudio']);
-
-
-mainApp.filter('capitalize', [function () {
-    return function (value) {
-        return value[0].toUpperCase() + value.slice(1);
-    }
-}]);
-
-
-mainApp.filter('fromSeconds', [function () {
-    return function(value) {
-        var min = Math.floor(value / 60);
-        var sec = value - min * 60;
-        return (min > 0 ? min + ' мин ' : '') + (sec < 10 ? '0' + sec : sec) + ' сек';
-    }
-}]);
-
-
-mainApp.filter('status', [function () {
-    return function (value) {
-        return value === 'отвечен';
-    }
-}]);
-
-
-mainApp.filter('callTime', [function () {
-    return function (value) {
-        var dateTime = value.split(' ');
-        dateTime[0] = dateTime[0].split('.').reverse().join('-');
-        return new Date(dateTime.join('T') + 'Z');
-    }
-}]);
-
-mainApp.filter('callsFilter', ['$filter', function ($filter) {
-    return function (arr) {
-        angular.forEach(arr, function (element, index) {
-            if (element.hasOwnProperty('Тип')) {
-                arr[index] = {
-                    type: element['Тип'],
-                    status: $filter('status')(element['Статус']),
-                    time: $filter('callTime')(element['Время']),
-                    from: element['Откуда'],
-                    responder: element['Кто ответил'],
-                    callTime: element['Продолжительность звонка'],
-                    talkTime: element['Продолжительность разговора'],
-                    record: {
-                        id: element['ID записи'],
-                        playing: false,
-                        audio: null
-                    }
-                };
-            }
-        });
-        return arr;
-    }
-}]);
+var mainApp = angular.module('mainApp', ['ui.bootstrap', 'ngAudio', 'filters']);
 
 
 mainApp.factory('callsFactory', ['$http' ,function ($http) {
@@ -89,9 +33,15 @@ mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scop
     });
 
     $scope.record = function (recordId) {
+        // Select call object
         var call = $scope.calls.filter(function (element) {
             return element.record.id == recordId;
         })[0];
+
+        // creates a copy of current playing record object
+        var playingRecord = {};
+        angular.copy($scope.currentRecord, playingRecord);
+
 
         if (!$scope.currentRecord || $scope.currentRecord.id !=  recordId) {
             if (!call.record.audio) {
@@ -103,14 +53,20 @@ mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scop
             }
             $scope.currentRecord.id = recordId;
         }
-        console.log($scope.calls);
+
         return {
             play: function () {
+                if ($scope.currentRecord.playing) {
+                    console.log(true);
+                }
                 $scope.currentRecord.setProgress(call.record.audio.progress);
                 $scope.currentRecord.play();
                 $scope.currentRecord.playing = call.record.playing = true;
             },
             pause: function () {
+                if (call.record.playing) {
+                    console.log(true);
+                }
                 $scope.currentRecord.pause();
                 $scope.currentRecord.playing = call.record.playing = false;
                 call.record.audio = $scope.currentRecord;
