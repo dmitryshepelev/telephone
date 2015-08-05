@@ -37,39 +37,29 @@ mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scop
             return $scope.calls.filter(function (element) {
                 return element.record.id == recordId;
             })[0];
-        };
-
-        // Select call object which record will be playing
-        var call = getCallByRecordId(recordId);
-
-        // creates a copy of current playing record object
-        var currentRecord = {};
-        for (var prop in $scope.playingRecord) {
-            if ($scope.playingRecord.hasOwnProperty(prop)) {
-                currentRecord[prop] = $scope.playingRecord[prop];
-            }
         }
 
-        if (!currentRecord || currentRecord.id != call.record.id) {
-            if (!call.record.audio) {
-                // New audio will be played
-                // TODO: get record request to the api
-                call.record.audio = ngAudio.load('/testrecord?recordId=' + call.record.id);
-            };
+        var call = getCallByRecordId(recordId);
+
+        // Load new audio
+        if (!call.record.audio) {
+            // New audio will be played
+            // TODO: get record request to the api
+            call.record.audio = ngAudio.load('/testrecord?recordId=' + call.record.id);
         }
 
         return {
             play: function () {
-                $scope.playingRecord = call.record.audio;
-                $scope.playingRecord.setProgress(call.record.audio.progress || 0);
-                $scope.playingRecord.play();
-                $scope.playingRecord.playing = call.record.playing = true;
-                $scope.playingRecord.id = call.record.id;
+                call.record.audio.setProgress(call.record.audio.progress || 0);
+                call.record.audio.play();
+                call.record.playing = true;
             },
             pause: function () {
-                $scope.playingRecord.pause();
-                $scope.playingRecord.playing = call.record.playing = false;
-                call.record.audio = $scope.playingRecord;
+                call.record.audio.pause();
+                call.record.playing = false;
+            },
+            getRecord: function () {
+                window.location.href = ('/testrecord?recordId=' + recordId);
             }
         }
     }

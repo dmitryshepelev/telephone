@@ -47,8 +47,8 @@
 	                <td>{{ 'call.callTime | fromSeconds' | ng }}</td>
 	                <td>{{ 'call.talkTime | fromSeconds' | ng }}</td>
 	                <td>
-	                    <button class="btn btn-default btn-xs" ng-click="playingRecord.playing ? record(call.record.id).pause() : record(call.record.id).play()"><span class="glyphicon" ng-class="{'glyphicon-play': !call.record.playing, 'glyphicon-pause': call.record.playing}"></span></button>
-	                    <button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></button>
+	                    <button class="btn btn-default btn-xs" ng-click="call.record.playing ? record(call.record.id).pause() : record(call.record.id).play()"><span class="glyphicon" ng-class="{'glyphicon-play': !call.record.playing, 'glyphicon-pause': call.record.playing}"></span></button>
+	                    <button class="btn btn-default btn-xs" ng-click="record(call.record.id).getRecord()"><span class="glyphicon glyphicon-download-alt"></span></button>
                     </td>
                 </tr>
             </tbody>
