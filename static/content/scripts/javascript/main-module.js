@@ -16,7 +16,6 @@ mainApp.factory('callsFactory', ['$http' ,function ($http) {
 
 mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scope, callsFactory, ngAudio) {
     $scope.calls = [];
-    $scope.currentRecord = {};
 
     function callsFilter(calls) {
         return calls.filter(function (call) {
@@ -32,46 +31,46 @@ mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scop
         }
     });
 
+    $scope.playingRecord = {};
     $scope.record = function (recordId) {
-        // Select call object
-        var call = $scope.calls.filter(function (element) {
-            return element.record.id == recordId;
-        })[0];
+        function getCallByRecordId (id) {
+            return $scope.calls.filter(function (element) {
+                return element.record.id == recordId;
+            })[0];
+        };
+
+        // Select call object which record will be playing
+        var call = getCallByRecordId(recordId);
 
         // creates a copy of current playing record object
-        var playingRecord = {};
-        angular.copy($scope.currentRecord, playingRecord);
+        var currentRecord = {};
+        for (var prop in $scope.playingRecord) {
+            if ($scope.playingRecord.hasOwnProperty(prop)) {
+                currentRecord[prop] = $scope.playingRecord[prop];
+            }
+        }
 
-
-        if (!$scope.currentRecord || $scope.currentRecord.id !=  recordId) {
+        if (!currentRecord || currentRecord.id != call.record.id) {
             if (!call.record.audio) {
                 // New audio will be played
                 // TODO: get record request to the api
-                call.record.audio = ngAudio.load('/testrecord?recordId=' + recordId);
-            } else {
-                $scope.currentRecord = call.record.audio;
-            }
-            $scope.currentRecord.id = recordId;
+                call.record.audio = ngAudio.load('/testrecord?recordId=' + call.record.id);
+            };
         }
 
         return {
             play: function () {
-                if ($scope.currentRecord.playing) {
-                    console.log(true);
-                }
-                $scope.currentRecord.setProgress(call.record.audio.progress);
-                $scope.currentRecord.play();
-                $scope.currentRecord.playing = call.record.playing = true;
+                $scope.playingRecord = call.record.audio;
+                $scope.playingRecord.setProgress(call.record.audio.progress || 0);
+                $scope.playingRecord.play();
+                $scope.playingRecord.playing = call.record.playing = true;
+                $scope.playingRecord.id = call.record.id;
             },
             pause: function () {
-                if (call.record.playing) {
-                    console.log(true);
-                }
-                $scope.currentRecord.pause();
-                $scope.currentRecord.playing = call.record.playing = false;
-                call.record.audio = $scope.currentRecord;
+                $scope.playingRecord.pause();
+                $scope.playingRecord.playing = call.record.playing = false;
+                call.record.audio = $scope.playingRecord;
             }
         }
-
     }
 }]);
