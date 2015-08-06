@@ -1,4 +1,4 @@
-var mainApp = angular.module('mainApp', ['ui.bootstrap', 'ngAudio', 'filters']);
+var mainApp = angular.module('mainApp', ['ui.bootstrap', 'ngAudio', 'filters', 'directives', 'nzToggle']);
 
 
 mainApp.factory('callsFactory', ['$http' ,function ($http) {
@@ -14,24 +14,43 @@ mainApp.factory('callsFactory', ['$http' ,function ($http) {
 }]);
 
 
-mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', function ($scope, callsFactory, ngAudio) {
-    $scope.calls = [];
+mainApp.controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', function ($scope, callsFactory, ngAudio, $filter) {
+    var _calls = [];
 
-    function callsFilter(calls) {
-        return calls.filter(function (call) {
-            return call['Тип'] != 'внутренний';
-        });
-    }
+    $scope.calls = [];
+    $scope.order = {
+        parameter: 'time',
+        reverse: true
+    };
+
+    $scope.filters = {
+        params: {
+            incoming: null,
+            status: null
+        },
+        onIncomingFilterChange: function () {
+            $scope.calls = $filter('callsFilter')(_calls, $scope.filters.params);
+        },
+        onStatusFilterChange: function () {
+            $scope.calls = $filter('callsFilter')(_calls, $scope.filters.params);
+        },
+        changeIncomingFilter: function (value) {
+            $scope.filters.params.incoming = value;
+        },
+        changeStatusFilter: function (value) {
+            $scope.filters.params.status = value;
+        }
+    };
 
     callsFactory.loadCalls().success(function (data) {
         if (data) {
-            $scope.calls = callsFilter(converter.csv_to_json(data));
+            _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
+            $scope.calls = _calls;
         } else {
             throw 'Empty Response';
         }
     });
 
-    $scope.playingRecord = {};
     $scope.record = function (recordId) {
         function getCallByRecordId (id) {
             return $scope.calls.filter(function (element) {

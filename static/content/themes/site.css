@@ -189,3 +189,33 @@ footer {
     /*align-content: center;*/
     /*opacity: 0.6;*/
 }
+
+.vis-hidden {
+    visibility: hidden;
+}
+
+.glyphicon-right {
+    padding: 0 5px;
+}
+
+.pointer {
+    cursor: pointer !important;
+}
+
+.toggle-container {
+    display: table;
+}
+
+.toggle-container > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.hr-sm {
+    margin: 5px 0;
+}
+
+.nz-toggle-wrap {
+    margin-top: 7px !important;
+    margin-right: 10px !important;
+}
