@@ -58,4 +58,10 @@ def get_test_record(request):
 
 @login_required
 def get_period_modal_template(request, template):
+	"""
+	Get html template of the period modal
+	:param request: HTTP GET request
+	:param template: html template
+	:return: HttpResponse instance
+	"""
 	return render_to_response(template, {}, context_instance=RequestContext(request))

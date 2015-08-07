@@ -1,8 +1,19 @@
 (function () {
     angular.module('controllers', ['ngAudio'])
 
-        .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', function ($scope, callsFactory, ngAudio, $filter, $modal) {
+        .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider) {
             var _calls = [];
+            var _loadCalls = function () {
+                // TODO: params
+                callsFactory.loadCalls().success(function (data) {
+                    if (data) {
+                        _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
+                        $scope.calls = _calls;
+                    } else {
+                        throw 'Empty Response';
+                    }
+                });
+            };
 
             $scope.calls = [];
             $scope.order = {
@@ -32,31 +43,13 @@
             $scope.period = new Period();
             $scope.periodLabeltext = $scope.period.toPeriodString();
             $scope.showPeriodModal = function () {
-                var modalInstance = $modal.open({
-                    animation: true,
-                    templateUrl: 'get_period_modal_template',
-                    controller: 'periodModalCtrl',
-                    resolve: {
-                        period: function () {
-                            return $scope.period;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (period) {
+                modalsProvider.periodModal({ period: $scope.period }, function (period) {
                     $scope.period = period;
                     $scope.periodLabeltext = $scope.period.toPeriodString();
-                })
+                    // TODO: request to the new data
+                    _loadCalls();
+                });
             };
-
-            callsFactory.loadCalls().success(function (data) {
-                if (data) {
-                    _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
-                    $scope.calls = _calls;
-                } else {
-                    throw 'Empty Response';
-                }
-            });
 
             $scope.record = function (recordId) {
                 function getCallByRecordId (id) {
@@ -89,26 +82,29 @@
                     }
                 }
             }
+
+            _loadCalls();
         }])
 
         .controller('periodModalCtrl', ['$scope', '$modalInstance', 'period', function ($scope, $modalInstance, period) {
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel')
-            };
-
-            $scope.ok = function () {
-                $modalInstance.close(new Period($scope.dates.from, $scope.dates.to));
-            };
-
             $scope.dates = {
                 maxDate: period.getMaxDate(),
                 from: period.getFromDate(),
                 to: period.getToDate()
             };
 
-            //$scope.getDateDifference = function () {
-            //    var timeDiff = Math.abs($scope.dates.to.getTime() - $scope.dates.from.getTime());
-            //    return Math.ceil(timeDiff / (1000 * 3600 * 24));
-            //}
+            $scope.errors = [];
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel')
+            };
+
+            $scope.ok = function () {
+                var period = new Period($scope.dates.from, $scope.dates.to);
+                if (period.getDatesDifferent() < 0) {
+                    period.setToDate(period.getFromDate());
+                }
+                $modalInstance.close(period);
+            };
         }])
 })();

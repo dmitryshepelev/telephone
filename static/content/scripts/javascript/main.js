@@ -20,6 +20,19 @@ var Period = function(from, to, maxDate) {
         return this._to;
     };
 
+    this.setToDate = function (value) {
+        if (value instanceof Date) {
+            this._to = value;
+        } else {
+            throw new TypeError('value is not an instance of Date');
+        }
+    };
+
+    this.getDatesDifferent = function () {
+        var timeDiff = this._to.getTime() - this._from.getTime();
+        return Math.ceil(timeDiff / (1000 * 3600 * 24));
+    };
+
     this.toPeriodString = function (locale) {
         // TODO: Locale
         if (this._from.toDateString() == new Date(Date.now()).toDateString()) {
@@ -29,5 +42,5 @@ var Period = function(from, to, maxDate) {
             return this._from.toRightDateString()
         }
         return 'период с ' + this._from.toRightDateString() + ' по ' + this._to.toRightDateString();
-    }
+    };
 };

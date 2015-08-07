@@ -4,6 +4,7 @@
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "angular-1.4.3.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "controllers.js" %}"></script>
+	<script type="text/javascript" src="{% static "factories.js" %}"></script>
     <script type="text/javascript" src="{% static "filters.js" %}"></script>
 	<script type="text/javascript" src="{% static "directives.js" %}"></script>
 	<script type="text/javascript" src="{% static "nz-toggle.js" %}"></script>
@@ -25,8 +26,10 @@
 	<div ng-app="mainApp" ng-controller="ctrl">
 		<div class="row">
 			<div class="col-sm-6">
-				<button class="btn btn-default btn-sm" ng-click="showPeriodModal()" tooltip-placement="bottom" tooltip="Выбрать период"><span class="glyphicon glyphicon-calendar"></span></button>
-				<span>Показать данные за {{ 'periodLabeltext' | ng }}</span>
+				<div class="period-container">
+					<button class="btn btn-default btn-sm" ng-click="showPeriodModal()" tooltip-placement="bottom" tooltip="Выбрать период"><span class="glyphicon glyphicon-calendar"></span></button>
+					<span class="period-label">Показать данные за <b>{{ 'periodLabeltext' | ng }}</b></span>
+				</div>
 			</div>
 			<div class="col-sm-6">
 				<div class="row">

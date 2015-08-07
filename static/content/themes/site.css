@@ -223,3 +223,37 @@ footer {
 .modal-dialog {
     min-width: 700px;
 }
+
+.period-label {
+    margin-left: 7px;
+}
+
+.period-container {
+    margin: 5px 0;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+}
+
+/*td[id^="datepicker"] > button {*/
+    /*border: none;*/
+/*}*/
+
+table[aria-activedescendant^="datepicker"] button {
+    border: none;
+    box-shadow: none;
+}
+
+table[aria-activedescendant^="datepicker"] button[disabled] {
+    opacity: 0.25;
+}
+
+table[aria-activedescendant^="datepicker"] button.active {
+    background-color: #7AA8D0;
+    box-shadow: none;
+}
+
+table[aria-activedescendant^="datepicker"] button.active:focus, table[aria-activedescendant^="datepicker"] button.active:hover {
+    background-color: #286090;
+}
