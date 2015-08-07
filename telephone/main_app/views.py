@@ -54,3 +54,8 @@ def get_test_record(request):
 	response['Content-Length'] = os.path.getsize(path)
 	response['Content-Disposition'] = 'attachment; filename=%s' % 'test.mp3'
 	return response
+
+
+@login_required
+def get_period_modal_template(request, template):
+	return render_to_response(template, {}, context_instance=RequestContext(request))

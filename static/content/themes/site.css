@@ -219,3 +219,7 @@ footer {
     margin-top: 7px !important;
     margin-right: 10px !important;
 }
+
+.modal-dialog {
+    min-width: 700px;
+}
