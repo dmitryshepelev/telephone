@@ -20,7 +20,7 @@ a:hover, a:focus {
 }
 
 .container.body {
-    padding-top: 70px;
+    padding-top: 50px;
     padding-bottom: 61px;
 }
 
@@ -256,4 +256,18 @@ table[aria-activedescendant^="datepicker"] button.active {
 
 table[aria-activedescendant^="datepicker"] button.active:focus, table[aria-activedescendant^="datepicker"] button.active:hover {
     background-color: #286090;
+}
+
+div#filters {
+    position: relative;
+    background-color: white;
+    top: 0;
+    z-index: 1000;
+    padding-top: 10px;
+}
+
+thead#table-head {
+    position: relative;
+    top: 0;
+    z-index: 1000;
 }
