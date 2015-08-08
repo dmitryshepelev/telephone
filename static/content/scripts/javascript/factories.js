@@ -2,13 +2,22 @@
     angular.module('factories', [])
 
         .factory('callsFactory', ['$http', function ($http) {
-            var testMode = true;
+            var _getParamsString = function (params) {
+                var str = '?';
+                for (var p in params) {
+                    if (params.hasOwnProperty(p)) {
+                        str += p + '=' + params[p] + '&';
+                    }
+                }
+                return str.slice(0, -1);
+            };
+            var _testMode = true;
             // TODO: url to the api
-            var baseUrl = testMode ? '/test/' : '';
+            var baseUrl = _testMode ? '/test' : '';
             // TODO: params array to request request
             return {
-                loadCalls: function () {
-                    return $http.get(baseUrl);
+                loadCalls: function (params) {
+                    return $http.get(baseUrl + _getParamsString(params));
                 }
             }
         }])

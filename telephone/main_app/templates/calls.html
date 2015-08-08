@@ -18,49 +18,49 @@
 {% endblock %}
 
 {% block title %}
-    Calls
+    Звонки
 {% endblock %}
 
 {% block content %}
 	{% load ng_filter %}
+    <input id="user_code" type="hidden" value="{{ user.userprofile.user_code }}">
+    <input id="schema_code" type="hidden" value="{{ user.userprofile.schema.schema_code }}">
 	<div ng-app="mainApp" ng-controller="ctrl">
-		<div id="filters">
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="period-container">
-						<button class="btn btn-default btn-sm" ng-click="showPeriodModal()" tooltip-placement="bottom" tooltip="Выбрать период"><span class="glyphicon glyphicon-calendar"></span></button>
-						<span class="period-label">Показать данные за <b>{{ 'periodLabeltext' | ng }}</b></span>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="toggle-container">
-					            <div>
-					                <nz-toggle tri-toggle on-toggle="filters.onIncomingFilterChange()" ng-model="filters.params.incoming"></nz-toggle>
-					            </div>
-					            <div>
-					                <span>{{ 'filters.params.incoming ? "Только входящие" : filters.params.incoming == null ? "Входящие и исходящие" : "Только исходящие"' | ng }}</span>
-					            </div>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="toggle-container">
-					            <div>
-					                <nz-toggle tri-toggle on-toggle="filters.onStatusFilterChange()" ng-model="filters.params.status"></nz-toggle>
-					            </div>
-					            <div>
-					                <span>{{ 'filters.params.status ? "Только принятые" : filters.params.status == null ? "Принятые и пропущенные" : "Только пропущенные"' | ng }}</span>
-					            </div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr class="hr-sm">
-		</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="period-container">
+                    <button class="btn btn-default btn-sm" ng-click="showPeriodModal()" tooltip-placement="bottom" tooltip="Выбрать период"><span class="glyphicon glyphicon-calendar"></span></button>
+                    <span class="period-label">Показать данные за <b>{{ 'periodLabeltext' | ng }}</b></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="toggle-container">
+                            <div>
+                                <nz-toggle tri-toggle on-toggle="filters.onIncomingFilterChange()" ng-model="filters.params.incoming"></nz-toggle>
+                            </div>
+                            <div>
+                                <span>{{ 'filters.params.incoming ? "Только входящие" : filters.params.incoming == null ? "Входящие и исходящие" : "Только исходящие"' | ng }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="toggle-container">
+                            <div>
+                                <nz-toggle tri-toggle on-toggle="filters.onStatusFilterChange()" ng-model="filters.params.status"></nz-toggle>
+                            </div>
+                            <div>
+                                <span>{{ 'filters.params.status ? "Только принятые" : filters.params.status == null ? "Принятые и пропущенные" : "Только пропущенные"' | ng }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="hr-sm">
         <table class="table table-striped table-hover">
-            <thead id="table-head">
+            <thead>
                 <tr>
                     <th></th>
                     <th></th>

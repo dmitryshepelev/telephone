@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from telephone.main_app import Schema
 
 from telephone.settings import BASE_DIR
 
@@ -60,6 +61,17 @@ def get_test_record(request):
 def get_period_modal_template(request, template):
 	"""
 	Get html template of the period modal
+	:param request: HTTP GET request
+	:param template: html template
+	:return: HttpResponse instance
+	"""
+	return render_to_response(template, {}, context_instance=RequestContext(request))
+
+
+@login_required
+def schema_error(request, template):
+	"""
+	Schema error page
 	:param request: HTTP GET request
 	:param template: html template
 	:return: HttpResponse instance

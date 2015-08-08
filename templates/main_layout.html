@@ -23,7 +23,7 @@
 <div class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a href="../" class="navbar-brand">telephone</a>
+            <a href="/" class="navbar-brand">telephone</a>
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
@@ -32,17 +32,18 @@
 {#                </li>#}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-	            {% if user.is_authenticated == False %}
-		            <li>
-		                <a href="/auth/login/">Sign in / Sign up</a>
-	                </li>
+	            {% if not user.is_authenticated %}
+		            <li><a href="/auth/login/">Войти</a></li>
 	            {% else %}
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="/calls/">Calls</a></li>
+							<li><a href="/calls/">Звонки</a></li>
+                            {% if user.is_superuser %}
+                                <li><a href="/admin/">Грозная Админка</a></li>
+                            {% endif %}
 							<li class="divider"></li>
-							<li><a href="/auth/logout/">Exit</a></li>
+							<li><a href="/auth/logout/">Выход</a></li>
 						</ul>
 					</li>
 	            {% endif %}
@@ -59,7 +60,7 @@
 {% block footer %}
 <footer align="center">
     <div class="container footer" align="center">
-        <span>All right reserved | <a href="/">Home</a></span>
+        <span>{% now 'Y' %} - Все права защищены | <a href="/">Главная</a></span>
     </div>
 </footer>
 {% endblock %}

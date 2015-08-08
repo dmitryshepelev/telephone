@@ -1,20 +1,24 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 from telephone import settings
+from telephone.main_app.models import UserProfile
 
 
-def sing_in(username, password, request):
+def sing_in(code, password, request):
 	"""
 	Authenticate and Sign in user by login and password
-	:param username: username, string
+	:param code: code of user, string
 	:param password: password, string
 	:param request: HTTP request
 	:return: True if the user was singed in
 	"""
-	user = authenticate(username=username, password=password)
+	user = UserProfile.objects.filter(user_code=code).first()
 	if user is not None:
-		login(request, user)
-		return True
+		auth_user = authenticate(username=user.user.username, password=password)
+		if auth_user is not None:
+			login(request, auth_user)
+			return True
 	return False
 
 

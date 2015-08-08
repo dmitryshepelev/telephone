@@ -1,29 +1,28 @@
 {% extends 'auth_layout.html' %}
 
 {% block title %}
-	Sign in
+	Вход
 {% endblock %}
 
 {% block content %}
 	<div align="center">
-		<h2>Welcome to <a href="/">telephone</a></h2>
-		<h3>Sign in with the code and password</h3>
+		<h2>Добро пожаловать на <a href="/">telephone</a></h2>
+		<h3>Войдите в профиль используюя код и пароль</h3>
 	</div>
 
 	<div align="center">
 		<div class="auth-group">
 			<form class="form-horizontal" >
-{#					method="post", action="/auth/login/">#}
 				{% csrf_token %}
 				<input type="hidden" id="redirect_url" name="redirect_url" value="{{ redirect_url }}">
 				<div class="form-group">
-					<input class="form-control input-lg" id="username" onfocus="validate.hideError($(event.target))" name="username" type="text" placeholder="Code">
+					<input class="form-control input-lg" id="code" onfocus="validate.hideError($(event.target))" name="code" type="text" placeholder="Код">
 				</div>
 				<div class="form-group">
-					<input class="form-control input-lg" id="password" onfocus="validate.hideError($(event.target))" name="password" type="password" placeholder="Password">
+					<input class="form-control input-lg" id="password" onfocus="validate.hideError($(event.target))" name="password" type="password" placeholder="Пароль">
 				</div>
 				<div class="form-group">
-					<button type="button" onclick="auth.login(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Sign in</button>
+					<button type="button" onclick="auth.login(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Войти</button>
 				</div>
 			</form>
 		</div>

@@ -4,8 +4,13 @@
         .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider) {
             var _calls = [];
             var _loadCalls = function () {
+                var user = angular.element('input[id=user_code]').val();
+                var tree = angular.element('input[id=schema_code]').val();
+                if (!user || !tree) {
+                    window.location.href = '/e/schema/';
+                }
                 // TODO: params
-                callsFactory.loadCalls().success(function (data) {
+                callsFactory.loadCalls({ user: user, tree: tree }).success(function (data) {
                     if (data) {
                         _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
                         $scope.calls = _calls;
@@ -81,7 +86,7 @@
                         window.location.href = ('/testrecord?recordId=' + recordId);
                     }
                 }
-            }
+            };
 
             _loadCalls();
         }])

@@ -27,10 +27,12 @@ def sign_in(request):
 	if user was signed in successfully.
 	"""
 	auth_user_form = AuthUserForm(request.POST)
-	redirect_url = get_redirect_url(request)
 	if auth_user_form.errors:
 		return JsonResponse({'errors': auth_user_form.errors})
-	return JsonResponse({get_redirect_url_prop(): redirect_url}) if sing_in(username=auth_user_form.data['username'], password=auth_user_form.data['password'], request=request) else JsonResponse({'errors': {'password': ['Invalid Username or Password']}})
+	if sing_in(code=auth_user_form.data['code'], password=auth_user_form.data['password'], request=request):
+		return JsonResponse({get_redirect_url_prop(): get_redirect_url(request)})
+	else:
+		return JsonResponse({'errors': {'password': ['Invalid Username or Password']}})
 
 
 @login_required
