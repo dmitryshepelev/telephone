@@ -4,9 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from telephone import settings
-from telephone.main_app import Schema
 
+from telephone import settings
 from telephone.settings import BASE_DIR
 
 

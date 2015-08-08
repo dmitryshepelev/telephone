@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import time
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -130,3 +131,46 @@ SCHEMA_URL = '/calls/'
 
 # TODO: secret key
 S_KEY = 'blah'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'django': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
+        'auth_logger_handler': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            # 'when': 'S',
+            'maxBytes': 10*1024*1024,
+            'backupCount': 0,
+            'filename': 'auth.log',  # 'auth_log_' + time.strftime('%d.%m.%Y') + '.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        # 'django': {
+        #     'handlers': ['django'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'auth_logger': {
+            'handlers': ['auth_logger_handler'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
