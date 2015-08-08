@@ -1,22 +1,26 @@
 (function () {
     angular.module('controllers', ['ngAudio'])
 
-        .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider) {
+        .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', 'serviceFactory', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider, serviceFactory) {
             var _calls = [];
+            var _params = new ApiParams();
             var _loadCalls = function () {
                 var user = angular.element('input[id=user_code]').val();
                 var tree = angular.element('input[id=schema_code]').val();
                 if (!user || !tree) {
                     window.location.href = '/e/schema/';
                 }
-                // TODO: params
-                callsFactory.loadCalls({ user: user, tree: tree }).success(function (data) {
-                    if (data) {
-                        _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
-                        $scope.calls = _calls;
-                    } else {
-                        throw 'Empty Response';
-                    }
+                _params.setParams({ user: user, tree: tree });
+                serviceFactory.getSecretKey().success(function (result) {
+                    _params.setKey(result.key);
+                    callsFactory.loadCalls(_params.getRequestString()).success(function (data) {
+                        if (data) {
+                            _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
+                            $scope.calls = _calls;
+                        } else {
+                            throw 'Empty Response';
+                        }
+                    });
                 });
             };
 

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from telephone.main_app.views import main, get_test_file, calls, get_test_record, get_period_modal_template, \
-	schema_error
+	schema_error, get_key
 
 urlpatterns = [
 	url(r'^$', main, {'template': 'main.html'}),
@@ -9,4 +9,5 @@ urlpatterns = [
 	url(r'^test/$', get_test_file),
 	url(r'^testrecord/$', get_test_record),
 	url(r'^e/schema/$', schema_error, {'template': 'schema_error.html'}),
+	url(r'^s/key/', get_key),
 ]

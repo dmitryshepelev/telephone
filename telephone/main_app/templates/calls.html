@@ -25,7 +25,7 @@
 	{% load ng_filter %}
     <input id="user_code" type="hidden" value="{{ user.userprofile.user_code }}">
     <input id="schema_code" type="hidden" value="{{ user.userprofile.schema.schema_code }}">
-	<div ng-app="mainApp" ng-controller="ctrl">
+	<div ng-app="mainApp" ng-controller="ctrl" ng-cloak>
         <div class="row">
             <div class="col-sm-6">
                 <div class="period-container">

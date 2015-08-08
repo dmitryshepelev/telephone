@@ -127,3 +127,6 @@ TEMPLATE_DIRS = (
 LOGIN_URL = '/auth/login/'
 
 SCHEMA_URL = '/calls/'
+
+# TODO: secret key
+S_KEY = 'blah'

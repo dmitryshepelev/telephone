@@ -1,9 +1,10 @@
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from telephone import settings
 from telephone.main_app import Schema
 
 from telephone.settings import BASE_DIR
@@ -77,3 +78,8 @@ def schema_error(request, template):
 	:return: HttpResponse instance
 	"""
 	return render_to_response(template, {}, context_instance=RequestContext(request))
+
+
+@login_required
+def get_key(request):
+	return JsonResponse({'key': settings.S_KEY})

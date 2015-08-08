@@ -1,3 +1,3 @@
 (function () {
-    angular.module('mainApp', ['ui.bootstrap', 'ngAudio', 'filters', 'directives', 'nzToggle', 'controllers', 'factories']);
+    angular.module('mainApp', ['ui.bootstrap', 'ngAudio', 'filters', 'directives', 'nzToggle', 'controllers', 'factories'])
 })();
