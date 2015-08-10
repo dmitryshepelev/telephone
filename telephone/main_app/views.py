@@ -7,7 +7,7 @@ from django.template import RequestContext
 import requests
 
 from telephone import settings
-from telephone.main_app.services import get_request_string
+from telephone.main_app.services import get_request_string, get_logger
 from telephone.settings import BASE_DIR
 
 
@@ -48,9 +48,13 @@ def get_calls(request):
 
 	request_string = get_request_string(request.GET)
 	url = '%s%s%s' % (settings.API_URLS['base_api_url'], settings.API_URLS['get_calls'], request_string,)
-	request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': 'stat_%s-%s' % (request.GET.get('form'), request.GET.get('to'))})
-	response.content = request.content[:-1] if request.content[-1] == '\n' else request.content
-	return response
+	api_request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': 'stat_%s-%s' % (request.GET.get('form'), request.GET.get('to'))})
+	if api_request.ok:
+		response.content = api_request.content[:-1] if api_request.content[-1] == '\n' else api_request.content
+		return response
+	else:
+		get_logger().error('api data export request error.\n\tUser: %s\n\tTree: %s\n\trequest string: %s' % (request.user.userprofile.user_code, request.user.userprofile.schema.schema_code, request_string,))
+		return HttpResponse(status=500)
 
 
 @login_required
@@ -72,10 +76,13 @@ def get_call_record(request):
 	record_id = request.GET.get('id')
 	request_string = get_request_string({'id': record_id, 'user': request.user.userprofile.user_code})
 	url = '%s%s%s' % (settings.API_URLS['base_api_url'], settings.API_URLS['get_record'], request_string,)
-	request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': '%s.mp3' % (record_id,)})
-	response.content = request.content
-	return response
-
+	api_request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': '%s.mp3' % (record_id,)})
+	if api_request.ok:
+		response.content = api_request.content
+		return response
+	else:
+		get_logger().error('api call record request error.\n\tUser: %s\n\tTree: %s\n\trequest string: %s' % (request.user.userprofile.user_code, request.user.userprofile.schema.schema_code, request_string,))
+		return HttpResponse(status=500)
 
 
 @login_required
@@ -91,6 +98,17 @@ def get_period_modal_template(request, template):
 
 @login_required
 def schema_error(request, template):
+	"""
+	Schema error page
+	:param request: HTTP GET request
+	:param template: html template
+	:return: HttpResponse instance
+	"""
+	return render_to_response(template, {}, context_instance=RequestContext(request))
+
+
+@login_required
+def default_error(request, template):
 	"""
 	Schema error page
 	:param request: HTTP GET request

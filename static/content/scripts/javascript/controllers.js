@@ -16,10 +16,13 @@
                     if (data) {
                         _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
                         $scope.calls = _calls;
-                        $scope.isLoaded = true;
                     } else {
                         throw 'Empty Response';
                     }
+                }).error(function (e) {
+                    window.location.href = '/e/'
+                }).finally(function () {
+                    $scope.isLoaded = true;
                 });
             };
 

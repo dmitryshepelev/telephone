@@ -173,6 +173,14 @@ LOGGING = {
             'filename': 'auth.log',
             'formatter': 'verbose',
         },
+        'main_logger_handler': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 10*1024*1024,
+            'backupCount': 0,
+            'filename': 'main.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         # 'django': {
@@ -182,6 +190,11 @@ LOGGING = {
         # },
         'auth_logger': {
             'handlers': ['auth_logger_handler'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'main_logger': {
+            'handlers': ['main_logger_handler'],
             'level': 'INFO',
             'propagate': True,
         },

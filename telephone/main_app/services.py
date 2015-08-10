@@ -1,5 +1,10 @@
 import hashlib
+import logging
 from telephone import settings
+
+
+def get_logger():
+	return logging.getLogger('main_logger')
 
 
 def get_hash_string(params):
