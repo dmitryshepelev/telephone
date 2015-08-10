@@ -4,23 +4,26 @@
         .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider) {
             var _calls = [];
             var _params = new ApiParams();
+            var _user = angular.element('input[id=user_code]').val();
+            var _tree = angular.element('input[id=schema_code]').val();
+            if (!_user || !_tree) {
+                window.location.href = '/e/schema/';
+            }
+            _params.setParams({ user: _user, tree: _tree });
             var _loadCalls = function () {
-                var user = angular.element('input[id=user_code]').val();
-                var tree = angular.element('input[id=schema_code]').val();
-                if (!user || !tree) {
-                    window.location.href = '/e/schema/';
-                }
-                _params.setParams({ user: user, tree: tree });
+                $scope.isLoaded = false;
                 callsFactory.loadCalls(_params.getRequestString()).success(function (data) {
                     if (data) {
                         _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
                         $scope.calls = _calls;
+                        $scope.isLoaded = true;
                     } else {
                         throw 'Empty Response';
                     }
                 });
             };
 
+            $scope.isLoaded = false;
             $scope.calls = [];
             $scope.order = {
                 parameter: 'time',
@@ -52,7 +55,7 @@
                 modalsProvider.periodModal({ period: $scope.period }, function (period) {
                     $scope.period = period;
                     $scope.periodLabeltext = $scope.period.toPeriodString();
-                    // TODO: request to the new data
+                    _params.setParams({ from: period._from, to: period._to });
                     _loadCalls();
                 });
             };

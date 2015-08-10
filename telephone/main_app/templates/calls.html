@@ -60,7 +60,10 @@
             </div>
         </div>
         <hr class="hr-sm">
-        <table class="table table-striped table-hover">
+        <div align="center" ng-show="!isLoaded">
+            <img src="/static/loader.gif" class="loader">
+        </div>
+        <table class="table table-striped table-hover" ng-show="isLoaded">
             <thead>
                 <tr>
                     <th></th>

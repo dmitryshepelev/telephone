@@ -271,3 +271,7 @@ thead#table-head {
     top: 0;
     z-index: 1000;
 }
+
+.loader {
+    margin: 20px;
+}
