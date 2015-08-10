@@ -57,7 +57,7 @@ var Period = function(from, to, maxDate) {
     };
 };
 
-var ApiParams = function (params) {
+function ApiParams(params) {
     this._params = {
         // Display anonymous calls: 0 - No; 1 - Yes
         anonymous: 1,
@@ -80,44 +80,42 @@ var ApiParams = function (params) {
         // Call type: 0 - all calls; 1 - incoming; 2 - upcoming; 3 - inner
         type: 0,
         // User code
-        user: '',
-        // Secret key
-        hash: ''
+        user: ''
     };
 
-    this._init = function (params) {
+    this._init(params);
+}
+
+ApiParams.prototype = {
+    constructor: ApiParams,
+
+    _init: function (params) {
         for (var param in params) {
             if (params.hasOwnProperty(param)) {
                 this._params[param] = params[param];
             }
         }
-    };
+    },
 
-    this.setTree = function (value) {
+    setTree: function (value) {
         this._params.tree = value;
-    };
+    },
 
-    this.setUser = function (value) {
+    setUser: function (value) {
         this._params.user = value;
-    };
+    },
 
-    this.setKey = function (value) {
-        this._params.hash = value
-    };
-
-    this.setParams = function (params) {
+    setParams: function (params) {
         this._init(params);
-    };
+    },
 
-    this.getRequestString = function () {
+    getRequestString: function () {
         var str = '?';
         for (var param in this._params) {
             if (this._params.hasOwnProperty(param)) {
                 str += param + '=' + (param === 'from' || param === 'to' ? this._params[param].toRightDateString() :this._params[param]) + '&';
             }
         }
-        return str.slice(0, -1);
-    };
-
-    this._init(params);
+        return str;
+    }
 };

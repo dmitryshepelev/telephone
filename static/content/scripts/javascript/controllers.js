@@ -1,7 +1,7 @@
 (function () {
     angular.module('controllers', ['ngAudio'])
 
-        .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', 'serviceFactory', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider, serviceFactory) {
+        .controller('ctrl', ['$scope', 'callsFactory', 'ngAudio', '$filter', '$modal', 'modalsProvider', function ($scope, callsFactory, ngAudio, $filter, $modal, modalsProvider) {
             var _calls = [];
             var _params = new ApiParams();
             var _loadCalls = function () {
@@ -11,16 +11,13 @@
                     window.location.href = '/e/schema/';
                 }
                 _params.setParams({ user: user, tree: tree });
-                serviceFactory.getSecretKey().success(function (result) {
-                    _params.setKey(result.key);
-                    callsFactory.loadCalls(_params.getRequestString()).success(function (data) {
-                        if (data) {
-                            _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
-                            $scope.calls = _calls;
-                        } else {
-                            throw 'Empty Response';
-                        }
-                    });
+                callsFactory.loadCalls(_params.getRequestString()).success(function (data) {
+                    if (data) {
+                        _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
+                        $scope.calls = _calls;
+                    } else {
+                        throw 'Empty Response';
+                    }
                 });
             };
 
@@ -73,7 +70,7 @@
                 if (!call.record.audio) {
                     // New audio will be played
                     // TODO: get record request to the api
-                    call.record.audio = ngAudio.load('/testrecord?recordId=' + call.record.id);
+                    call.record.audio = ngAudio.load('/getCallRecord?id=' + call.record.id);
                 }
 
                 return {
@@ -87,11 +84,10 @@
                         call.record.playing = false;
                     },
                     getRecord: function () {
-                        window.location.href = ('/testrecord?recordId=' + recordId);
+                        window.location.href = ('/getCallRecord?recordId=' + recordId);
                     }
                 }
             };
-
             _loadCalls();
         }])
 

@@ -1,21 +1,13 @@
 (function () {
     angular.module('factories', [])
 
-        .factory('serviceFactory', ['$http', function ($http) {
-            return {
-                getSecretKey: function () {
-                    return $http.get('/s/key/')
-                }
-            }
-        }])
-
         .factory('callsFactory', ['$http', function ($http) {
-            var _testMode = true;
-            // TODO: url to the api
-            var baseUrl = _testMode ? '/test' : '';
             return {
                 loadCalls: function (params) {
-                    return $http.get(baseUrl + params);
+                    return $http.get('/getCalls' + params);
+                },
+                getCallRecord: function (params) {
+                    return $http.get('/getCallRecord' + params)
                 }
             }
         }])

@@ -41,10 +41,12 @@ INSTALLED_APPS = (
     # 'telephone.main_app.templatetags',
     'telephone.main_app',
     'telephone.auth_app',
+    'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -127,10 +129,21 @@ TEMPLATE_DIRS = (
 
 LOGIN_URL = '/auth/login/'
 
+TEST_MODE = False
+
 SCHEMA_URL = '/calls/'
 
-# TODO: secret key
-S_KEY = 'blah'
+S_KEY = '0.l4lxhd71bhr'
+
+API_URLS = {
+	'base_api_url': 'http://sipuni.com/api/statistic',
+	'get_record': '/record',
+	'get_calls': '/export',
+}
+
+CORS_ORIGIN_ALLOW_ALL = (
+	'sipuni.com'
+)
 
 LOGGING = {
     'version': 1,
@@ -154,10 +167,9 @@ LOGGING = {
         'auth_logger_handler': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            # 'when': 'S',
             'maxBytes': 10*1024*1024,
             'backupCount': 0,
-            'filename': 'auth.log',  # 'auth_log_' + time.strftime('%d.%m.%Y') + '.log',
+            'filename': 'auth.log',
             'formatter': 'verbose',
         },
     },
