@@ -43,7 +43,6 @@
                             talkTime: Number(element['Продолжительность разговора']),
                             record: {
                                 id: element['ID записи'],
-                                playing: false,
                                 audio: null
                             }
                         };

@@ -160,7 +160,7 @@ LOGGING = {
     },
     'handlers': {
         'django': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'debug.log',
             'formatter': 'verbose',
@@ -183,11 +183,11 @@ LOGGING = {
         },
     },
     'loggers': {
-        # 'django': {
-        #     'handlers': ['django'],
-        #     'level': 'DEBUG',
-        #     'propagate': True,
-        # },
+        'django': {
+            'handlers': ['django'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'auth_logger': {
             'handlers': ['auth_logger_handler'],
             'level': 'INFO',

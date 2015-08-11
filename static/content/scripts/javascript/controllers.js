@@ -14,8 +14,8 @@
                 $scope.isLoaded = false;
                 callsFactory.loadCalls(_params.getRequestString()).success(function (data) {
                     if (data) {
-                        _calls = $filter('callsFilter')($filter('callsProxy')(converter.csv_to_json(data)));
-                        $scope.calls = _calls;
+                        _calls = $filter('callsProxy')(converter.csv_to_json(data));
+                        $scope.filters.applyFilters();
                     } else {
                         throw 'Empty Response';
                     }
@@ -38,17 +38,11 @@
                     incoming: null,
                     status: null
                 },
-                onIncomingFilterChange: function () {
-                    $scope.calls = $filter('callsFilter')(_calls, $scope.filters.params);
-                },
-                onStatusFilterChange: function () {
-                    $scope.calls = $filter('callsFilter')(_calls, $scope.filters.params);
-                },
                 changeIncomingFilter: function (value) {
                     $scope.filters.params.incoming = value;
                 },
-                changeStatusFilter: function (value) {
-                    $scope.filters.params.status = value;
+                applyFilters: function () {
+                    $scope.calls = $filter('callsFilter')(_calls, $scope.filters.params)
                 }
             };
 
@@ -63,34 +57,24 @@
                 });
             };
 
-            $scope.record = function (recordId) {
-                function getCallByRecordId (id) {
-                    return $scope.calls.filter(function (element) {
-                        return element.record.id == recordId;
-                    })[0];
-                }
-
-                var call = getCallByRecordId(recordId);
-
+            $scope.record = function (call) {
+                var requestString = '/getCallRecord?id=' + call.record.id;
                 // Load new audio
                 if (!call.record.audio) {
                     // New audio will be played
-                    // TODO: get record request to the api
-                    call.record.audio = ngAudio.load('/getCallRecord?id=' + call.record.id);
+                    call.record.audio = ngAudio.load(requestString);
                 }
 
                 return {
                     play: function () {
-                        call.record.audio.setProgress(call.record.audio.progress || 0);
+                        console.log(call.record.audio);
                         call.record.audio.play();
-                        call.record.playing = true;
                     },
-                    pause: function () {
-                        call.record.audio.pause();
-                        call.record.playing = false;
+                    stop: function () {
+                        call.record.audio.stop();
                     },
-                    getRecord: function () {
-                        window.location.href = ('/getCallRecord?recordId=' + recordId);
+                    getCallRecordRequestString: function () {
+                        return requestString;
                     }
                 }
             };

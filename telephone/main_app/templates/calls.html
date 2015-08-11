@@ -39,7 +39,7 @@
                     <div class="col-sm-6">
                         <div class="toggle-container">
                             <div>
-                                <nz-toggle tri-toggle on-toggle="filters.onIncomingFilterChange()" ng-model="filters.params.incoming"></nz-toggle>
+                                <nz-toggle tri-toggle on-toggle="filters.applyFilters()" ng-model="filters.params.incoming"></nz-toggle>
                             </div>
                             <div>
                                 <span>{{ 'filters.params.incoming ? "Только входящие" : filters.params.incoming == null ? "Входящие и исходящие" : "Только исходящие"' | ng }}</span>
@@ -49,7 +49,7 @@
                     <div class="col-sm-6">
                         <div class="toggle-container">
                             <div>
-                                <nz-toggle tri-toggle on-toggle="filters.onStatusFilterChange()" ng-model="filters.params.status"></nz-toggle>
+                                <nz-toggle tri-toggle on-toggle="filters.applyFilters()" ng-model="filters.params.status"></nz-toggle>
                             </div>
                             <div>
                                 <span>{{ 'filters.params.status ? "Только принятые" : filters.params.status == null ? "Принятые и пропущенные" : "Только пропущенные"' | ng }}</span>
@@ -93,8 +93,9 @@
 	                <td>{{ 'call.callTime | fromSeconds' | ng }}</td>
 	                <td>{{ 'call.talkTime | fromSeconds' | ng }}</td>
 	                <td>
-	                    <button class="btn btn-default btn-xs" ng-click="call.record.playing ? record(call.record.id).pause() : record(call.record.id).play()"><span class="glyphicon" ng-class="{'glyphicon-play': !call.record.playing, 'glyphicon-pause': call.record.playing}"></span></button>
-	                    <button class="btn btn-default btn-xs" ng-click="record(call.record.id).getRecord()"><span class="glyphicon glyphicon-download-alt"></span></button>
+	                    <button class="btn btn-default btn-xs" ng-click="call.record.audio.paused || call.record.audio.paused == undefined ? record(call).play() : record(call).stop()"><span class="glyphicon" ng-class="{'glyphicon-play': call.record.audio.paused || call.record.audio.paused == undefined, 'glyphicon-stop': call.record.audio.paused == false}"></span></button>
+{#	                    <button class="btn btn-default btn-xs" ng-click="record(call).getRecord()"><span class="glyphicon glyphicon-download-alt"></span></button>#}
+		                <a href="{{ 'record(call).getCallRecordRequestString()' | ng }}" class="btn btn-default btn-xs" download="{{ 'record(call).getCallRecordRequestString()' | ng }}"><span class="glyphicon glyphicon-download-alt"></span></a>
                     </td>
                 </tr>
             </tbody>

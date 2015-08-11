@@ -15,37 +15,41 @@ Date.getNowDate = function () {
     return new Date(Date.now());
 };
 
-var Period = function(from, to, maxDate) {
+function Period(from, to, maxDate) {
     this._maxDate = maxDate || new Date(Date.now());
     this._from = from || new Date(Date.now());
     this._to = to || new Date(Date.now());
+}
 
-    this.getMaxDate = function () {
+Period.prototype = {
+    constructor: Period,
+
+    getMaxDate: function () {
         return this._maxDate;
-    };
+    },
 
-    this.getFromDate = function () {
+    getFromDate: function () {
         return this._from;
-    };
+    },
 
-    this.getToDate = function () {
+    getToDate: function () {
         return this._to;
-    };
+    },
 
-    this.setToDate = function (value) {
+    setToDate: function (value) {
         if (value instanceof Date) {
             this._to = value;
         } else {
             throw new TypeError('value is not an instance of Date');
         }
-    };
+    },
 
-    this.getDatesDifferent = function () {
+    getDatesDifferent: function () {
         var timeDiff = this._to.getTime() - this._from.getTime();
         return Math.ceil(timeDiff / (1000 * 3600 * 24));
-    };
+    },
 
-    this.toPeriodString = function (locale) {
+    toPeriodString: function (locale) {
         // TODO: Locale
         if (this._from.toDateString() == new Date(Date.now()).toDateString()) {
             return 'сегодня';
@@ -54,7 +58,7 @@ var Period = function(from, to, maxDate) {
             return this._from.toRightDateString()
         }
         return 'период с ' + this._from.toRightDateString() + ' по ' + this._to.toRightDateString();
-    };
+    }
 };
 
 function ApiParams(params) {
