@@ -4,9 +4,14 @@ from django.contrib.auth import authenticate, login
 
 from telephone import settings
 from telephone.main_app.models import UserProfile
+from telephone.services import AppLogger
 
 
-logger = logging.getLogger('auth_logger')
+__logger = AppLogger('auth_logger')
+
+
+def get_logger():
+	return __logger
 
 
 def sing_in(code, password, request):
@@ -23,7 +28,7 @@ def sing_in(code, password, request):
 		if auth_user is not None:
 			login(request, auth_user)
 			return True
-	logger.error('Error user login: code: %s; password: %s' % (code, password))
+	get_logger().error('Error user login', request.path, request, {'Code': code, 'Password': password})
 	return False
 
 

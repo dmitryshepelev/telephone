@@ -26,52 +26,54 @@ SECRET_KEY = '_u@*cvlhy#9(9))hbv6@w3+6hfx=btuegjm$@sxw7-ixdd^$%5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	'*',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    # 'telephone.main_app.templatetags',
-    'telephone.main_app',
-    'telephone.auth_app',
-    'corsheaders',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	# 'telephone.main_app.templatetags',
+	'telephone.main_app',
+	'telephone.auth_app',
+	'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
 )
 
 ROOT_URLCONF = 'telephone.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'telephone.wsgi.application'
@@ -81,14 +83,14 @@ WSGI_APPLICATION = 'telephone.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'telephonedb',
-        'USER': 'postgres',
-        'PASSWORD': 'qwaszx@1',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'telephonedb',
+		'USER': 'postgres',
+		'PASSWORD': 'qwaszx@1',
+		'HOST': 'localhost',
+		'PORT': '5432',
+	}
 }
 
 
@@ -147,56 +149,71 @@ CORS_ORIGIN_ALLOW_ALL = (
 )
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt': "%d/%b/%Y %H:%M:%S"
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'django': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-            'formatter': 'verbose',
-        },
-        'auth_logger_handler': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 10*1024*1024,
-            'backupCount': 0,
-            'filename': 'auth.log',
-            'formatter': 'verbose',
-        },
-        'main_logger_handler': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 10*1024*1024,
-            'backupCount': 0,
-            'filename': 'main.log',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['django'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'auth_logger': {
-            'handlers': ['auth_logger_handler'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'main_logger': {
-            'handlers': ['main_logger_handler'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
+	'version': 1,
+	'disable_existing_loggers': False,
+	'formatters': {
+		'verbose': {
+			'format': "\n[%(asctime)s] %(levelname)s [%(filename)s:%(lineno)s] %(message)s",
+			'datefmt': "%d/%b/%Y %H:%M:%S"
+		},
+		'simple': {
+			'format': '%(levelname)s %(message)s'
+		},
+	},
+	'handlers': {
+		'django': {
+			'level': 'INFO',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'maxBytes': 10*1024*1024,
+			'backupCount': 0,
+			'filename': 'debug.log',
+			'formatter': 'verbose',
+		},
+		'app_logger_handler': {
+			'level': 'INFO',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'maxBytes': 10*1024*1024,
+			'backupCount': 0,
+			'filename': 'app_log.log',
+			'formatter': 'verbose',
+		},
+		'auth_logger_handler': {
+			'level': 'INFO',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'maxBytes': 10*1024*1024,
+			'backupCount': 0,
+			'filename': 'auth.log',
+			'formatter': 'verbose',
+		},
+		'main_logger_handler': {
+			'level': 'INFO',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'maxBytes': 10*1024*1024,
+			'backupCount': 0,
+			'filename': 'main.log',
+			'formatter': 'verbose',
+		},
+	},
+	'loggers': {
+		'django': {
+			'handlers': ['django'],
+			'level': 'INFO',
+			'propagate': True,
+		},
+		'app_logger': {
+			'handlers': ['app_logger_handler'],
+			'level': 'INFO',
+			'propagate': True,
+		},
+		'auth_logger': {
+			'handlers': ['auth_logger_handler'],
+			'level': 'INFO',
+			'propagate': True,
+		},
+		'main_logger': {
+			'handlers': ['main_logger_handler'],
+			'level': 'INFO',
+			'propagate': True,
+		},
+	},
 }

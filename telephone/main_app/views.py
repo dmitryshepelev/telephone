@@ -53,7 +53,7 @@ def get_calls(request):
 		response.content = api_request.content[:-1] if api_request.content[-1] == '\n' else api_request.content
 		return response
 	else:
-		get_logger().error('api data export request error.\n\tUser: %s\n\tTree: %s\n\trequest string: %s' % (request.user.userprofile.user_code, request.user.userprofile.schema.schema_code, request_string,))
+		get_logger().error('api data export request error', request.path, request, {'Schema code': request.user.userprofile.schema.schema_code, 'Request string': request_string})
 		return HttpResponse(status=500)
 
 
@@ -81,7 +81,7 @@ def get_call_record(request):
 		response.content = api_request.content
 		return response
 	else:
-		get_logger().error('api call record request error.\n\tUser: %s\n\tTree: %s\n\trequest string: %s' % (request.user.userprofile.user_code, request.user.userprofile.schema.schema_code, request_string,))
+		get_logger().error('api call record request error', request.path, request, {'Schema code': request.user.userprofile.schema.schema_code, 'Request string': request_string})
 		return HttpResponse(status=500)
 
 
@@ -98,17 +98,6 @@ def get_period_modal_template(request, template):
 
 @login_required
 def schema_error(request, template):
-	"""
-	Schema error page
-	:param request: HTTP GET request
-	:param template: html template
-	:return: HttpResponse instance
-	"""
-	return render_to_response(template, {}, context_instance=RequestContext(request))
-
-
-@login_required
-def default_error(request, template):
 	"""
 	Schema error page
 	:param request: HTTP GET request
