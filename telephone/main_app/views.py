@@ -29,7 +29,8 @@ def calls(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	return render_to_response(template, {}, context_instance=RequestContext(request))
+	schema_name = request.user.userprofile.schema.name
+	return render_to_response(template, {'schema_name': schema_name}, context_instance=RequestContext(request))
 
 
 @login_required

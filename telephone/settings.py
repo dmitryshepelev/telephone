@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
 	'*',
 ]
 
+TEMPLATE_DEBUG = True
 
 # Application definition
 
