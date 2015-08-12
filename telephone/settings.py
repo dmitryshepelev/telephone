@@ -24,13 +24,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_u@*cvlhy#9(9))hbv6@w3+6hfx=btuegjm$@sxw7-ixdd^$%5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
 	'*',
 ]
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 # Application definition
 
@@ -44,12 +44,10 @@ INSTALLED_APPS = (
 	# 'telephone.main_app.templatetags',
 	'telephone.main_app',
 	'telephone.auth_app',
-	'corsheaders',
 )
 
 MIDDLEWARE_CLASSES = (
 	'django.contrib.sessions.middleware.SessionMiddleware',
-	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -86,10 +84,10 @@ WSGI_APPLICATION = 'telephone.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-		'NAME': 'telephonedb',
-		'USER': 'postgres',
+		'NAME': 'telephonedb',  # 'videomesrf',
+		'USER': 'postgres',  # 'videomesrf'
 		'PASSWORD': 'qwaszx@1',
-		'HOST': 'localhost',
+		'HOST': 'localhost',  # 'localhost',
 		'PORT': '5432',
 	}
 }
