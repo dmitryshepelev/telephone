@@ -1,0 +1,111 @@
+{% extends 'main_layout.html' %}
+
+{% block resources %}
+	{% load staticfiles %}
+
+{% endblock %}
+
+{% block title %}
+    Звонки
+{% endblock %}
+
+{% block content %}
+	{% load ng_filter %}
+	<div class="row">
+		<div class="col-sm-6">
+			<h2 style="margin: 0 0 20px 0">{{ schema_name }}</h2>
+		</div>
+		<div class="col-sm-6">
+
+		</div>
+	</div>
+    <input id="user_code" type="hidden" value="{{ user.userprofile.user_code }}">
+    <input id="schema_code" type="hidden" value="{{ user.userprofile.schema.schema_code }}">
+	<div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="period-container">
+                    <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-calendar"></span></button>
+{#                    <span class="period-label">Показать данные за <b>{{ 'periodLabeltext' | ng }}</b></span>#}
+                </div>
+            </div>
+{#            <div class="col-sm-6">#}
+{#                <div class="row">#}
+{#                    <div class="col-sm-6">#}
+{#                        <div class="toggle-container">#}
+{#                            <div>#}
+{#                                <nz-toggle tri-toggle on-toggle="filters.applyFilters()" ng-model="filters.params.incoming"></nz-toggle>#}
+{#                            </div>#}
+{#                            <div>#}
+{#                                <span>{{ 'filters.params.incoming ? "Только входящие" : filters.params.incoming == null ? "Входящие и исходящие" : "Только исходящие"' | ng }}</span>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-sm-6">#}
+{#                        <div class="toggle-container">#}
+{#                            <div>#}
+{#                                <nz-toggle tri-toggle on-toggle="filters.applyFilters()" ng-model="filters.params.status"></nz-toggle>#}
+{#                            </div>#}
+{#                            <div>#}
+{#                                <span>{{ 'filters.params.status ? "Только принятые" : filters.params.status == null ? "Принятые и пропущенные" : "Только пропущенные"' | ng }}</span>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+        </div>
+        <hr class="hr-sm">
+{#        <div align="center" ng-show="!isLoaded">#}
+{#            <img src="/static/loader.gif" class="loader">#}
+{#        </div>#}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Время</th>
+                    <th>Номер</th>
+                    <th>Кто ответил</th>
+                    <th>Время звонка</th>
+                    <th>Время разговора</th>
+                    <th>Запись</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for call in calls %}
+	            <tr>
+	                <td>{{ forloop.counter }}</td>
+		            <td>{{ call.incoming }}</td>
+		            <td>{{ call.status }}</td>
+		            <td>{{ call.time|date:'d.m.Y' }}</td>
+		            <td>{{ call.fromNumber }}</td>
+		            <td>{{ call.responder }}</td>
+		            <td>{{ call.callTime }}</td>
+		            <td>{{ call.talkTime }}</td>
+		            <td>{{ call.recordId }}</td>
+	            </tr>
+            {% endfor %}
+{#                <tr bindonce ng-repeat="call in calls | orderBy: order.parameter: order.reverse track by $index">#}
+{#	                <td bo-text="$index + 1"></td>#}
+{#	                <td>#}
+{#	                    <span class="glyphicon glyphicon-arrow-down pointer" bo-if="call.incoming" ng-click="filters.changeIncomingFilter(true)"></span>#}
+{#	                    <span class="glyphicon glyphicon-arrow-up pointer" bo-if="!call.incoming" ng-click="filters.changeIncomingFilter(false)"></span>#}
+{#                    </td>#}
+{#	                <td>#}
+{#	                    <span class="glyphicon glyphicon-earphone" bo-show="call.status" tooltip-placement="bottom" tooltip="Отвечен"></span>#}
+{#                    </td>#}
+{#	                <td bo-text="call.time | date: 'dd.MM.yyyy HH:mm:ss' : '+0'"></td>#}
+{#	                <td bo-text="call.from"></td>#}
+{#	                <td bo-text="call.responder"></td>#}
+{#	                <td bo-text="call.callTime | fromSeconds"></td>#}
+{#	                <td bo-text="call.talkTime | fromSeconds"></td>#}
+{#	                <td>#}
+{#	                    <button class="btn btn-default btn-xs" ng-click="call.record.audio.paused || call.record.audio.paused == undefined ? record(call).play() : record(call).stop()"><span class="glyphicon" bo-class="{'glyphicon-play': call.record.audio.paused || call.record.audio.paused == undefined, 'glyphicon-stop': call.record.audio.paused == false}"></span></button>#}
+{#		                <a bo-href="record(call).getCallRecordRequestString()" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></a>#}
+{#                    </td>#}
+{#                </tr>#}
+            </tbody>
+        </table>
+	</div>
+{% endblock %}

@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib.auth import authenticate, login
 
 from telephone import settings

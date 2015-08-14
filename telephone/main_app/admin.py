@@ -1,6 +1,5 @@
 from django.contrib import admin
-from telephone.main_app import Schema
-from telephone.main_app.models import UserProfile
+from telephone.main_app.models import UserProfile, Schema
 
 
 class SchemaAdmin(admin.ModelAdmin):

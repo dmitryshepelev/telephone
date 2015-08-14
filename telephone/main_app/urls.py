@@ -4,7 +4,7 @@ from telephone.main_app.views import main, get_calls, calls, get_call_record, ge
 
 urlpatterns = [
 	url(r'^$', main, {'template': 'main.html'}),
-	url(r'^calls/$', calls, {'template': 'calls.html'}),
+	url(r'^calls/$', calls, {'template': 'view-calls.html'}),
 	url(r'^calls/get_period_modal_template/$', get_period_modal_template, {'template': 'period_modal_template.html'}),
 	url(r'^getCalls/$', get_calls),
 	url(r'^getCallRecord/$', get_call_record),

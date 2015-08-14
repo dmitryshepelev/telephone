@@ -8,7 +8,8 @@ import requests
 
 from telephone import settings
 from telephone.main_app import services
-from telephone.main_app.services import get_request_string, get_logger, parse_csv
+from telephone.main_app.proxy.Parameters import Parameters
+from telephone.main_app.services import get_logger
 from telephone.settings import BASE_DIR
 
 
@@ -30,9 +31,11 @@ def calls(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	schema_name = request.user.userprofile.schema.name
-	calls_list = services.get_calls(request)
-	return render_to_response(template, {'schema_name': schema_name, 'calls': calls_list}, context_instance=RequestContext(request))
+	schema = request.user.userprofile.schema
+	params = Parameters()
+	params.set_params({'user': request.user.userprofile.user_code, 'tree': schema.schema_code})
+	calls_list = services.get_calls(params, request.user.is_superuser)
+	return render_to_response(template, {'schema_name': schema.name, 'calls': calls_list}, context_instance=RequestContext(request))
 
 
 @login_required
