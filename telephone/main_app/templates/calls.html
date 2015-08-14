@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="{% static "angular.audio.js" %}"></script>
 	<script type="text/javascript" src="{% static "main-module.js" %}"></script>
 	<script type="text/javascript" src="{% static "converter.js" %}"></script>
+	<script type="text/javascript" src="{% static "bindonce.js" %}"></script>
 
 	<link rel="stylesheet" type="text/css" href="{% static "nz-toggle.css" %}">
 {% endblock %}
@@ -85,24 +86,23 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="call in calls | orderBy: order.parameter: order.reverse track by $index">
-	                <td>{{ '$index + 1' | ng }}</td>
+                <tr bindonce ng-repeat="call in calls | orderBy: order.parameter: order.reverse track by $index">
+	                <td bo-text="$index + 1"></td>
 	                <td>
-	                    <span class="glyphicon glyphicon-arrow-down pointer" ng-if="call.incoming" ng-click="filters.changeIncomingFilter(true)" tooltip-placement="bottom" tooltip="{{ 'call.incoming | callType: true' | ng }}"></span>
-	                    <span class="glyphicon glyphicon-arrow-up pointer" ng-if="!call.incoming" ng-click="filters.changeIncomingFilter(false)" tooltip-placement="bottom" tooltip="{{ 'call.incoming | callType: true' | ng }}"></span>
+	                    <span class="glyphicon glyphicon-arrow-down pointer" bo-if="call.incoming" ng-click="filters.changeIncomingFilter(true)"></span>
+	                    <span class="glyphicon glyphicon-arrow-up pointer" bo-if="!call.incoming" ng-click="filters.changeIncomingFilter(false)"></span>
                     </td>
 	                <td>
-	                    <span class="glyphicon glyphicon-earphone" ng-show="call.status" tooltip-placement="bottom" tooltip="Отвечен"></span>
+	                    <span class="glyphicon glyphicon-earphone" bo-show="call.status" tooltip-placement="bottom" tooltip="Отвечен"></span>
                     </td>
-	                <td>{{ 'call.time | date: "dd.MM.yyyy HH:mm:ss" : "+0"' | ng }}</td>
-	                <td>{{ 'call.from' | ng }}</td>
-	                <td>{{ 'call.responder' | ng }}</td>
-	                <td>{{ 'call.callTime | fromSeconds' | ng }}</td>
-	                <td>{{ 'call.talkTime | fromSeconds' | ng }}</td>
+	                <td bo-text="call.time | date: 'dd.MM.yyyy HH:mm:ss' : '+0'"></td>
+	                <td bo-text="call.from"></td>
+	                <td bo-text="call.responder"></td>
+	                <td bo-text="call.callTime | fromSeconds"></td>
+	                <td bo-text="call.talkTime | fromSeconds"></td>
 	                <td>
-	                    <button class="btn btn-default btn-xs" ng-click="call.record.audio.paused || call.record.audio.paused == undefined ? record(call).play() : record(call).stop()"><span class="glyphicon" ng-class="{'glyphicon-play': call.record.audio.paused || call.record.audio.paused == undefined, 'glyphicon-stop': call.record.audio.paused == false}"></span></button>
-{#	                    <button class="btn btn-default btn-xs" ng-click="record(call).getRecord()"><span class="glyphicon glyphicon-download-alt"></span></button>#}
-		                <a href="{{ 'record(call).getCallRecordRequestString()' | ng }}" class="btn btn-default btn-xs" download="{{ 'record(call).getCallRecordRequestString()' | ng }}"><span class="glyphicon glyphicon-download-alt"></span></a>
+	                    <button class="btn btn-default btn-xs" ng-click="call.record.audio.paused || call.record.audio.paused == undefined ? record(call).play() : record(call).stop()"><span class="glyphicon" bo-class="{'glyphicon-play': call.record.audio.paused || call.record.audio.paused == undefined, 'glyphicon-stop': call.record.audio.paused == false}"></span></button>
+		                <a bo-href="record(call).getCallRecordRequestString()" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></a>
                     </td>
                 </tr>
             </tbody>

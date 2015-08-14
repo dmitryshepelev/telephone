@@ -7,7 +7,8 @@ from django.template import RequestContext
 import requests
 
 from telephone import settings
-from telephone.main_app.services import get_request_string, get_logger
+from telephone.main_app import services
+from telephone.main_app.services import get_request_string, get_logger, parse_csv
 from telephone.settings import BASE_DIR
 
 
@@ -30,7 +31,8 @@ def calls(request, template):
 	:return: HttpResponse instance
 	"""
 	schema_name = request.user.userprofile.schema.name
-	return render_to_response(template, {'schema_name': schema_name}, context_instance=RequestContext(request))
+	calls_list = services.get_calls(request)
+	return render_to_response(template, {'schema_name': schema_name, 'calls': calls_list}, context_instance=RequestContext(request))
 
 
 @login_required

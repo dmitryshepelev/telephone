@@ -23,6 +23,7 @@
                     window.location.href = '/e/'
                 }).finally(function () {
                     $scope.isLoaded = true;
+                    console.log($scope);
                 });
             };
 
