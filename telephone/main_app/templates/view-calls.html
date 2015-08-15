@@ -2,8 +2,11 @@
 
 {% block resources %}
 	{% load staticfiles %}
+    <script type="text/javascript" src="{% static "main.js" %}"></script>
     <script type="text/javascript" src="{% static "audio.js" %}"></script>
+    <script type="text/javascript" src="{% static "switcher.js" %}"></script>
 
+    <link rel="stylesheet" type="text/css" href="{% static "switcher.css" %}">
 {% endblock %}
 
 {% block title %}
@@ -30,30 +33,17 @@
 {#                    <span class="period-label">Показать данные за <b>{{ 'periodLabeltext' | ng }}</b></span>#}
                 </div>
             </div>
-{#            <div class="col-sm-6">#}
-{#                <div class="row">#}
-{#                    <div class="col-sm-6">#}
-{#                        <div class="toggle-container">#}
-{#                            <div>#}
-{#                                <nz-toggle tri-toggle on-toggle="filters.applyFilters()" ng-model="filters.params.incoming"></nz-toggle>#}
-{#                            </div>#}
-{#                            <div>#}
-{#                                <span>{{ 'filters.params.incoming ? "Только входящие" : filters.params.incoming == null ? "Входящие и исходящие" : "Только исходящие"' | ng }}</span>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="col-sm-6">#}
-{#                        <div class="toggle-container">#}
-{#                            <div>#}
-{#                                <nz-toggle tri-toggle on-toggle="filters.applyFilters()" ng-model="filters.params.status"></nz-toggle>#}
-{#                            </div>#}
-{#                            <div>#}
-{#                                <span>{{ 'filters.params.status ? "Только принятые" : filters.params.status == null ? "Принятые и пропущенные" : "Только пропущенные"' | ng }}</span>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
+            <div class="col-sm-6">
+                <form>
+                    {% csrf_token %}
+                    <div class="col-sm-6">
+                        <switcher name="incoming" titles="['Только входящие', 'Входящие и исходящие', 'Только исходящие']"></switcher>
+                    </div>
+                    <div class="col-sm-6">
+                        <switcher name="status" titles="['Только пропущенные', 'Пропущенные и принятые', 'Только принятые']"></switcher>
+                    </div>
+                </form>
+            </div>
         </div>
         <hr class="hr-sm">
 {#        <div align="center" ng-show="!isLoaded">#}

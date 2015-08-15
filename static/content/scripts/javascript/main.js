@@ -15,6 +15,18 @@ Date.getNowDate = function () {
     return new Date(Date.now());
 };
 
+
+/**
+ * Extends String prototype with format function. Template: {number}
+ * @returns {string}
+ */
+String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match;
+    });
+};
+
 function Period(from, to, maxDate) {
     this._maxDate = maxDate || new Date(Date.now());
     this._from = from || new Date(Date.now());
