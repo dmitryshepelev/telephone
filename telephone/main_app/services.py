@@ -1,12 +1,10 @@
 # coding=utf-8
-import hashlib
 
 import requests
 
 from telephone import settings
 from telephone.main_app.proxy.Call import Call
 from telephone.services import AppLogger
-from telephone.settings import BASE_DIR
 
 
 __logger = AppLogger('main_logger')
@@ -29,7 +27,7 @@ def parse_csv(csv_string):
 
 def get_calls(params, is_superuser):
 	if settings.TEST_MODE or is_superuser:
-		abspath = open(BASE_DIR + '/static/content/test.csv', 'r')
+		abspath = open(settings.BASE_DIR + '/static/content/test.csv', 'r')
 		return parse_csv(abspath.read())
 
 	request_string = params.get_request_string()

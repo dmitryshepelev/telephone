@@ -1,5 +1,6 @@
 import hashlib
 import time
+import datetime
 from telephone import settings
 
 
@@ -11,13 +12,13 @@ class Parameters():
 			# New clients only: 0 - No; 1 - Yes
 			'firstTime': 0,
 			# Start date: 'd.m.Y'
-			'from': time.strftime('%d.%m.%Y %H:%M:%S'),
+			'from': datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT),
 			# Callee number
 			'fromNumber': '',
 			# Call status: 0 - all calls; 1 - missed; 2 - accepted
 			'state': 0,
 			# End date (inclusively): 'd.m.Y'
-			'to': time.strftime('%d.%m.%Y %H:%M:%S'),
+			'to': datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT),
 			# Call responder number
 			'toAnswer': '',
 			# Call destination number
@@ -38,6 +39,11 @@ class Parameters():
 		return hashlib.md5('%s%s' % (''.join('{}+'.format(value) for key, value in sorted(self.__params.items())), settings.S_KEY,)).hexdigest()
 
 	def set_params(self, params):
+		"""
+		Sets parameters
+		:param params: array of parameters
+		:return: None
+		"""
 		for key, value in params.items():
 			self.__params[key] = params[key]
 

@@ -41,7 +41,7 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	# 'telephone.main_app.templatetags',
+	'telephone.main_app.templatetags',
 	'telephone.main_app',
 	'telephone.auth_app',
 )
@@ -121,7 +121,7 @@ STATICFILES_DIRS = (
 	'static/content/images'
 )
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/content/'
 
 # STATIC_ROOT = 'static/root/'
 
@@ -133,7 +133,7 @@ TEMPLATE_DIRS = (
 
 LOGIN_URL = '/auth/login/'
 
-TEST_MODE = False
+TEST_MODE = True
 
 SCHEMA_URL = '/calls/'
 
@@ -150,6 +150,8 @@ CORS_ORIGIN_ALLOW_ALL = (
 )
 
 DELIMITER = ';'
+
+DATETIME_FORMAT = '%d.%m.%Y %H:%M:%S'
 
 LOGGING = {
 	'version': 1,

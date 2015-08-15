@@ -2,6 +2,7 @@
 
 {% block resources %}
 	{% load staticfiles %}
+    <script type="text/javascript" src="{% static "audio.js" %}"></script>
 
 {% endblock %}
 
@@ -73,38 +74,27 @@
                 </tr>
             </thead>
             <tbody>
+            {% load t_fs_filter %}
             {% for call in calls %}
 	            <tr>
 	                <td>{{ forloop.counter }}</td>
-		            <td>{{ call.incoming }}</td>
-		            <td>{{ call.status }}</td>
-		            <td>{{ call.time|date:'d.m.Y' }}</td>
+		            <td>
+                        <span class="glyphicon {% if call.incoming %} glyphicon-arrow-down {% else %} glyphicon-arrow-up {% endif %} pointer"></span>
+                    </td>
+		            <td>
+                        <span class="glyphicon {% if call.status %} glyphicon-earphone {% endif %} pointer"></span>
+                    </td>
+		            <td>{{ call.time|date:'d.m.Y H.i.s' }}</td>
 		            <td>{{ call.fromNumber }}</td>
 		            <td>{{ call.responder }}</td>
-		            <td>{{ call.callTime }}</td>
-		            <td>{{ call.talkTime }}</td>
-		            <td>{{ call.recordId }}</td>
+		            <td>{{ call.callTime|t_fs }}</td>
+		            <td>{{ call.talkTime|t_fs }}</td>
+		            <td>
+                        <button class="btn btn-default btn-xs" onclick="audio.action(event)" data-record-id="{{ call.recordId }}"><span class="glyphicon glyphicon-play"></span></button>
+                        <button onclick="audio.download(event)" data-record-id="{{ call.recordId }}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></button>
+                    </td>
 	            </tr>
             {% endfor %}
-{#                <tr bindonce ng-repeat="call in calls | orderBy: order.parameter: order.reverse track by $index">#}
-{#	                <td bo-text="$index + 1"></td>#}
-{#	                <td>#}
-{#	                    <span class="glyphicon glyphicon-arrow-down pointer" bo-if="call.incoming" ng-click="filters.changeIncomingFilter(true)"></span>#}
-{#	                    <span class="glyphicon glyphicon-arrow-up pointer" bo-if="!call.incoming" ng-click="filters.changeIncomingFilter(false)"></span>#}
-{#                    </td>#}
-{#	                <td>#}
-{#	                    <span class="glyphicon glyphicon-earphone" bo-show="call.status" tooltip-placement="bottom" tooltip="Отвечен"></span>#}
-{#                    </td>#}
-{#	                <td bo-text="call.time | date: 'dd.MM.yyyy HH:mm:ss' : '+0'"></td>#}
-{#	                <td bo-text="call.from"></td>#}
-{#	                <td bo-text="call.responder"></td>#}
-{#	                <td bo-text="call.callTime | fromSeconds"></td>#}
-{#	                <td bo-text="call.talkTime | fromSeconds"></td>#}
-{#	                <td>#}
-{#	                    <button class="btn btn-default btn-xs" ng-click="call.record.audio.paused || call.record.audio.paused == undefined ? record(call).play() : record(call).stop()"><span class="glyphicon" bo-class="{'glyphicon-play': call.record.audio.paused || call.record.audio.paused == undefined, 'glyphicon-stop': call.record.audio.paused == false}"></span></button>#}
-{#		                <a bo-href="record(call).getCallRecordRequestString()" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></a>#}
-{#                    </td>#}
-{#                </tr>#}
             </tbody>
         </table>
 	</div>
