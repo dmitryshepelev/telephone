@@ -1,9 +1,15 @@
 /**
- * Convert date to string formatted as 'd.m.yyyy'
+ * Convert date to string formatted as 'dd.mm.yyyy'
  * @returns {string}
  */
 Date.prototype.toRightDateString = function () {
-    var date = [this.getDate(), (this.getMonth() + 1), this.getFullYear()];
+    var day = this.getDate().toString();
+    var month = (this.getMonth() + 1).toString();
+    var date = [
+        day.length < 2 ? '0{0}'.format(day) : day ,
+        month.length < 2 ? '0{0}'.format(month) : month,
+        this.getFullYear().toString()
+    ];
     return String(date.join('.'));
 };
 
@@ -14,7 +20,6 @@ Date.prototype.toRightDateString = function () {
 Date.getNowDate = function () {
     return new Date(Date.now());
 };
-
 
 /**
  * Extends String prototype with format function. Template: {number}
@@ -75,28 +80,24 @@ Period.prototype = {
 
 function ApiParams(params) {
     this._params = {
-        // Display anonymous calls: 0 - No; 1 - Yes
-        anonymous: 1,
-        // New clients only: 0 - No; 1 - Yes
-        firstTime: 0,
-        // Start date: 'd.m.Y'
-        from: Date.getNowDate(),
-        // Callee number
-        fromNumber: '',
-        // Call status: 0 - all calls; 1 - missed; 2 - accepted
-        state: 0,
-        // End date (inclusively): 'd.m.Y'
-        to: Date.getNowDate(),
-        // Call responder number
-        toAnswer: '',
-        // Call destination number
-        toNumber: '',
-        // Schema number
-        tree: '',
-        // Call type: 0 - all calls; 1 - incoming; 2 - upcoming; 3 - inner
-        type: 0,
-        // User code
-        user: ''
+        //// Display anonymous calls: 0 - No; 1 - Yes
+        //anonymous: 1,
+        //// New clients only: 0 - No; 1 - Yes
+        //firstTime: 0,
+        //// Start date: 'd.m.Y'
+        //from: Date.getNowDate(),
+        //// Callee number
+        //fromNumber: '',
+        //// Call status: 0 - all calls; 1 - missed; 2 - accepted
+        //state: 0,
+        //// End date (inclusively): 'd.m.Y'
+        //to: Date.getNowDate(),
+        //// Call responder number
+        //toAnswer: '',
+        //// Call destination number
+        //toNumber: '',
+        //// Call type: 0 - all calls; 1 - incoming; 2 - upcoming; 3 - inner
+        //type: 0
     };
 
     this._init(params);
@@ -113,25 +114,18 @@ ApiParams.prototype = {
         }
     },
 
-    setTree: function (value) {
-        this._params.tree = value;
-    },
-
-    setUser: function (value) {
-        this._params.user = value;
-    },
-
     setParams: function (params) {
         this._init(params);
     },
 
     getRequestString: function () {
         var str = '?';
+        console.log(this._params);
         for (var param in this._params) {
             if (this._params.hasOwnProperty(param)) {
-                str += param + '=' + (param === 'from' || param === 'to' ? this._params[param].toRightDateString() :this._params[param]) + '&';
+                str += param + '=' + this._params[param] + '&';
             }
         }
-        return str;
+        return str.slice(0, -1);
     }
 };

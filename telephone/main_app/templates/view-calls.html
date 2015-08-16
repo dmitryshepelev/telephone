@@ -2,11 +2,15 @@
 
 {% block resources %}
 	{% load staticfiles %}
+    <script type="text/javascript" src="{% static "bootstrap-datepicker.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap-datepicker.ru.min.js" %}"></script>
     <script type="text/javascript" src="{% static "main.js" %}"></script>
     <script type="text/javascript" src="{% static "audio.js" %}"></script>
     <script type="text/javascript" src="{% static "switcher.js" %}"></script>
+    <script type="text/javascript" src="{% static "calls-controller.js" %}"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static "switcher.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap-datepicker3.standalone.min.css" %}">
 {% endblock %}
 
 {% block title %}
@@ -23,69 +27,33 @@
 
 		</div>
 	</div>
-    <input id="user_code" type="hidden" value="{{ user.userprofile.user_code }}">
-    <input id="schema_code" type="hidden" value="{{ user.userprofile.schema.schema_code }}">
 	<div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="period-container">
-                    <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-calendar"></span></button>
-{#                    <span class="period-label">Показать данные за <b>{{ 'periodLabeltext' | ng }}</b></span>#}
+                    <span>Данные в период с </span>
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input type="text" class="input-sm form-control pseudo-hidden pointer datepicker-input" autocomplete="off" name="from" value="" />
+                        <span class="datepicker-input-group-addon">по</span>
+                        <input type="text" class="input-sm form-control pseudo-hidden pointer datepicker-input" autocomplete="off" name="to" value="" />
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <form>
-                    {% csrf_token %}
-                    <div class="col-sm-6">
-                        <switcher name="incoming" titles="['Только входящие', 'Входящие и исходящие', 'Только исходящие']"></switcher>
-                    </div>
-                    <div class="col-sm-6">
-                        <switcher name="status" titles="['Только пропущенные', 'Пропущенные и принятые', 'Только принятые']"></switcher>
-                    </div>
-                </form>
+            <div class="col-sm-8">
+                <div class="col-sm-4">
+                    <switcher name="type" titles="['Только исходящие', 'Входящие и исходящие', 'Только входящие']"></switcher>
+                </div>
+                <div class="col-sm-5">
+                    <switcher name="state" titles="['Только принятые', 'Пропущенные и принятые', 'Только пропущенные']"></switcher>
+                </div>
+                <div class="col-sm-3 period-container" >
+                    <button type="button" onclick="controller.applyFilters()" class="pull-right btn btn-default btn-sm"><span class="glyphicon glyphicon-ok"></span> Применить фильтры</button>
+                </div>
             </div>
         </div>
         <hr class="hr-sm">
-{#        <div align="center" ng-show="!isLoaded">#}
-{#            <img src="/static/loader.gif" class="loader">#}
-{#        </div>#}
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>Время</th>
-                    <th>Номер</th>
-                    <th>Кто ответил</th>
-                    <th>Время звонка</th>
-                    <th>Время разговора</th>
-                    <th>Запись</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% load t_fs_filter %}
-            {% for call in calls %}
-	            <tr>
-	                <td>{{ forloop.counter }}</td>
-		            <td>
-                        <span class="glyphicon {% if call.incoming %} glyphicon-arrow-down {% else %} glyphicon-arrow-up {% endif %} pointer"></span>
-                    </td>
-		            <td>
-                        <span class="glyphicon {% if call.status %} glyphicon-earphone {% endif %} pointer"></span>
-                    </td>
-		            <td>{{ call.time|date:'d.m.Y H.i.s' }}</td>
-		            <td>{{ call.fromNumber }}</td>
-		            <td>{{ call.responder }}</td>
-		            <td>{{ call.callTime|t_fs }}</td>
-		            <td>{{ call.talkTime|t_fs }}</td>
-		            <td>
-                        <button class="btn btn-default btn-xs" onclick="audio.action(event)" data-record-id="{{ call.recordId }}"><span class="glyphicon glyphicon-play"></span></button>
-                        <button onclick="audio.download(event)" data-record-id="{{ call.recordId }}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></button>
-                    </td>
-	            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div data-view>
+
+        </div>
 	</div>
 {% endblock %}

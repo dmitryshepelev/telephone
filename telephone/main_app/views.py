@@ -31,36 +31,22 @@ def calls(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	schema = request.user.userprofile.schema
-	params = Parameters()
-	params.set_params({'user': request.user.userprofile.user_code, 'tree': schema.schema_code})
-	calls_list = services.get_calls(params, request.user.is_superuser)
-	return render_to_response(template, {'schema_name': schema.name, 'calls': calls_list}, context_instance=RequestContext(request))
+	return render_to_response(template, {'schema_name': request.user.userprofile.schema.name}, context_instance=RequestContext(request))
 
 
 @login_required
-def get_calls(request):
+def get_calls(request, template):
 	"""
 	Controller to get test calls file
 	:param request: HTTP GET request
 	:return: csv file
 	"""
-	response = HttpResponse(content_type='text')
-
-	if settings.TEST_MODE or request.user.is_superuser:
-		abspath = open(BASE_DIR + '/static/content/test.csv', 'r')
-		response.content = abspath.read()
-		return response
-
-	request_string = get_request_string(request.GET)
-	url = '%s%s%s' % (settings.API_URLS['base_api_url'], settings.API_URLS['get_calls'], request_string,)
-	api_request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': 'stat_%s-%s' % (request.GET.get('form'), request.GET.get('to'))})
-	if api_request.ok:
-		response.content = api_request.content[:-1] if api_request.content[-1] == '\n' else api_request.content
-		return response
-	else:
-		get_logger().error('api data export request error', request.path, request, {'Schema code': request.user.userprofile.schema.schema_code, 'Request string': request_string})
-		return HttpResponse(status=500)
+	params = Parameters()
+	if request.GET:
+		params.set_params(request.GET)
+	params.set_params({'user': request.user.userprofile.user_code, 'tree': request.user.userprofile.schema.schema_code})
+	calls_list = services.get_calls(params, request.user.is_superuser)
+	return render_to_response(template, {'calls': calls_list}, context_instance=RequestContext(request))
 
 
 @login_required

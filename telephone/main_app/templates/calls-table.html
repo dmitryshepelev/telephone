@@ -1,0 +1,38 @@
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Время</th>
+            <th>Номер</th>
+            <th>Кто ответил</th>
+            <th>Время звонка</th>
+            <th>Время разговора</th>
+            <th>Запись</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% load t_fs_filter %}
+    {% for call in calls %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <span class="glyphicon {% if call.incoming %} glyphicon-arrow-down {% else %} glyphicon-arrow-up {% endif %} pointer"></span>
+            </td>
+            <td>
+                <span class="glyphicon {% if call.status %} glyphicon-earphone {% endif %} pointer"></span>
+            </td>
+            <td>{{ call.time|date:'d.m.Y H.i.s' }}</td>
+            <td>{{ call.fromNumber }}</td>
+            <td>{{ call.responder }}</td>
+            <td>{{ call.callTime|t_fs }}</td>
+            <td>{{ call.talkTime|t_fs }}</td>
+            <td>
+                <button class="btn btn-default btn-xs" onclick="audio.action(event)" data-record-id="{{ call.recordId }}"><span class="glyphicon glyphicon-play"></span></button>
+                <button onclick="audio.download(event)" data-record-id="{{ call.recordId }}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></button>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

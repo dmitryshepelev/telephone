@@ -275,3 +275,40 @@ thead#table-head {
 .loader {
     margin: 20px;
 }
+
+.datepicker-input {
+    border: none;
+    box-shadow: none;
+    font-size: 14px;
+    padding-left: 0;
+    padding-right: 0;
+    color: transparent;
+    display: inline-block;
+    text-shadow: 0 0 0 black;
+    font-weight: bold;
+}
+
+.datepicker-input:hover, .datepicker-input:focus {
+    text-shadow: 0 0 0 #3892d5;
+    box-shadow: none;
+    outline: none;
+}
+
+.datepicker-input-group-addon {
+    display: table-cell;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    min-width: 16px;
+    padding: 4px 3px;
+    width: auto;
+}
+
+.input-daterange.input-group {
+    display: inline-flex !important;
+    width: 75px !important;
+}
+
+.col-sm-8:last-child {
+    padding-right: 0;
+}

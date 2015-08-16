@@ -6,7 +6,7 @@ urlpatterns = [
 	url(r'^$', main, {'template': 'main.html'}),
 	url(r'^calls/$', calls, {'template': 'view-calls.html'}),
 	url(r'^calls/get_period_modal_template/$', get_period_modal_template, {'template': 'period_modal_template.html'}),
-	url(r'^getCalls/$', get_calls),
+	url(r'^getCalls/$', get_calls, {'template': 'calls-table.html'}),
 	url(r'^getCallRecord/$', get_call_record),
 	url(r'^e/schema/$', schema_error, {'template': 'schema_error.html'}),
 ]

@@ -7,7 +7,7 @@
             titles: []
         };
 
-        var _hiddenElementTemplate = '<input type="hidden" name="{0}" value="{1}" />';
+        var _hiddenElementTemplate = '<input type="hidden" class="pseudo-hidden" name="{0}" value="{1}" />';
         var _template = '<div class="switcher-container"><div class="switcher"></div></div>';
         var _labelTemplate = '<span class="switcher-label"></span>';
 
