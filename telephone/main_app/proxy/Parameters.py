@@ -31,12 +31,13 @@ class Parameters():
 			'user': ''
 		}
 
-	def __get_hash_string(self):
+	@staticmethod
+	def get_hash_string(params):
 		"""
 		Calculates md5 hash string
 		:return: md5 hash string
 		"""
-		return hashlib.md5('%s%s' % (''.join('{}+'.format(value) for key, value in sorted(self.__params.items())), settings.S_KEY,)).hexdigest()
+		return hashlib.md5('%s%s' % (''.join('{}+'.format(value) for key, value in sorted(params.items())), settings.S_KEY,)).hexdigest()
 
 	def set_params(self, params):
 		"""
@@ -52,4 +53,4 @@ class Parameters():
 		Generate request string from parameters
 		:return: request string
 		"""
-		return '?%shash=%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(self.__params.items())), self.__get_hash_string())
+		return '?%shash=%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(self.__params.items())), self.get_hash_string(self.__params))

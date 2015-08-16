@@ -30,6 +30,8 @@ var controller = (function () {
         _updateContainer(true);
         $.get('/getCalls/{0}'.format(request_string || ''), function (data) {
             _updateContainer(data);
+        }).fail(function () {
+            window.location.href = '/e/';
         })
     }
 

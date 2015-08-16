@@ -1,16 +1,11 @@
-import os
-
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import requests
 
-from telephone import settings
 from telephone.main_app import services
 from telephone.main_app.proxy.Parameters import Parameters
 from telephone.main_app.services import get_logger
-from telephone.settings import BASE_DIR
 
 
 def main(request, template):
@@ -46,6 +41,9 @@ def get_calls(request, template):
 		params.set_params(request.GET)
 	params.set_params({'user': request.user.userprofile.user_code, 'tree': request.user.userprofile.schema.schema_code})
 	calls_list = services.get_calls(params, request.user.is_superuser)
+	if not calls_list:
+		get_logger().error('Get calls error', request.path, request, {})
+		return HttpResponse(status=500)
 	return render_to_response(template, {'calls': calls_list}, context_instance=RequestContext(request))
 
 
@@ -56,25 +54,17 @@ def get_call_record(request):
 	:param request: HTTP GET request
 	:return: mp3 file
 	"""
-	response = HttpResponse(content_type='audio/mp3')
-
-	if settings.TEST_MODE or request.user.is_superuser:
-		path = BASE_DIR + '/static/content/test.mp3'
-		response.content = open(path, 'rb')
-		response['Content-Length'] = os.path.getsize(path)
-		response['Content-Disposition'] = 'attachment; filename=%s' % 'test.mp3'
-		return response
-
-	record_id = request.GET.get('id')
-	request_string = get_request_string({'id': record_id, 'user': request.user.userprofile.user_code})
-	url = '%s%s%s' % (settings.API_URLS['base_api_url'], settings.API_URLS['get_record'], request_string,)
-	api_request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': '%s.mp3' % (record_id,)})
-	if api_request.ok:
-		response.content = api_request.content
-		return response
-	else:
-		get_logger().error('api call record request error', request.path, request, {'Schema code': request.user.userprofile.schema.schema_code, 'Request string': request_string})
+	params = {}
+	if request.GET:
+		params = ({'id': request.GET.get('id'), 'user': request.user.userprofile.user_code})
+	record = services.get_call_record(params, request.user.is_superuser)
+	if not record:
+		get_logger().error('Get record error', request.path, request, {})
 		return HttpResponse(status=500)
+	response = HttpResponse(content_type='audio/mp3')
+	response['Content-Disposition'] = 'attachment; filename=%s' % 'record.mp3'
+	response.content = record
+	return response
 
 
 @login_required

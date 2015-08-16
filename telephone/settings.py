@@ -133,7 +133,7 @@ TEMPLATE_DIRS = (
 
 LOGIN_URL = '/auth/login/'
 
-TEST_MODE = True
+TEST_MODE = False
 
 SCHEMA_URL = '/calls/'
 
