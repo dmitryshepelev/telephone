@@ -32,6 +32,8 @@ ALLOWED_HOSTS = [
 
 TEMPLATE_DEBUG = True
 
+TEST_MODE = False
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -84,10 +86,10 @@ WSGI_APPLICATION = 'telephone.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-		'NAME': 'telephonedb',  # 'videomesrf',
-		'USER': 'postgres',  # 'videomesrf'
+		'NAME': 'telephonedb' if DEBUG else 'videomesrf',
+		'USER': 'postgres' if DEBUG else 'videomesrf',
 		'PASSWORD': 'qwaszx@1',
-		'HOST': 'localhost',  # 'localhost',
+		'HOST': 'localhost' if DEBUG else 'pg.sweb.ru',
 		'PORT': '5432',
 	}
 }
@@ -123,7 +125,7 @@ STATICFILES_DIRS = (
 
 STATIC_URL = '/static/content/'
 
-# STATIC_ROOT = 'static/root/'
+# STATIC_ROOT = 'static/r_content/'
 
 TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'templates'),
@@ -132,8 +134,6 @@ TEMPLATE_DIRS = (
 )
 
 LOGIN_URL = '/auth/login/'
-
-TEST_MODE = False
 
 SCHEMA_URL = '/calls/'
 
@@ -171,7 +171,7 @@ LOGGING = {
 			'class': 'logging.handlers.RotatingFileHandler',
 			'maxBytes': 10*1024*1024,
 			'backupCount': 0,
-			'filename': 'debug.log',
+			'filename': os.path.join(BASE_DIR,  'debug.log'),
 			'formatter': 'verbose',
 		},
 		'app_logger_handler': {
@@ -179,7 +179,7 @@ LOGGING = {
 			'class': 'logging.handlers.RotatingFileHandler',
 			'maxBytes': 10*1024*1024,
 			'backupCount': 0,
-			'filename': 'app_log.log',
+			'filename': os.path.join(BASE_DIR,  'app_log.log'),
 			'formatter': 'verbose',
 		},
 		'auth_logger_handler': {
@@ -187,7 +187,7 @@ LOGGING = {
 			'class': 'logging.handlers.RotatingFileHandler',
 			'maxBytes': 10*1024*1024,
 			'backupCount': 0,
-			'filename': 'auth.log',
+			'filename': os.path.join(BASE_DIR,  'auth.log'),
 			'formatter': 'verbose',
 		},
 		'main_logger_handler': {
@@ -195,7 +195,7 @@ LOGGING = {
 			'class': 'logging.handlers.RotatingFileHandler',
 			'maxBytes': 10*1024*1024,
 			'backupCount': 0,
-			'filename': 'main.log',
+			'filename': os.path.join(BASE_DIR,  'main.log'),
 			'formatter': 'verbose',
 		},
 	},
