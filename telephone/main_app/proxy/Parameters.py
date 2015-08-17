@@ -54,3 +54,6 @@ class Parameters():
 		:return: request string
 		"""
 		return '?%shash=%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(self.__params.items())), self.get_hash_string(self.__params))
+
+	def get_params(self):
+		return self.__params

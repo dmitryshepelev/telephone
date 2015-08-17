@@ -42,7 +42,7 @@ def get_calls(request, template):
 	params.set_params({'user': request.user.userprofile.user_code, 'tree': request.user.userprofile.schema.schema_code})
 	calls_list = services.get_calls(params, request.user.is_superuser)
 	if not calls_list:
-		get_logger().error('Get calls error', request.path, request, {})
+		get_logger().error('Get calls error', request.path, request, params.get_params())
 		return HttpResponse(status=500)
 	return render_to_response(template, {'calls': calls_list}, context_instance=RequestContext(request))
 
@@ -54,12 +54,12 @@ def get_call_record(request):
 	:param request: HTTP GET request
 	:return: mp3 file
 	"""
-	params = {}
+	params = {'user': request.user.userprofile.user_code}
 	if request.GET:
-		params = ({'id': request.GET.get('id'), 'user': request.user.userprofile.user_code})
+		params['id'] = request.GET.get('id')
 	record = services.get_call_record(params, request.user.is_superuser)
 	if not record:
-		get_logger().error('Get record error', request.path, request, {})
+		get_logger().error('Get record error', request.path, request, params)
 		return HttpResponse(status=500)
 	response = HttpResponse(content_type='audio/mp3')
 	response['Content-Disposition'] = 'attachment; filename=%s' % 'record.mp3'
