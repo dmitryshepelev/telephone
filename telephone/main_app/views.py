@@ -41,7 +41,7 @@ def get_calls(request, template):
 		params.set_params(request.GET)
 	params.set_params({'user': request.user.userprofile.user_code, 'tree': request.user.userprofile.schema.schema_code})
 	calls_list = services.get_calls(params, request.user.is_superuser)
-	if not calls_list:
+	if calls_list is None:
 		get_logger().error('Get calls error', request.path, request, params.get_params())
 		return HttpResponse(status=500)
 	return render_to_response(template, {'calls': calls_list}, context_instance=RequestContext(request))
