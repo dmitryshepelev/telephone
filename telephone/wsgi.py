@@ -1,16 +1,12 @@
-"""
-WSGI config for telephone project.
+import os, sys
+from telephone import settings
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
-"""
-
-import os
-
-from django.core.wsgi import get_wsgi_application
+if not settings.DEBUG:
+	sys.path.insert(0, '/home/v/videomesrf/tel/public_html')
+	sys.path.insert(0, '/home/v/videomesrf/tel')
+	sys.path.insert(0, '/home/v/videomesrf/tel/.djangovenv/lib64/python2.7/site-packages')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "telephone.settings")
 
+from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
