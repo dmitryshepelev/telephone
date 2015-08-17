@@ -39,7 +39,7 @@ def get_calls(request, template):
 	params = Parameters()
 	if request.GET:
 		params.set_params(request.GET)
-	params.set_params({'user': request.user.userprofile.user_code, 'tree': request.user.userprofile.schema.schema_code})
+	params.set_params({'user': request.user.userprofile.user_code})
 	calls_list = services.get_calls(params, request.user.is_superuser)
 	if calls_list is None:
 		get_logger().error('Get calls error', request.path, request, params.get_params())
