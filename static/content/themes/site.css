@@ -312,3 +312,28 @@ thead#table-head {
 .col-sm-8:last-child {
     padding-right: 0;
 }
+
+table th:hover {
+    cursor: pointer;
+    color: #3892d5;
+}
+
+.table-sort {
+    padding-left: 20px !important;
+}
+
+.table-sort-asc {
+    background: url("/static/content/images/icon-chevron-down.png") no-repeat center left;
+}
+
+.table-sort-asc:hover {
+    background: url("/static/content/images/icon-chevron-down-hover.png") no-repeat center left;
+}
+
+.table-sort-desc {
+    background: url("/static/content/images/icon-chevron-up.png") no-repeat center left;
+}
+
+.table-sort-desc:hover {
+    background: url("/static/content/images/icon-chevron-up-hover.png") no-repeat center left;
+}

@@ -1,4 +1,4 @@
-(function () {
+var Switcher = (function () {
     function Switcher (element) {
         this._element = $(element);
         this._params = {
@@ -66,10 +66,5 @@
         }
     };
 
-    $(document).ready(function () {
-        var elements = $('switcher');
-        for (var i = 0; i < elements.length; i++){
-            new Switcher(elements[i]);
-        }
-    })
+    return Switcher
 })();

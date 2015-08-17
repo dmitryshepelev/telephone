@@ -20,10 +20,22 @@ var controller = (function () {
         container.find('input.pseudo-hidden').attr('value', Date.getNowDate().toRightDateString());
     }
 
+    function _makeSortable() {
+        $('#callsTable').tablesorter({sortList: [[3,1]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
+            var value = node.innerHTML;
+            if (value.search(/(мин|сек)/g) != -1) {
+                var textArr = value.split(' ');
+                value = (textArr.length === 2 ? textArr[0] : Number(textArr[0]) * 60 + Number(textArr[2])).toString();
+            }
+            return value
+        }});
+    }
+
     function _updateContainer(data) {
         var loaderTemplate = '<div align="center"><img src="/static/content/images/loader.gif" class="loader"></div>';
         _container.empty();
         _container.append(data.toString() === 'true' ? loaderTemplate : data);
+        _makeSortable();
     }
 
     function _getCalls(request_string, callback) {
@@ -51,6 +63,10 @@ var controller = (function () {
         _initDatepicker();
         _getCalls(new ApiParams().getRequestString());
 
+        var elements = $('switcher');
+        for (var i = 0; i < elements.length; i++){
+            new Switcher(elements[i]);
+        }
     });
 
     return {

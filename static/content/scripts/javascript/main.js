@@ -120,7 +120,6 @@ ApiParams.prototype = {
 
     getRequestString: function () {
         var str = '?';
-        console.log(this._params);
         for (var param in this._params) {
             if (this._params.hasOwnProperty(param)) {
                 str += param + '=' + this._params[param] + '&';
