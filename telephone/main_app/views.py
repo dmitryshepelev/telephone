@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.main_app import services
-from telephone.main_app.proxy.Parameters import Parameters
+from telephone.main_app.proxy.Parameters import CallsParameters
 from telephone.main_app.services import get_logger
 
 
@@ -26,6 +26,8 @@ def calls(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
+	params = CallsParameters()
+	sign = params.get_sign('statistic')
 	return render_to_response(template, {'schema_name': request.user.userprofile.schema.name}, context_instance=RequestContext(request))
 
 

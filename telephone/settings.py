@@ -140,9 +140,10 @@ SCHEMA_URL = '/calls/'
 S_KEY = '0.l4lxhd71bhr'
 
 API_URLS = {
-	'base_api_url': 'http://sipuni.com/api/statistic',
+	'base_api_url': 'https://api.zadarma.com',
+	'api_version': '/v1',
 	'get_record': '/record',
-	'get_calls': '/export',
+	'get_calls': '/statistics',
 }
 
 CORS_ORIGIN_ALLOW_ALL = (
