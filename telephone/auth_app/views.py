@@ -33,7 +33,7 @@ def sign_in(request):
 	auth_user_form = AuthUserForm(request.POST)
 	if auth_user_form.errors:
 		return JsonResponse({'errors': auth_user_form.errors})
-	if sing_in(code=auth_user_form.data['code'], password=auth_user_form.data['password'], request=request):
+	if sing_in(username=auth_user_form.data['username'], password=auth_user_form.data['password'], request=request):
 		return JsonResponse({get_redirect_url_prop(): get_redirect_url(request)})
 	else:
 		return JsonResponse({'errors': {'password': ['Invalid Username or Password']}})

@@ -7,7 +7,7 @@
 {% block content %}
 	<div align="center">
 		<h2>Добро пожаловать на <a href="/">telephone</a></h2>
-		<h3>Войдите в профиль используюя код и пароль</h3>
+		<h3>Войдите в профиль используюя логин и пароль</h3>
 	</div>
 
 	<div align="center">
@@ -16,7 +16,7 @@
 				{% csrf_token %}
 				<input type="hidden" id="redirect_url" name="redirect_url" value="{{ redirect_url }}">
 				<div class="form-group">
-					<input class="form-control input-lg" id="code" onfocus="validate.hideError($(event.target))" name="code" type="text" placeholder="Код">
+					<input class="form-control input-lg" id="username" onfocus="validate.hideError($(event.target))" name="username" type="text" placeholder="Логин">
 				</div>
 				<div class="form-group">
 					<input class="form-control input-lg" id="password" onfocus="validate.hideError($(event.target))" name="password" type="password" placeholder="Пароль">

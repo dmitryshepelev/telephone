@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login
 
 from telephone import settings
-from telephone.main_app.models import UserProfile
 from telephone.services import AppLogger
 
 
@@ -12,21 +11,19 @@ def get_logger():
 	return __logger
 
 
-def sing_in(code, password, request):
+def sing_in(username, password, request):
 	"""
 	Authenticate and Sign in user by login and password
-	:param code: code of user, string
+	:param username: username, string
 	:param password: password, string
 	:param request: HTTP request
 	:return: True if the user was singed in
 	"""
-	user = UserProfile.objects.filter(user_code=code).first()
-	if user is not None:
-		auth_user = authenticate(username=user.user.username, password=password)
-		if auth_user is not None:
-			login(request, auth_user)
-			return True
-	get_logger().error('Error user login', request.path, request, {'Code': code, 'Password': password})
+	auth_user = authenticate(username=username, password=password)
+	if auth_user is not None:
+		login(request, auth_user)
+		return True
+	get_logger().error('Error user login', request.path, request, {'Username': username, 'Password': password})
 	return False
 
 

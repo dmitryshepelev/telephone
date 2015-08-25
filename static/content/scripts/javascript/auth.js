@@ -2,7 +2,7 @@ var auth = (function () {
     return {
         login: function (e) {
             var loginFormFields = {
-                code: 'code',
+                username: 'username',
                 password: 'password',
                 redirect_url: 'redirect_url'
             };

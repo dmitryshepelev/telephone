@@ -16,7 +16,8 @@ class Schema(models.Model):
 class UserProfile(models.Model):
 	schema = models.OneToOneField(Schema, on_delete=models.CASCADE)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	user_code = models.CharField(max_length=9)
+	user_code = models.CharField(max_length=30)
+	secret_key = models.CharField(max_length=30, default='')
 
 	class Meta:
 		app_label = 'main_app'

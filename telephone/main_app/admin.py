@@ -8,7 +8,7 @@ class SchemaAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-	list_display = ('user_code', 'user_id', 'schema',)
+	list_display = ('user_id', 'user_code', 'secret_key', 'schema',)
 	raw_id_fields = ('schema', 'user',)
 
 
