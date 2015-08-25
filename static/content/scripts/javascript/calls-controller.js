@@ -21,7 +21,7 @@ var controller = (function () {
     }
 
     function _makeSortable() {
-        $('#callsTable').tablesorter({sortList: [[3,1]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
+        $('#callsTable').tablesorter({sortList: [[2,1]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
             var value = node.innerHTML;
             if (value.search(/(мин|сек)/g) != -1) {
                 var textArr = value.split(' ');

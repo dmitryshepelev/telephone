@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.main_app import services
-from telephone.main_app.exceptions import ApiErrorException
+from telephone.exceptions import ApiErrorException
 from telephone.main_app.proxy.Parameters import CallsParameters
 from telephone.main_app.services import get_logger
 
@@ -35,13 +35,13 @@ def get_statistic(request, template):
 	"""
 	Controller to get test calls file
 	:param request: HTTP GET request
-	:return: csv file
+	:return: json format
 	"""
 	params = CallsParameters()
 	if request.GET:
 		params.set_params(request.GET)
 	try:
-		calls_list = services.get_statistics(params, request.user, 'e6eddf38406a4fa03d09')
+		calls_list = services.get_statistics(params, request.user)
 	except ApiErrorException as e:
 		get_logger().error(e.message, e.url, request, e.data)
 		return HttpResponse(status=500)
@@ -66,17 +66,6 @@ def get_call_record(request):
 	response['Content-Disposition'] = 'attachment; filename=%s' % 'record.mp3'
 	response.content = record
 	return response
-
-
-@login_required
-def get_period_modal_template(request, template):
-	"""
-	Get html template of the period modal
-	:param request: HTTP GET request
-	:param template: html template
-	:return: HttpResponse instance
-	"""
-	return render_to_response(template, {}, context_instance=RequestContext(request))
 
 
 @login_required

@@ -3,7 +3,7 @@
 import requests
 
 from telephone import settings
-from telephone.main_app.exceptions import ApiErrorException
+from telephone.exceptions import ApiErrorException
 from telephone.main_app.proxy import Parameters
 from telephone.main_app.proxy.Call import Call
 from telephone.services import AppLogger
@@ -27,13 +27,19 @@ def parse_csv(csv_string):
 	return arr
 
 
-def get_statistics(params, user, secret_key):
+def get_statistics(params, user):
+	"""
+	Get statistics from api
+	:param params: CallParameters instance
+	:param user: User instance
+	:return: json type
+	"""
 	if settings.TEST_MODE or user.is_superuser:
-		abspath = open(settings.BASE_DIR + '/static/content/test.csv', 'r')
+		abspath = open(settings.BASE_DIR + '/static/content/stat.csv', 'r')
 		return parse_csv(abspath.read())
 
 	request_string = params.get_request_string()
-	api_response = requests.get(request_string, headers={'Authorization': '%s:%s' % ('b0e5ccb775f83d4d8a1f', params.get_sign(secret_key))})
+	api_response = requests.get(request_string, headers={'Authorization': '%s:%s' % ('b0e5ccb775f83d4d8a1f', params.get_sign(user.userprofile.secret_key))})
 	if api_response.ok:
 		return api_response.content
 	else:
