@@ -3,6 +3,7 @@
 import requests
 
 from telephone import settings
+from telephone.main_app.exceptions import ApiErrorException
 from telephone.main_app.proxy import Parameters
 from telephone.main_app.proxy.Call import Call
 from telephone.services import AppLogger
@@ -26,18 +27,17 @@ def parse_csv(csv_string):
 	return arr
 
 
-def get_calls(params, is_superuser):
-	if settings.TEST_MODE or is_superuser:
+def get_statistics(params, user, secret_key):
+	if settings.TEST_MODE or user.is_superuser:
 		abspath = open(settings.BASE_DIR + '/static/content/test.csv', 'r')
 		return parse_csv(abspath.read())
 
 	request_string = params.get_request_string()
-	url = '%s%s%s' % (settings.API_URLS['base_api_url'], settings.API_URLS['get_calls'], request_string,)
-	api_request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': 'stat.csv'})
-	if api_request.ok:
-		return parse_csv(api_request.content)
+	api_response = requests.get(request_string, headers={'Authorization': '%s:%s' % ('b0e5ccb775f83d4d8a1f', params.get_sign(secret_key))})
+	if api_response.ok:
+		return api_response.content
 	else:
-		return None
+		raise ApiErrorException(api_response)
 
 
 def get_call_record(params, is_superuser):

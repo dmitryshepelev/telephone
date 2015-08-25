@@ -14,7 +14,7 @@ def default_404(request):
 	:param request: html template
 	:return: HttpResponse instance
 	"""
-	logger.warning('404 not found', request.path, request, None)
+	logger.warning('404 not found', request.path, request)
 	return render_to_response('default_404.html')
 
 
@@ -25,5 +25,5 @@ def default_error(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	logger.warning('Default error', request.path, request, None)
+	logger.warning('Default error', request.path, request)
 	return render_to_response(template, {}, context_instance=RequestContext(request))

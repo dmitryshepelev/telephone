@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.main_app import services
+from telephone.main_app.exceptions import ApiErrorException
 from telephone.main_app.proxy.Parameters import CallsParameters
 from telephone.main_app.services import get_logger
 
@@ -26,25 +27,23 @@ def calls(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	params = CallsParameters()
-	sign = params.get_sign('statistic')
 	return render_to_response(template, {'schema_name': request.user.userprofile.schema.name}, context_instance=RequestContext(request))
 
 
 @login_required
-def get_calls(request, template):
+def get_statistic(request, template):
 	"""
 	Controller to get test calls file
 	:param request: HTTP GET request
 	:return: csv file
 	"""
-	params = Parameters()
+	params = CallsParameters()
 	if request.GET:
 		params.set_params(request.GET)
-	params.set_params({'user': request.user.userprofile.user_code})
-	calls_list = services.get_calls(params, request.user.is_superuser)
-	if calls_list is None:
-		get_logger().error('Get calls error', request.path, request, params.get_params())
+	try:
+		calls_list = services.get_statistics(params, request.user, 'e6eddf38406a4fa03d09')
+	except ApiErrorException as e:
+		get_logger().error(e.message, e.url, request, e.data)
 		return HttpResponse(status=500)
 	return render_to_response(template, {'calls': calls_list}, context_instance=RequestContext(request))
 

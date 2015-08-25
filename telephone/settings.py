@@ -137,13 +137,13 @@ LOGIN_URL = '/auth/login/'
 
 SCHEMA_URL = '/calls/'
 
-S_KEY = '0.l4lxhd71bhr'
+S_KEY = 'e6eddf38406a4fa03d09'
 
 API_URLS = {
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',
 	'get_record': '/record',
-	'get_calls': '/statistics',
+	'statistics': '/statistics',
 }
 
 CORS_ORIGIN_ALLOW_ALL = (
