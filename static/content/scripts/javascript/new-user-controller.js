@@ -31,8 +31,12 @@ var controller = (function () {
 
     function _createMail(data) {
         var params = _getParamString(data);
+        var successElementTemplate = '<span class="pull-right btn btn-lg btn-empty"><span class="glyphicon glyphicon-ok"></span> Почта создана успешно</span>';
         $.get('/createMail?' + params, function (result) {
-            console.log(result)
+            $('#uid').attr('value', result.uid);
+            $('#createMailBtn').after(successElementTemplate).remove();
+        }).fail(function () {
+
         })
     }
 

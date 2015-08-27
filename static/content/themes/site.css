@@ -385,3 +385,15 @@ small a {
     color: #555555;
 }
 
+.btn-empty {
+    padding-right: 0;
+    padding-left: 0;
+    border-color: transparent;
+    background-color: transparent;
+    box-shadow: none;
+    cursor: default;
+}
+
+.btn-empty:active {
+    box-shadow: none;
+}

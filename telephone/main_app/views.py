@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.main_app import services
-from telephone.exceptions import ApiErrorException
+from telephone.exceptions import ApiErrorException, MailErrorException
 from telephone.main_app.proxy.Parameters import CallsParameters, MailParameters
 from telephone.main_app.services import get_logger, get_random_number, generate_email_password, generate_random_password, \
 	create_domain_mail
@@ -101,9 +101,13 @@ def generate_password(request):
 
 @login_required
 def create_mail(request):
-	if request.user.is_superuser:
-		if request.GET:
-			params = MailParameters(request.GET)
-			status = create_domain_mail(params)
-			pass
-	return default_404(request)
+	if request.user.is_superuser and request.GET:
+		params = MailParameters(request.GET)
+		try:
+			result = create_domain_mail(params)
+			return JsonResponse({'login': result['login'], 'uid': result['uid']})
+		except MailErrorException as e:
+			# TODO: log exceptions
+			# get_logger().error(e.message, e.url, request, e.data)
+			return HttpResponse(status=500)
+	return HttpResponse(status=500)

@@ -1,10 +1,12 @@
 # coding=utf-8
+import json
 from random import randint
 import datetime
 import string
 import random
 
 import requests
+import urllib2
 
 from telephone import settings
 from telephone.exceptions import ApiErrorException, MailErrorException
@@ -77,10 +79,13 @@ def generate_random_password(length):
 
 
 def create_domain_mail(params):
-	request_string = 'https://pddimp.yandex.ru/api2/admin/email/add'
-	params_string = params.get_request_string()
-	api_response = requests.post(request_string, params_string, headers={'Method': 'POST', 'PddToken': settings.MAIL_A_TOKEN})
+	request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['create_mail'])
+	api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
 	if api_response.ok:
-		pass
+		response_data = json.loads(api_response.content)
+		if response_data['success'] == 'ok':
+			return response_data
+		else:
+			raise MailErrorException(response_content=response_data)
 	else:
-		raise MailErrorException(api_response)
+		raise MailErrorException(api_response=api_response)

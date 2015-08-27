@@ -108,3 +108,6 @@ class MailParameters(Parameters):
 
 	def get_request_string(self):
 		return Parameters.generate_params_string(self.__params)
+
+	def get_params(self):
+		return self.__params
