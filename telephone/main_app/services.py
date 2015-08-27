@@ -1,9 +1,13 @@
 # coding=utf-8
+from random import randint
+import datetime
+import string
+import random
 
 import requests
 
 from telephone import settings
-from telephone.exceptions import ApiErrorException
+from telephone.exceptions import ApiErrorException, MailErrorException
 from telephone.main_app.proxy import Parameters
 from telephone.main_app.proxy.Call import Call
 from telephone.services import AppLogger
@@ -58,3 +62,25 @@ def get_call_record(params, is_superuser):
 		return api_request.content
 	else:
 		return None
+
+
+def get_random_number(length):
+	return ''.join(['%s' % randint(0, 9) for num in range(0, length)])
+
+
+def generate_email_password(email_id):
+	return 'wt%s$%s' % (datetime.datetime.now().strftime('%d%m%y'), email_id)
+
+
+def generate_random_password(length):
+	return ''.join(random.SystemRandom().choice(settings.PASSWORD_SYMBOLS) for _ in range(length))
+
+
+def create_domain_mail(params):
+	request_string = 'https://pddimp.yandex.ru/api2/admin/email/add'
+	params_string = params.get_request_string()
+	api_response = requests.post(request_string, params_string, headers={'Method': 'POST', 'PddToken': settings.MAIL_A_TOKEN})
+	if api_response.ok:
+		pass
+	else:
+		raise MailErrorException(api_response)

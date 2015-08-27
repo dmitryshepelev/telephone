@@ -10,6 +10,7 @@
     {% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "bootstrap.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "main-controller.js" %}"></script>
 	<script type="text/javascript" src="{% static "main.js" %}"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static "default/bootstrap.css" %}" />
@@ -41,6 +42,7 @@
 							<li><a href="/calls/">Звонки</a></li>
                             {% if user.is_superuser %}
                                 <li><a href="/admin/">Грозная Админка</a></li>
+	                            <li><a href="/admin/newUser/">Новый пользователь</a></li>
                             {% endif %}
 							<li class="divider"></li>
 							<li><a href="/auth/logout/">Выход</a></li>

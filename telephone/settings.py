@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import string
 import time
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,6 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '_u@*cvlhy#9(9))hbv6@w3+6hfx=btuegjm$@sxw7-ixdd^$%5'
 
+MAIL_A_TOKEN = 'FY6DV6SXQ2MNIW44F3ZPUQ3HDUP5P22N54I7ZBTUAXMD42PS6KZA'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -33,6 +36,8 @@ ALLOWED_HOSTS = [
 TEMPLATE_DEBUG = True
 
 TEST_MODE = False
+
+DOMAIN = 'web-tel.ru'
 
 # Application definition
 
@@ -139,6 +144,8 @@ SCHEMA_URL = '/calls/'
 
 S_KEY = 'e6eddf38406a4fa03d09'
 
+PASSWORD_SYMBOLS = string.ascii_letters + string.digits + string.punctuation
+
 API_URLS = {
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',
@@ -147,7 +154,7 @@ API_URLS = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = (
-	'sipuni.com'
+	'*'
 )
 
 DELIMITER = ';'

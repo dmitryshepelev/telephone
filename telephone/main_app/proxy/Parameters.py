@@ -95,3 +95,16 @@ class CallsParameters(Parameters):
 		"""
 		for key, value in params.items():
 			self.__params[key] = params[key]
+
+
+class MailParameters(Parameters):
+	def __init__(self, params):
+		Parameters.__init__(self)
+		self.__params = {
+			'domain': settings.DOMAIN,
+			'login': params['login'],
+			'password': params['email_password']
+		}
+
+	def get_request_string(self):
+		return Parameters.generate_params_string(self.__params)

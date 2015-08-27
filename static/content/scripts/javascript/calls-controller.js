@@ -31,16 +31,11 @@ var controller = (function () {
         }});
     }
 
-    function _initTooltips() {
-        $("[data-toggle=tooltip]").tooltip();
-    }
-
     function _updateContainer(data) {
         var loaderTemplate = '<div align="center"><img src="/static/content/images/loader.gif" class="loader"></div>';
         _container.empty();
         _container.append(data.toString() === 'true' ? loaderTemplate : data);
         _makeSortable();
-        _initTooltips();
     }
 
     function _getCalls(request_string, callback) {

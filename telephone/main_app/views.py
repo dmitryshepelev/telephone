@@ -1,12 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.main_app import services
 from telephone.exceptions import ApiErrorException
-from telephone.main_app.proxy.Parameters import CallsParameters
-from telephone.main_app.services import get_logger
+from telephone.main_app.proxy.Parameters import CallsParameters, MailParameters
+from telephone.main_app.services import get_logger, get_random_number, generate_email_password, generate_random_password, \
+	create_domain_mail
+from telephone.shared_views import default_404
 
 
 def main(request, template):
@@ -77,3 +79,31 @@ def schema_error(request, template):
 	:return: HttpResponse instance
 	"""
 	return render_to_response(template, {}, context_instance=RequestContext(request))
+
+
+@login_required
+def create_new_user(request, template):
+	if request.user.is_superuser:
+		if request.POST:
+			pass
+		else:
+			email_id = get_random_number(6)
+			return render_to_response(template, {'email_id': email_id, 'email_password': generate_email_password(email_id)}, context_instance=RequestContext(request))
+	return default_404(request)
+
+
+@login_required
+def generate_password(request):
+	if request.user.is_superuser:
+		return JsonResponse({'password': generate_random_password(10)})
+	return default_404(request)
+
+
+@login_required
+def create_mail(request):
+	if request.user.is_superuser:
+		if request.GET:
+			params = MailParameters(request.GET)
+			status = create_domain_mail(params)
+			pass
+	return default_404(request)

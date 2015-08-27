@@ -165,7 +165,7 @@ footer a:hover, footer a:focus {
 }
 
 .form-group {
-    margin: 15px !important;
+    margin: 15px 0 !important;
 }
 
 .auth-group {
@@ -355,3 +355,33 @@ table th:hover {
 .table-sort-desc:hover {
     background: url("/static/content/images/icon-chevron-up-hover.png") no-repeat center left;
 }
+
+small a {
+    color: #dadada;
+}
+
+.form-container div {
+    margin-bottom: 30px;
+}
+
+.allow-events {
+    pointer-events: auto;
+}
+
+.input-lg.domain + .form-control-feedback {
+    right: 50px !important;
+    color: #a7a7a7;
+}
+
+.has-feedback .form-control.domain {
+    padding-right: 110px;
+}
+
+.input-lg.password + .form-control-feedback {
+    color: #a7a7a7;
+}
+
+.input-lg.password + .form-control-feedback:hover, .input-lg.password + .form-control-feedback:focus {
+    color: #555555;
+}
+

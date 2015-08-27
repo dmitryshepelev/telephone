@@ -4,3 +4,8 @@ class ApiErrorException(Exception):
 		self.url = api_response.url
 		self.status_code = api_response.status_code
 		self.data = api_response.content
+
+
+class MailErrorException(Exception):
+	def __init__(self, api_response):
+		pass
