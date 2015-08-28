@@ -128,3 +128,155 @@ ApiParams.prototype = {
         return str.slice(0, -1);
     }
 };
+
+
+/**
+ * Class represents Mail entity
+ * @constructor Mail
+ */
+function Mail() {
+    this._data = {
+        login: null,
+        password: null
+    };
+    this._templates = {
+        base: '<span class="pull-left btn-lg btn-empty btn-padding-0 {0}-message"><span class="glyphicon glyphicon-{1}"></span> {2}</span>'
+                ,
+        success: {
+            cls: 'success',
+            message: 'Почта создана успешно',
+            icon: 'ok'
+        },
+        error: {
+            cls: 'error',
+            message: 'Операция не завершена',
+            icon: 'remove'
+        }
+    };
+    this._url = '/createMail/';
+};
+
+Mail.prototype = {
+    constructor: Mail,
+
+    /**
+     * Update html
+     * @param isSuccess bool, result of operation
+     * @param data data to insert
+     * @private
+     */
+    _updateHtml: function (isSuccess, data) {
+        var templateDate;
+        if (isSuccess) {
+            $('#uid').attr('value', data.uid);
+            templateDate = this._templates.success
+        } else {
+            templateDate = this._templates.error
+        }
+        $('#createMailBtn').after(this._templates.base.format(templateDate.cls, templateDate.icon, templateDate.message)).remove();
+    },
+    /**
+     * Returns Mail form fields
+     * @returns {{login: string, password: string}}
+     */
+    getModel: function () {
+        return {
+            login: 'login',
+            password: 'password'
+        }
+    },
+    /**
+     * Create request to the server to create new mail
+     */
+    createMail: function (successCallback) {
+        var that = this;
+        $.post(this._url, this._data, function (result) {
+            that._updateHtml(true, result);
+            if (successCallback) {
+                successCallback()
+            }
+        }).fail(function () {
+            that._updateHtml(false)
+        })
+    }
+};
+
+/**
+ * Class represents NewUser entity
+ * @constructor NewUser
+ */
+function NewUser() {
+    this._data = {
+        login: null,
+        password: null,
+        uid: null,
+        userKey: null,
+        secretKey: null,
+        userEmail: null,
+        userPassword: null,
+        userName: null
+    }
+}
+
+NewUser.prototype = {
+    constructor: NewUser,
+
+    /**
+     * Return NewUser form fields
+     * @returns {{login: string, password: string, uid: string, userKey: string, secretKey: string, userEmail: string, userPassword: string, userName: string}}
+     */
+    getModel: function () {
+        return {
+            login: 'login',
+            password: 'password',
+            uid: 'uid',
+            userKey: 'user_key',
+            secretKey: 'secret_key',
+            userEmail: 'user_email',
+            userPassword: 'user_password',
+            userName: 'user_name'
+        }
+    }
+};
+
+function Disk() {
+    this._templates = {
+        connectionForm: '<form class="form-horizontal"><div class="input-group disk-form"><span class="input-group-addon">Код</span>' +
+                        '<input id="connectDiskCode" class="form-control" type="text" placeholder="Код" value=""><span class="input-group-btn">' +
+                        '<button id="connectDiskSendCodeBtn" class="btn btn-default" type="button">Соединить</button></span></div></form>'
+    }
+}
+
+Disk.prototype = {
+    constructor: Disk,
+
+    _getApiUrl: function (reason, successCallback) {
+        $.get('/getApiUrls?reason={0}'.format(reason), function (result) {
+            console.log(result);
+            if (successCallback) {
+                successCallback()
+            }
+        })
+    },
+    _getToken: function (code, successCallback) {
+        $.post('/getApiToken/', { code: code }, function (result) {
+            console.log(result);
+            if (successCallback) {
+                successCallback()
+            }
+        })
+    },
+    connect: function () {
+        var that = this;
+        this._getApiUrl('code', function () {
+            $('#connectDiskBtn').after(that._templates.connectionForm).remove();
+            $('#connectDiskSendCodeBtn').on('click', function (event) {
+                var value = $('#connectDiskCode')[0].value;
+                if (value) {
+                    that._getToken(value)
+                }
+                console.log('click', $(event.target).prev());
+            })
+        })
+    }
+};

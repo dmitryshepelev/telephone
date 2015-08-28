@@ -151,11 +151,21 @@ API_URLS = {
 	'api_version': '/v1',
 	'get_record': '/record',
 	'statistics': '/statistics',
+	'oauth': {
+		'host': 'https://oauth.yandex.ru',
+		'authorize': '/authorize?response_type=code',
+		'token': '/token'
+	},
 	'mail': {
 		'host': 'https://pddimp.yandex.ru',
 		'create_mail': '/api2/admin/email/add',
+	},
+	'disk': {
+		''
 	}
 }
+
+O_AUTH_ID = '52a0d804d54b45ef8c309088af6d444d'
 
 CORS_ORIGIN_ALLOW_ALL = (
 	'*'

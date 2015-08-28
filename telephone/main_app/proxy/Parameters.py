@@ -103,7 +103,7 @@ class MailParameters(Parameters):
 		self.__params = {
 			'domain': settings.DOMAIN,
 			'login': params['login'],
-			'password': params['email_password']
+			'password': params['password']
 		}
 
 	def get_request_string(self):

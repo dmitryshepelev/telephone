@@ -360,7 +360,7 @@ small a {
     color: #dadada;
 }
 
-.form-container div {
+.vertical-block {
     margin-bottom: 30px;
 }
 
@@ -386,14 +386,47 @@ small a {
 }
 
 .btn-empty {
-    padding-right: 0;
-    padding-left: 0;
     border-color: transparent;
     background-color: transparent;
     box-shadow: none;
     cursor: default;
 }
 
+.btn-padding-0 {
+    padding-right: 0;
+    padding-left: 0;
+}
+
 .btn-empty:active {
     box-shadow: none;
+}
+
+.required-label-flag {
+    color: #8c8c8c;
+    margin: 0 3px;
+}
+
+.btn-link-empty {
+    color: #333333;
+    background-color: transparent;
+}
+
+.btn-link-empty:hover, .btn-link-empty:focus {
+    color: #2E6DA4;
+}
+
+.btn-link-empty:active {
+    box-shadow: none;
+}
+
+.success-message {
+    color: #5CB85C;
+}
+
+.error-message {
+    color: #D9534F;
+}
+
+.disk-form {
+    margin-top: 5px;
 }
