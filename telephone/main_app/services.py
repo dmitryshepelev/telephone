@@ -93,14 +93,10 @@ def create_domain_mail(params):
 
 def get_oauth_token(code):
 	request_string = '%s%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['token'])
-	api_response = requests.post(request_string, {'grant_type': 'authorization_code', 'code': code}, headers={'Content-type': 'application/x-www-form-urlencoded'})
+	api_response = requests.post(request_string, {'grant_type': 'authorization_code', 'code': code, 'client_id': settings.O_AUTH_ID, 'client_secret': settings.O_AUTH_SECRET}, headers={'Content-type': 'application/x-www-form-urlencoded'})
 	if api_response.ok:
 		response_data = json.loads(api_response.content)
-		if response_data['error']:
-			# TODO exception
-			pass
-		else:
-			return response_data
+		return response_data
 	else:
 		pass
 		# TODO: exception

@@ -128,7 +128,7 @@ def get_api_token(request):
 	if request.user.is_superuser and request.POST:
 		try:
 			result = get_oauth_token(request.POST.get('code'))
-			return JsonResponse({'token': result['access_token']})
+			return JsonResponse(result)
 		except Exception as e:
 			pass
 			return HttpResponse(status=500)
