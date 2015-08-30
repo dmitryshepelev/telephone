@@ -6,6 +6,7 @@ from telephone import settings
 
 from telephone.main_app import services
 from telephone.exceptions import ApiErrorException, MailErrorException
+from telephone.main_app.forms import NewUserForm
 from telephone.main_app.proxy.Parameters import CallsParameters, MailParameters
 from telephone.main_app.services import get_logger, get_random_number, generate_email_password, generate_random_password, \
 	create_domain_mail, get_oauth_token
@@ -84,9 +85,24 @@ def schema_error(request, template):
 
 @login_required
 def create_new_user(request, template):
-	if request.user.is_superuser:
+	"""
+	Create new user controller
+	:param request: HTTP request
+	:param template: html template
+	:return:
+	"""
+	if request.user.is_superuser:  # TODO: is_superuser decorator
 		if request.POST:
-			pass
+			new_user_form = NewUserForm(request.POST)
+			if new_user_form.errors:
+				return JsonResponse({'errors': new_user_form.errors})
+			try:
+				user = services.create_profile(new_user_form.data)
+				return HttpResponse(status=201)
+				# TODO: redirect
+			except Exception as e:
+				# TODO: handle exception
+				return HttpResponse(status=500)
 		else:
 			email_id = get_random_number(6)
 			return render_to_response(template, {'email_id': email_id, 'password': generate_email_password(email_id), 'domain': '@%s' % settings.DOMAIN}, context_instance=RequestContext(request))
@@ -95,13 +111,23 @@ def create_new_user(request, template):
 
 @login_required
 def generate_password(request):
+	"""
+	Generate random password
+	:param request: HTTP request
+	:return: dict with 'password' key
+	"""
 	if request.user.is_superuser:
 		return JsonResponse({'password': generate_random_password(10)})
-	return default_404(request)
+	return HttpResponse(status=500)
 
 
 @login_required
 def create_mail(request):
+	"""
+	Creates new email
+	:param request: HTTP request
+	:return: dict
+	"""
 	if request.user.is_superuser and request.POST:
 		params = MailParameters(request.POST)
 		try:
@@ -116,20 +142,29 @@ def create_mail(request):
 
 @login_required
 def get_api_urls(request):
+	"""
+	Api access url based on 'reason' GET parameter
+	:param request: HTTP request
+	:return: dict
+	"""
 	if request.user.is_superuser and request.GET:
 		reason = request.GET.get('reason')
-		if reason == 'code':
+		if reason == 'OAuthCode':
 			return JsonResponse({'url': '%s%s&client_id=%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['authorize'], settings.O_AUTH_ID)})
 	return HttpResponse(status=500)
 
 
 @login_required
-def get_api_token(request):
+def get_oauth_token(request):
+	"""
+	Get OAuth token to api access
+	:param request: HTTP request
+	:return: dict
+	"""
 	if request.user.is_superuser and request.POST:
 		try:
-			result = get_oauth_token(request.POST.get('code'))
+			result = services.get_oauth_token(request.POST.get('code'))
 			return JsonResponse(result)
 		except Exception as e:
-			pass
 			return HttpResponse(status=500)
 	return HttpResponse(status=500)

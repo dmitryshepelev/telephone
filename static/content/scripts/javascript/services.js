@@ -30,7 +30,7 @@ var services = (function () {
         for (var m in model) {
             if(model.hasOwnProperty(m)) {
                 var element = $('#' + model[m]);
-                result.data[m] = element.attr('value');
+                result.data[m] = element[0].value;
                 if (!!element.attr('required') && !result.data[m]) {
                     result.errors.push(m)
                 }
@@ -85,10 +85,52 @@ var services = (function () {
         }
         return instance
     }
+
+    /**
+     * Execute callback function with params array
+     * @param callback function
+     * @param params array
+     * @private
+     */
+    function _executeCallback(callback, params) {
+        if (callback) {
+            callback(params)
+        }
+    }
+
+    /**
+     * Service to get urls to api access
+     * @returns {{OAuthCodeUrl: Function}}
+     * @private
+     */
+    function _getApiUrls() {
+        var _baseUrl = '/getApiUrls?reason={0}';
+
+        /**
+         * Execute GET request to the server
+         * @param url
+         * @private
+         */
+        function _executeGetRequest(url) {
+            return $.get(url)
+        }
+
+        return {
+            /**
+             * Get url to get OAuth code
+             */
+            OAuthCodeUrl: function () {
+                var url = _baseUrl.format('OAuthCode');
+                return _executeGetRequest(url);
+            }
+        }
+    }
     
     return {
         collectModelData: _collectModelData,
         getParamsString: _getParamsString,
-        createInstance: _createInstance
+        createInstance: _createInstance,
+        executeCallback: _executeCallback,
+        getApiUrls: _getApiUrls
     }
 })();

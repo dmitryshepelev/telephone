@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from telephone.main_app.views import main, get_statistic, calls, get_call_record, schema_error, create_new_user, \
-	generate_password, create_mail, get_api_urls, get_api_token
+	generate_password, create_mail, get_api_urls, get_oauth_token
 
 urlpatterns = [
 	url(r'^$', main, {'template': 'main.html'}),
@@ -12,5 +12,5 @@ urlpatterns = [
 	url(r'^generatePassword/$', generate_password),
 	url(r'^createMail/$', create_mail),
 	url(r'^getApiUrls/$', get_api_urls),
-	url(r'^getApiToken/$', get_api_token),
+	url(r'^getOAuthToken/$', get_oauth_token),
 ]

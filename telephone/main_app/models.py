@@ -2,22 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Schema(models.Model):
-	schema_code = models.CharField(max_length=9)
-	name = models.CharField(max_length=20)
-
-	class Meta:
-		app_label = 'main_app'
-
-	def __unicode__(self):
-		return u'%s' % self.name
-
-
 class UserProfile(models.Model):
-	schema = models.OneToOneField(Schema, on_delete=models.CASCADE)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	user_code = models.CharField(max_length=30)
-	secret_key = models.CharField(max_length=30, default='')
+	user_key = models.CharField(max_length=50, default='')
+	secret_key = models.CharField(max_length=50, default='')
+	profile_email = models.CharField(max_length=30, default='')
+	profile_password = models.CharField(max_length=30, default='')
+	uid = models.CharField(max_length=50, default='')
+	token = models.CharField(max_length=50, default='')
 
 	class Meta:
 		app_label = 'main_app'

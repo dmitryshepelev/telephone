@@ -146,25 +146,6 @@ Mail.prototype = {
     constructor: Mail,
 
     /**
-     * Update html
-     * @param isSuccess bool, result of operation
-     * @param data data to insert
-     * @private
-     */
-    _updateHtml: function (isSuccess, data) {
-        var message = new MessageElement({
-            position: 'left',
-            size: 'lg'
-        });
-        if (isSuccess) {
-            $('#uid').attr('value', data.uid);
-            message.setParams({type: 'success', message: 'Почта создана успешно'});
-        } else {
-            message.setParams({type: 'error', message: 'Операция не завершена'});
-        }
-        message.setElement($('#createMailBtn'), 'replace');
-    },
-    /**
      * Returns Mail form fields
      * @returns {{login: string, password: string}}
      */
@@ -176,17 +157,10 @@ Mail.prototype = {
     },
     /**
      * Create request to the server to create new mail
+     * @returns JQuery.Deferred
      */
-    createMail: function (successCallback) {
-        var that = this;
-        $.post(this._url, this._data, function (result) {
-            that._updateHtml(true, result);
-            if (successCallback) {
-                successCallback()
-            }
-        }).fail(function () {
-            that._updateHtml(false)
-        })
+    createMail: function () {
+        return $.post(this._url, this._data)
     }
 };
 
@@ -199,6 +173,7 @@ function NewUser() {
         login: null,
         password: null,
         uid: null,
+        token: null,
         userKey: null,
         secretKey: null,
         userEmail: null,
@@ -219,103 +194,20 @@ NewUser.prototype = {
             login: 'login',
             password: 'password',
             uid: 'uid',
+            token: 'token',
             userKey: 'user_key',
             secretKey: 'secret_key',
             userEmail: 'user_email',
             userPassword: 'user_password',
             userName: 'user_name'
         }
-    }
-};
-
-function Disk() {
-    this._templates = {
-        connectionForm:
-            '<form class="form-horizontal">' +
-                '<div class="input-group disk-form btn-group pull-right">' +
-                    '<input id="connectDiskCode" style="max-width: 120px" class="form-control" type="text" placeholder="Код" value="">' +
-                    '<button id="connectDiskSendCodeBtn" class="btn btn-default" type="button">Подключить</button>' +
-                    '<button id="diskGetCode" class="btn btn-default" type="button"><span class="glyphicon glyphicon-repeat"></span></button>' +
-                '</div>' +
-            '</form>'
-    }
-}
-
-Disk.prototype = {
-    constructor: Disk,
-
-    _getApiUrl: function (reason, successCallback) {
-        $.get('/getApiUrls?reason={0}'.format(reason), function (result) {
-            window.open(result.url, '_blank');
-            if (successCallback) {
-                successCallback()
-            }
-        })
     },
-    _getToken: function (code, successCallback) {
-        $.post('/getApiToken/', { code: code }, function (result) {
-            console.log(result);
-            if (successCallback) {
-                successCallback()
-            }
-        })
-    },
-    getCode: function () {
-        this._getApiUrl('code');
-    },
-    connect: function () {
-        var that = this;
-        this._getApiUrl('code', function () {
-            $('#connectDiskBtn').after(that._templates.connectionForm).remove();
-            $('#connectDiskSendCodeBtn').on('click', function (event) {
-                var value = $('#connectDiskCode')[0].value;
-                if (value) {
-                    that._getToken(value)
-                }
-            });
-            $('#diskGetCode').on('click', function () {
-                that._getApiUrl('code');
-            })
-        })
-    }
-};
 
-function MessageElement(params) {
-    this._template = '<span class="pull-{0} {1} btn-empty btn-padding-0 {2}-message"><span class="glyphicon glyphicon-{3}"></span> {4}</span>'
-    this._params = {
-        position: 'left',
-        size: '',
-        type: '',
-        icon: '',
-        message: ''
-    };
-    this.setParams(params);
-}
-
-MessageElement.prototype = {
-    constructor: MessageElement,
-
-    setParams: function (params) {
-        for (var p in params) {
-            if (params.hasOwnProperty(p)) {
-                this._params[p] = params[p]
-            }
-        }
-    },
-    setElement: function (element, mode) {
-        var messageElement = this.getElement();
-        if (mode === 'replace') {
-            element.after(messageElement).remove()
-        } else {
-            element[mode](messageElement)
-        }
-    },
-    getElement: function () {
-        var position = this._params.position;
-        var size = this._params.size ? 'btn-' + this._params.size : '';
-        var type = this._params.type || 'success';
-        var icon = type === 'success' ? 'ok' : 'remove';
-        var message = this._params.message || type;
-        return this._template.format(position, size, type, icon,message);
+    /**
+     * Returns new user's data
+     * @returns {{login: null, password: null, uid: null, token: null, userKey: null, secretKey: null, userEmail: null, userPassword: null, userName: null}|*}
+     */
+    getData: function () {
+        return this._data;
     }
 };
