@@ -2,11 +2,9 @@
 import json
 from random import randint
 import datetime
-import string
 import random
 
 import requests
-import urllib2
 from django.contrib.auth.models import User
 
 from telephone import settings

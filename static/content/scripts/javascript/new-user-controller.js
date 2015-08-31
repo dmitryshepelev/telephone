@@ -24,6 +24,7 @@ var controller = (function (services) {
             var messageElement = new MessageElement($(event.target), { setMode: 'replace', size: 'lg' });
 
             if (!mailInstance.creationErrors) {
+                loader.show();
                 mailInstance.createMail().success(function (result) {
                     $('#uid').attr('value', result.uid);
                     messageElement.success({ message: 'Почта создана успешно' });
@@ -41,6 +42,8 @@ var controller = (function (services) {
 
                 }).fail(function () {
                     messageElement.error({ message: 'Операция не завершена' });
+                }).done(function () {
+                    loader.hide();
                 });
             } else {
                 $.toaster({ message : mailInstance.creationErrors.join('; '), title: 'Следующие поля не заполнены', priority : 'danger', settings: {timeout: 5000} });
@@ -49,13 +52,17 @@ var controller = (function (services) {
         createUser: function () {
             var newUserInstance = services.createInstance(NewUser, null);
             if (!newUserInstance.creationErrors) {
+                loader.show();
                 $.post('/admin/newUser/', newUserInstance.getData(), function (result) {
                     window.location.href = '/';
                 }).fail(function () {
                     $.toaster({ message : 'Профиль не создан', title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
                 }).done(function () {
-                    window.scrollTo(0, 0)
+                    window.scrollTo(0, 0);
+                    loader.hide();
                 })
+            } else {
+                $.toaster({ message : newUserInstance.creationErrors.join('; '), title: 'Следующие поля не заполнены', priority : 'danger', settings: {timeout: 5000} });
             }
         }
     }
