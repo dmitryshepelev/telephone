@@ -2,6 +2,7 @@
 
 {% block resources %}
 	{% load staticfiles %}
+	<script type="text/javascript" src="{% static 'jquery.toaster.js' %}"></script>
 	<script type="text/javascript" src="{% static 'new-user-controller.js' %}"></script>
     <script type="text/javascript" src="{% static 'message-element.js' %}"></script>
     <script type="text/javascript" src="{% static 'oauth.js' %}"></script>
@@ -12,6 +13,12 @@
 {% endblock %}
 
 {% block content %}
+	{% if message %}
+	<div class="alert alert-dismissible alert-{{ message.status }}">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+        {{ message.text }}
+	</div>
+	{% endif %}
     <div class="section padding-left">
 		<div class="container">
 			<div class="row col-md-offset-2 form-container">
@@ -61,12 +68,7 @@
 					</form>
 				</div>
 				<div class="col-md-9 vertical-block">
-					<h1>
-						Данные профиля
-{#						<small>#}
-{#							<a href="" target="_blank">Создать профиль</a>#}
-{#						</small>#}
-					</h1>
+					<h1>Данные профиля</h1>
 					<form role="form">
 						<div class="form-group">
 							<label class="control-label" for="user_email">Адрес пользователя</label>

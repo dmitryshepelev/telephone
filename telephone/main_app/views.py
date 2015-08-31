@@ -1,3 +1,5 @@
+# coding=utf-8
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
@@ -92,6 +94,7 @@ def create_new_user(request, template):
 	:return:
 	"""
 	if request.user.is_superuser:  # TODO: is_superuser decorator
+
 		if request.POST:
 			new_user_form = NewUserForm(request.POST)
 			if new_user_form.errors:
@@ -99,13 +102,13 @@ def create_new_user(request, template):
 			try:
 				user = services.create_profile(new_user_form.data)
 				return HttpResponse(status=201)
-				# TODO: redirect
 			except Exception as e:
 				# TODO: handle exception
 				return HttpResponse(status=500)
 		else:
 			email_id = get_random_number(6)
-			return render_to_response(template, {'email_id': email_id, 'password': generate_email_password(email_id), 'domain': '@%s' % settings.DOMAIN}, context_instance=RequestContext(request))
+			response_params = {'email_id': email_id, 'password': generate_email_password(email_id), 'domain': '@%s' % settings.DOMAIN}
+			return render_to_response(template, response_params, context_instance=RequestContext(request))
 	return default_404(request)
 
 

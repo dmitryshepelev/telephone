@@ -43,14 +43,19 @@ var controller = (function (services) {
                     messageElement.error({ message: 'Операция не завершена' });
                 });
             } else {
-                // TODO: validation error message
+                $.toaster({ message : mailInstance.creationErrors.join('; '), title: 'Следующие поля не заполнены', priority : 'danger', settings: {timeout: 5000} });
             }
         },
         createUser: function () {
             var newUserInstance = services.createInstance(NewUser, null);
-            console.log(newUserInstance);
             if (!newUserInstance.creationErrors) {
-                $.post('/admin/newUser/', newUserInstance.getData())
+                $.post('/admin/newUser/', newUserInstance.getData(), function (result) {
+                    window.location.href = '/';
+                }).fail(function () {
+                    $.toaster({ message : 'Профиль не создан', title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
+                }).done(function () {
+                    window.scrollTo(0, 0)
+                })
             }
         }
     }
