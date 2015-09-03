@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
+from django.utils.crypto import get_random_string
 
 from telephone.service_app.services.api_service import ApiService
 
@@ -28,4 +29,17 @@ def get_oauth_token(request):
 		code = request.POST.get('code')
 		if code:
 			result = ApiService.get_token(code)
-			return JsonResponse(result.data) if result.status else HttpResponse(status=500)
+			if result.is_success:
+				return JsonResponse(result.data)
+	return HttpResponse(status=500)
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def generate_password(request):
+	"""
+	Generate random password
+	:param request: HTTP request
+	:return: dict with 'password' key
+	"""
+	return JsonResponse({'password': get_random_string(10)})

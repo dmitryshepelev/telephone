@@ -6,7 +6,7 @@ var controller = (function (services) {
 
     var _userPassword = {
         get: function (callback) {
-            $.get('/generatePassword/', function (data) {
+            $.get('/services/generatePassword/', function (data) {
                 callback(data.password)
             })
         },

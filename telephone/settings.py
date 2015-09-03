@@ -146,8 +146,6 @@ SCHEMA_URL = '/calls/'
 
 S_KEY = 'e6eddf38406a4fa03d09'
 
-PASSWORD_SYMBOLS = string.ascii_letters + string.digits
-
 API_URLS = {
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',

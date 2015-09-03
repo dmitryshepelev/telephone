@@ -1,10 +1,7 @@
 # coding=utf-8
 import json
-from random import randint
-import datetime
-import random
-
 import requests
+
 from django.contrib.auth.models import User
 
 from telephone import settings
@@ -64,33 +61,6 @@ def get_call_record(params, is_superuser):
 		return api_request.content
 	else:
 		return None
-
-
-def get_random_number(length):
-	"""
-	Generate random number
-	:param length: number of numbers
-	:return: string number
-	"""
-	return ''.join(['%s' % randint(0, 9) for _ in range(0, length)])
-
-
-def generate_email_password(email_id):
-	"""
-	Generate password based on template: 'wt[day][month][year]$[login]
-	:param email_id: user's login
-	:return: string password
-	"""
-	return 'wt%s$%s' % (datetime.datetime.now().strftime('%d%m%y'), email_id)
-
-
-def generate_random_password(length):
-	"""
-	Generate random password form letters and numbers
-	:param length: length of password
-	:return: string password
-	"""
-	return ''.join(random.SystemRandom().choice(settings.PASSWORD_SYMBOLS) for _ in range(length))
 
 
 def create_domain_mail(params):
