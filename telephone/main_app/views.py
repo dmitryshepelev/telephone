@@ -141,33 +141,3 @@ def create_mail(request):
 			# get_logger().error(e.message, e.url, request, e.data)
 			return HttpResponse(status=500)
 	return HttpResponse(status=500)
-
-
-@login_required
-def get_api_urls(request):
-	"""
-	Api access url based on 'reason' GET parameter
-	:param request: HTTP request
-	:return: dict
-	"""
-	if request.user.is_superuser and request.GET:
-		reason = request.GET.get('reason')
-		if reason == 'OAuthCode':
-			return JsonResponse({'url': '%s%s&client_id=%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['authorize'], settings.O_AUTH_ID)})
-	return HttpResponse(status=500)
-
-
-@login_required
-def get_oauth_token(request):
-	"""
-	Get OAuth token to api access
-	:param request: HTTP request
-	:return: dict
-	"""
-	if request.user.is_superuser and request.POST:
-		try:
-			result = services.get_oauth_token(request.POST.get('code'))
-			return JsonResponse(result)
-		except Exception as e:
-			return HttpResponse(status=500)
-	return HttpResponse(status=500)

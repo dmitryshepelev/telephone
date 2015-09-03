@@ -11,6 +11,5 @@ urlpatterns = [
 	url(r'^admin/newUser/$', create_new_user, {'template': 'create_new_user.html'}),
 	url(r'^generatePassword/$', generate_password),
 	url(r'^createMail/$', create_mail),
-	url(r'^getApiUrls/$', get_api_urls),
 	url(r'^getOAuthToken/$', get_oauth_token),
 ]

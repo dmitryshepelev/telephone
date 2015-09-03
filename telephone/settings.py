@@ -52,6 +52,7 @@ INSTALLED_APPS = (
 	'telephone.main_app.templatetags',
 	'telephone.main_app',
 	'telephone.auth_app',
+	'telephone.service_app',
 )
 
 MIDDLEWARE_CLASSES = (

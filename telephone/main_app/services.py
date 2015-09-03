@@ -111,21 +111,6 @@ def create_domain_mail(params):
 		raise ApiErrorException(api_response=api_response)
 
 
-def get_oauth_token(code):
-	"""
-	Get OAuth token to api access
-	:param code: verifying code
-	:return: api response data: {'access_token': 'token', 'token_type': 'bearer', 'expires_in': 'time_in_seconds'}
-	"""
-	request_string = '%s%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['token'])
-	api_response = requests.post(request_string, {'grant_type': 'authorization_code', 'code': code, 'client_id': settings.O_AUTH_ID, 'client_secret': settings.O_AUTH_SECRET}, headers={'Content-type': 'application/x-www-form-urlencoded'})
-	if api_response.ok:
-		response_data = json.loads(api_response.content)
-		return response_data
-	else:
-		raise ApiErrorException(api_response=api_response)
-
-
 def create_profile(data):
 	"""
 	Creates a new user and userProfile

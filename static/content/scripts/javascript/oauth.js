@@ -53,7 +53,7 @@ var OAuth = (function (services) {
             var _that = this;
             var value = $('#oauth-code')[0].value;
             if (value) {
-                $.post('/getOAuthToken/', { code: value }).success(function (result) {
+                $.post('/services/getOAuthToken/', { code: value }).success(function (result) {
                     services.executeCallback(_that._getTokenSucccesCallback, result);
                 }).fail(function () {
                     services.executeCallback(_that._getTokenErrorCallback);

@@ -104,7 +104,7 @@ var services = (function () {
      * @private
      */
     function _getApiUrls() {
-        var _baseUrl = '/getApiUrls?reason={0}';
+        var _baseUrl = '/services/getApiUrls?reason={0}';
 
         /**
          * Execute GET request to the server
