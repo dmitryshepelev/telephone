@@ -8,10 +8,24 @@ from telephone import settings
 
 class Parameters():
 	def __init__(self):
-		pass
+		self.__domain = settings.API_URLS['base_api_url']
+		self.__api_version = settings.API_URLS['api_version']
 
-	__domain = settings.API_URLS['base_api_url']
-	__api_version = settings.API_URLS['api_version']
+	@property
+	def api_version(self):
+		"""
+		Getter of __api_version
+		:return: api_version
+		"""
+		return self.__api_version
+
+	@property
+	def domain(self):
+		"""
+		Getter of domain
+		:return: domain
+		"""
+		return self.__domain
 
 	@staticmethod
 	def generate_params_string(params):
@@ -21,8 +35,7 @@ class Parameters():
 		"""
 		return '%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(params.items()))[:-1])
 
-	@staticmethod
-	def sha_encode(method_name, request_string, secret_key):
+	def sha_encode(self, method_name, request_string, secret_key):
 		"""
 		Encode string with sha1 algorithm with secret ket
 		:param method_name: api method name
@@ -30,7 +43,7 @@ class Parameters():
 		:param secret_key: user secret key to api access
 		:return: sha1 encoded string
 		"""
-		return hmac.new(secret_key, '%s%s?%s%s' % (Parameters.__api_version, method_name, request_string, hashlib.md5(request_string).hexdigest()), hashlib.sha1).hexdigest()
+		return hmac.new(secret_key.encode(), '%s%s%s%s' % (self.api_version, method_name, request_string, hashlib.md5(request_string).hexdigest()), hashlib.sha1).hexdigest()
 
 	@staticmethod
 	def generate_sign(sha_string):
@@ -41,14 +54,13 @@ class Parameters():
 		"""
 		return b64encode(sha_string)
 
-	@staticmethod
-	def get_domain_url(method):
+	def get_domain_url(self, method):
 		"""
 		Generate high-level url to request
 		:param method: api method name
 		:return: domain url as 'https://domain/api_version/method'
 		"""
-		return '%s%s%s?' % (Parameters.__domain, Parameters.__api_version, method)
+		return '%s%s%s?' % (self.domain, self.api_version, method)
 
 
 class CallsParameters(Parameters):
@@ -77,7 +89,7 @@ class CallsParameters(Parameters):
 		:return: authorization sign
 		"""
 		request_string = Parameters.generate_params_string(self.__params)
-		sha_string = Parameters.sha_encode(self.__method, request_string, secret_key)
+		sha_string = self.sha_encode(self.__method, request_string, secret_key)
 		return Parameters.generate_sign(sha_string)
 
 	def get_request_string(self):
@@ -85,7 +97,7 @@ class CallsParameters(Parameters):
 		Generate full request string from parameters
 		:return: request string
 		"""
-		return '%s%s' % (Parameters.get_domain_url(self.__method), Parameters.generate_params_string(self.__params))
+		return '%s%s' % (self.get_domain_url(self.__method), self.generate_params_string(self.__params))
 
 	def set_params(self, params):
 		"""

@@ -5,9 +5,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.classes.Parameters import CallsParameters
-from telephone.classes.exceptions.ApiErrorException import ApiErrorException
 from telephone.main_app.services import get_logger
 from telephone import services
+from telephone.service_app.services.DataService import DataService
 
 
 def main(request, template):
@@ -28,7 +28,7 @@ def calls(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	return render_to_response(template, {'schema_name': request.user.userprofile.schema.name}, context_instance=RequestContext(request))
+	return render_to_response(template, {}, context_instance=RequestContext(request))
 
 
 @login_required
@@ -41,12 +41,10 @@ def get_statistic(request, template):
 	params = CallsParameters()
 	if request.GET:
 		params.set_params(request.GET)
-	try:
-		calls_list = services.get_statistics(params, request.user)
-	except ApiErrorException as e:
-		get_logger().error(e.message, e.url, request, e.data)
-		return HttpResponse(status=500)
-	return render_to_response(template, {'calls': calls_list}, context_instance=RequestContext(request))
+	result = DataService.get_statistics(params, request.user)
+	if result.is_success:
+		return render_to_response(template, {'calls': []}, context_instance=RequestContext(request))
+	return HttpResponse(status=500, content=result.data)
 
 
 @login_required
