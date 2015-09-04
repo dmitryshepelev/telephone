@@ -5,7 +5,7 @@ import requests
 from telephone import settings
 from telephone.classes.Parameters import Parameters
 from telephone.classes.Call import Call
-from telephone.classes.exceptions.ApiErrorExceptions import ApiErrorException
+from telephone.classes.exceptions.ApiErrorException import ApiErrorException
 from telephone.services import AppLogger
 
 
