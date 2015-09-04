@@ -1,17 +1,13 @@
 # coding=utf-8
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from telephone import settings
-from telephone.exceptions import ApiErrorException, MailErrorException
-from telephone.main_app.forms import NewUserForm
-from telephone.main_app.proxy.Parameters import CallsParameters, MailParameters
-from telephone.main_app.services import get_logger,	create_domain_mail
+from telephone.classes.exceptions.ApiErrorExceptions import ApiErrorException
+from telephone.classes.Parameters import CallsParameters
+from telephone.main_app.services import get_logger
 from telephone import services
-from telephone.service_app.services.api_service import ApiService
-from telephone.shared_views import default_404
 
 
 def main(request, template):
@@ -82,49 +78,3 @@ def schema_error(request, template):
 	:return: HttpResponse instance
 	"""
 	return render_to_response(template, {}, context_instance=RequestContext(request))
-
-
-@login_required
-def create_new_user(request, template):
-	"""
-	Create new user controller
-	:param request: HTTP request
-	:param template: html template
-	:return:
-	"""
-	if request.user.is_superuser:  # TODO: is_superuser decorator
-
-		if request.POST:
-			new_user_form = NewUserForm(request.POST)
-			if new_user_form.errors:
-				return JsonResponse({'errors': new_user_form.errors})
-			try:
-				# user = services.create_profile(new_user_form.data)
-				return HttpResponse(status=201)
-			except Exception as e:
-				# TODO: handle exception
-				return HttpResponse(status=500)
-		else:
-			email_id = services.get_random_string(6, only_digits=True)
-			response_params = {'email_id': email_id, 'password': ApiService.generate_email_password(email_id), 'domain': '@%s' % settings.DOMAIN}
-			return render_to_response(template, response_params, context_instance=RequestContext(request))
-	return default_404(request)
-
-
-@login_required
-def create_mail(request):
-	"""
-	Creates new email
-	:param request: HTTP request
-	:return: dict
-	"""
-	if request.user.is_superuser and request.POST:
-		params = MailParameters(request.POST)
-		try:
-			result = create_domain_mail(params)
-			return JsonResponse({'login': result['login'], 'uid': result['uid']})
-		except MailErrorException as e:
-			# TODO: log exceptions
-			# get_logger().error(e.message, e.url, request, e.data)
-			return HttpResponse(status=500)
-	return HttpResponse(status=500)

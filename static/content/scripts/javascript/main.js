@@ -139,7 +139,7 @@ function Mail() {
         login: null,
         password: null
     };
-    this._url = '/createMail/';
+    this._url = '/services/createMail/';
 }
 
 Mail.prototype = {

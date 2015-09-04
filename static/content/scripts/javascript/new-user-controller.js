@@ -34,7 +34,7 @@ var controller = (function (services) {
                     var tokenMessageElement = new MessageElement(tokenContainerElement, { size: 'lg', position: 'right'});
                     oauth.setGettingTokenCallback(function (result) {
                         $('#token').attr('value', result.access_token);
-                        tokenMessageElement.success({ setMode: 'replace', message: 'Токен получен успешно' });
+                        tokenMessageElement.success({ size: 'lg', setMode: 'replace', message: 'Токен получен успешно' });
                     }, function () {
                         tokenMessageElement.error({ size: 'sm', setMode: 'append', message: 'Произошла ошибка. Повторите операцию'});
                     });
@@ -42,7 +42,7 @@ var controller = (function (services) {
 
                 }).fail(function () {
                     messageElement.error({ message: 'Операция не завершена' });
-                }).done(function () {
+                }).always(function () {
                     loader.hide();
                 });
             } else {
@@ -57,7 +57,7 @@ var controller = (function (services) {
                     window.location.href = '/';
                 }).fail(function () {
                     $.toaster({ message : 'Профиль не создан', title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
-                }).done(function () {
+                }).always(function () {
                     window.scrollTo(0, 0);
                     loader.hide();
                 })

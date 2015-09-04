@@ -1,14 +1,11 @@
 # coding=utf-8
-import json
+
 import requests
 
-from django.contrib.auth.models import User
-
 from telephone import settings
-from telephone.exceptions import ApiErrorException, MailErrorException
-from telephone.main_app.models import UserProfile
-from telephone.main_app.proxy import Parameters
-from telephone.main_app.proxy.Call import Call
+from telephone.classes.Parameters import Parameters
+from telephone.classes.Call import Call
+from telephone.classes.exceptions.ApiErrorExceptions import ApiErrorException
 from telephone.services import AppLogger
 
 
@@ -61,34 +58,3 @@ def get_call_record(params, is_superuser):
 		return api_request.content
 	else:
 		return None
-
-
-def create_domain_mail(params):
-	"""
-	Create new domain email.
-	:param params: MailParameters instance
-	:return: api response data: {'domain': 'name', 'login': 'email', 'uid': 'uid, 'success': 'status'}
-	"""
-	request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['create_mail'])
-	api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
-	if api_response.ok:
-		response_data = json.loads(api_response.content)
-		if response_data['success'] == 'ok':
-			return response_data
-		else:
-			raise MailErrorException(response_content=response_data)
-	else:
-		raise ApiErrorException(api_response=api_response)
-
-
-def create_profile(data):
-	"""
-	Creates a new user and userProfile
-	:param data: NewUserForm data instance
-	:return: User instance
-	"""
-	user = User.objects.create_user(username=data['userName'], email=data['userEmail'], password=data['userPassword'])
-	user.save()
-	user_profile = UserProfile.objects.create(profile_email='%s@%s' % (data['login'], settings.DOMAIN), profile_password=data['password'], uid=data['uid'], token=data['token'], user_key=data['userKey'], secret_key=data['secretKey'], user_id=user.id)
-	user_profile.save()
-	return user

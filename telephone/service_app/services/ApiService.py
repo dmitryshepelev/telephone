@@ -1,3 +1,4 @@
+import json
 import requests
 import datetime
 from telephone import settings
@@ -15,10 +16,10 @@ class ApiService():
 		:param reason: string
 		:return: ServiceResponse
 		"""
-		result = {}
+		result = ''
 		status = True
 		if reason == 'OAuthCode':
-			result['url'] = '%s%s&client_id=%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['authorize'], settings.O_AUTH_ID)
+			result = '%s%s&client_id=%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['authorize'], settings.O_AUTH_ID)
 		else:
 			status = not status
 		return ServiceResponse(status, result)
@@ -43,3 +44,16 @@ class ApiService():
 		:return: string password
 		"""
 		return 'wt%s$%s' % (datetime.datetime.now().strftime('%d%m%y'), email_id)
+
+	@staticmethod
+	def create_domain_mail(params):
+		"""
+		Create new domain email.
+		:param params: MailParameters instance
+		:return: ServiceResponse, api response data: {'domain': 'name', 'login': 'email', 'uid': 'uid, 'success': 'status'}
+		"""
+		request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['create_mail'])
+		api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
+		if api_response.ok:
+			return ServiceResponse(api_response.ok, json.loads(api_response.content))
+		return ServiceResponse(api_response.ok)

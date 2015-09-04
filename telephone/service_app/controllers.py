@@ -1,8 +1,11 @@
+import json
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
-from django.utils.crypto import get_random_string
+from telephone.classes.Parameters import MailParameters
+from telephone.service_app.services.CommonService import CommonService
 
-from telephone.service_app.services.api_service import ApiService
+from telephone.service_app.services.ApiService import ApiService
 
 
 @login_required
@@ -14,7 +17,10 @@ def get_api_urls(request):
 	:return: dict
 	"""
 	if request.GET:
-		return JsonResponse(ApiService.get_url(request.GET.get('reason'))) or HttpResponse(status=500)
+		result = ApiService.get_url(request.GET.get('reason'))
+		if result.is_success:
+			return JsonResponse({'url': result.data})
+	return HttpResponse(status=500)
 
 
 @login_required
@@ -30,7 +36,7 @@ def get_oauth_token(request):
 		if code:
 			result = ApiService.get_token(code)
 			if result.is_success:
-				return JsonResponse(result.data)
+				return JsonResponse(json.loads(result.data))
 	return HttpResponse(status=500)
 
 
@@ -42,4 +48,20 @@ def generate_password(request):
 	:param request: HTTP request
 	:return: dict with 'password' key
 	"""
-	return JsonResponse({'password': get_random_string(10)})
+	return JsonResponse({'password': CommonService.get_random_string(10)})
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def create_mail(request):
+	"""
+	Creates new email
+	:param request: HTTP request
+	:return: JsonResponse
+	"""
+	if request.POST:
+		params = MailParameters(request.POST)
+		result = ApiService.create_domain_mail(params)
+		if result.is_success and result.data['success'] == 'ok':
+			return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
+	return HttpResponse(status=500)

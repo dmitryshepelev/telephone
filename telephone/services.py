@@ -32,18 +32,3 @@ class AppLogger:
 
 	def critical(self, message, path, request, add_data):
 		self.logger.critical(self.__get_message_string(message, path, request, add_data))
-
-
-def get_random_string(length, only_letters=False, only_digits=False):
-	"""
-	Generate random string form ascii letters and/or numbers
-	:param length: length of string
-	:param only_letters: boolean set if the string must contain only letters
-	:param only_digits: boolean set if the string must contain only digits
-	:return: string
-	"""
-	if only_letters:
-		return crypto.get_random_string(length, string.ascii_letters)
-	if only_digits:
-		return crypto.get_random_string(length, string.digits)
-	return get_random_string(length)

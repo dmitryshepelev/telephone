@@ -53,6 +53,7 @@ INSTALLED_APPS = (
 	'telephone.main_app',
 	'telephone.auth_app',
 	'telephone.service_app',
+	'telephone.admin_app',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -138,6 +139,7 @@ TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'templates'),
 	os.path.join(BASE_DIR,  'main_app/templates'),
 	os.path.join(BASE_DIR,  'auth_app/templates'),
+	os.path.join(BASE_DIR,  'admin_app/templates'),
 )
 
 LOGIN_URL = '/auth/login/'
