@@ -1,10 +1,11 @@
-import os, sys
-from telephone import settings
+import os
+import sys
 
-if not settings.DEBUG:
-	sys.path.insert(0, '/home/v/videomesrf/tel/public_html')
-	sys.path.insert(0, '/home/v/videomesrf/tel')
-	sys.path.insert(0, '/home/v/videomesrf/tel/.djangovenv/lib64/python2.7/site-packages')
+DEBUG = True
+if not DEBUG:
+	sys.path.insert(0, '/home/v/videomesrf/my.web-tel.ru/public_html')
+	sys.path.insert(0, '/home/v/videomesrf/my.web-tel.ru')
+	sys.path.insert(0, '/home/v/videomesrf/my.web-tel.ru/.djangovenv/lib64/python2.7/site-packages')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "telephone.settings")
 

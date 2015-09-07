@@ -22,10 +22,10 @@ def create_new_user(request, template):
 	if request.POST:
 		new_user_form = NewUserForm(request.POST)
 		if new_user_form.errors:
-			return JsonResponse({'errors': new_user_form.errors})
+			return JsonResponse({'isSuccess': False, 'data': new_user_form.errors})
 		result = ProfileService.create_profile(new_user_form.data)
 		if result.is_success:
-			return HttpResponse(status=201)
+			return HttpResponse(status=201, content={'isSuccess': True})
 		return HttpResponse(status=500)
 	else:
 		email_id = CommonService.get_random_string(6, only_digits=True)

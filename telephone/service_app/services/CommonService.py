@@ -23,7 +23,7 @@ class CommonService():
 		return crypto.get_random_string(length)
 
 	@staticmethod
-	def parse_csv(csv_string, cls):
+	def parse_csv(csv_string):
 		"""
 		Parse csv string into array of objects
 		:param csv_string: data string
@@ -35,5 +35,5 @@ class CommonService():
 		iter_csv = iter(csv_string.split('\n'))
 		next(iter_csv)
 		for item in iter_csv:
-			arr.append(cls(item.split(delimiter)))
+			arr.append(item.split(delimiter))
 		return arr

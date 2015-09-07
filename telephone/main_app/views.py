@@ -43,7 +43,7 @@ def get_statistic(request, template):
 		params.set_params(request.GET)
 	result = DataService.get_statistics(params, request.user)
 	if result.is_success:
-		return render_to_response(template, {'calls': []}, context_instance=RequestContext(request))
+		return render_to_response(template, {'calls': result.data}, context_instance=RequestContext(request))
 	return HttpResponse(status=500, content=result.data)
 
 

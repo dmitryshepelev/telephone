@@ -54,11 +54,20 @@ var controller = (function (services) {
             if (!newUserInstance.creationErrors) {
                 loader.show();
                 $.post('/admin/newUser/', newUserInstance.getData(), function (result) {
-                    window.location.href = '/';
+                    if (result.isSuccess) {
+                        window.location.href = '/';
+                    } else {
+                        var errors = [];
+                        for (var d in result.data) {
+                            if (result.data.hasOwnProperty(d)) {
+                                errors.push('{0}: {1}'.format(d, result.data[d][0]))
+                            }
+                        }
+                        $.toaster({ message : errors.join('\n'), title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
+                    }
                 }).fail(function () {
                     $.toaster({ message : 'Профиль не создан', title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
                 }).always(function () {
-                    window.scrollTo(0, 0);
                     loader.hide();
                 })
             } else {
