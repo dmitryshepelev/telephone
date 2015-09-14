@@ -80,24 +80,16 @@ Period.prototype = {
 
 function ApiParams(params) {
     this._params = {
-        //// Display anonymous calls: 0 - No; 1 - Yes
-        //anonymous: 1,
-        //// New clients only: 0 - No; 1 - Yes
-        //firstTime: 0,
-        //// Start date: 'd.m.Y'
-        //from: Date.getNowDate(),
-        //// Callee number
-        //fromNumber: '',
-        //// Call status: 0 - all calls; 1 - missed; 2 - accepted
-        //state: 0,
-        //// End date (inclusively): 'd.m.Y'
-        //to: Date.getNowDate(),
-        //// Call responder number
-        //toAnswer: '',
-        //// Call destination number
-        //toNumber: '',
-        //// Call type: 0 - all calls; 1 - incoming; 2 - upcoming; 3 - inner
-        //type: 0
+        // Start date: 'd.m.Y' *Required*
+        'start': '',
+        // End date (inclusively): 'd.m.Y' *Required*
+        'end': '',
+        // Determine SIP number
+        'sip': '',
+        // Wasted cash
+        'cost_only': '',
+        // Call type: doesn't include - common; 'toll' - 800 number; ru495 - 495 number
+        'type': ''
     };
 
     this._init(params);

@@ -2,6 +2,7 @@ from base64 import b64encode
 import hashlib
 import datetime
 import hmac
+import urllib
 
 from telephone import settings
 
@@ -28,12 +29,12 @@ class Parameters():
 		return self.__domain
 
 	@staticmethod
-	def generate_params_string(params):
+	def get_params_string(params):
 		"""
 		Generate request string from parameters
 		:return: request string
 		"""
-		return '%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(params.items()))[:-1])
+		return urllib.urlencode(sorted(params.items()))
 
 	def sha_encode(self, method_name, request_string, secret_key):
 		"""
@@ -74,11 +75,11 @@ class CallsParameters(Parameters):
 			# End date (inclusively): 'd.m.Y' *Required*
 			'end': end,
 			# Determine SIP number
-			# 'sip': sip,
+			'sip': sip,
 			# Wasted cash
-			# 'cost_only': cost_only,
+			'cost_only': cost_only,
 			# Call type: doesn't include - common; 'toll' - 800 number; ru495 - 495 number
-			# 'type': type
+			'type': type
 		}
 		self.__method = settings.API_URLS['statistics']
 
@@ -88,8 +89,8 @@ class CallsParameters(Parameters):
 		:param secret_key: user secret ket to api access
 		:return: authorization sign
 		"""
-		request_string = Parameters.generate_params_string(self.__params)
-		sha_string = self.sha_encode(self.__method, request_string, secret_key)
+		params_string = Parameters.get_params_string(self.__params)
+		sha_string = self.sha_encode(self.__method, params_string, secret_key)
 		return Parameters.generate_sign(sha_string)
 
 	def get_request_string(self):
@@ -97,7 +98,7 @@ class CallsParameters(Parameters):
 		Generate full request string from parameters
 		:return: request string
 		"""
-		return '%s%s' % (self.get_domain_url(self.__method), self.generate_params_string(self.__params))
+		return '%s%s' % (self.get_domain_url(self.__method), self.get_params_string(self.__params))
 
 	def set_params(self, params):
 		"""
@@ -119,7 +120,7 @@ class MailParameters(Parameters):
 		}
 
 	def get_request_string(self):
-		return Parameters.generate_params_string(self.__params)
+		return Parameters.get_params_string(self.__params)
 
 	def get_params(self):
 		return self.__params

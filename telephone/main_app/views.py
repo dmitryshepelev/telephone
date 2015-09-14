@@ -7,6 +7,7 @@ from django.template import RequestContext
 from telephone.classes.Parameters import CallsParameters
 from telephone.main_app.services import get_logger
 from telephone import services
+from json import loads
 from telephone.service_app.services.DataService import DataService
 
 
@@ -44,7 +45,8 @@ def get_statistic(request, template):
 	result = DataService.get_statistics(params, request.user)
 	if result.is_success:
 		return render_to_response(template, {'calls': result.data}, context_instance=RequestContext(request))
-	return HttpResponse(status=500, content=result.data)
+	# TODO: Logger
+	return HttpResponse(status=500)
 
 
 @login_required

@@ -1,3 +1,4 @@
+import json
 import requests
 from telephone import settings
 from telephone.classes.Call import Call
@@ -22,6 +23,7 @@ class DataService():
 			data_arr = CommonService.parse_csv(abspath.read())
 			return ServiceResponse(True, [Call(d) for d in data_arr])
 
-		request_string = params.get_request_string()
-		api_response = requests.get(request_string, headers={'Authorization': '%s:%s' % (user.userprofile.user_key, params.get_sign(user.userprofile.secret_key))})
-		return ServiceResponse(api_response.ok, api_response.content)
+		api_response = requests.get(params.get_request_string(), headers={'Authorization': '%s:%s' % (user.userprofile.user_key, params.get_sign(user.userprofile.secret_key))})
+		if api_response.ok:
+			return ServiceResponse(api_response.ok, [Call(s) for s in json.loads(api_response.content)['stats']])
+		return ServiceResponse(api_response.ok, message=api_response.status_code)
