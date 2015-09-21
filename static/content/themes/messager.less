@@ -1,0 +1,25 @@
+@import "frittt/varaibles.less";
+#messager {
+	z-index: 1030;
+	width: 100%;
+	padding: 5px 10px;
+	position: fixed;
+	top: @header-height;
+	color: #ffffff;
+
+	&.message-success {
+		background-color: @success-color;
+	}
+
+	&.message-warning {
+		background-color: @warning-color;
+	}
+
+	&.message-error {
+		background-color: @error-color;
+	}
+
+	&.message-info {
+		background-color: @info-color;
+	}
+}

@@ -3,6 +3,15 @@
 {% block resources %}
 	{% load staticfiles %}
 
+	<script>
+
+		$(document).ready(function () {
+			var message = new Messager();
+			$('#showMes').on('click', function (e) {
+				message.success('Hello, spaceboy ' + e.timeStamp);
+			})
+		});
+	</script>
 {% endblock %}
 
 {% block title %}
@@ -10,5 +19,5 @@
 {% endblock %}
 
 {% block content %}
-    content
+    <button id="showMes" class="btn btn-default" type="button">Message</button>
 {% endblock %}
