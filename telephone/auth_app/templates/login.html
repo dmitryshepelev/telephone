@@ -1,30 +1,37 @@
-{% extends 'auth_layout.html' %}
+{% extends 'main_layout.html' %}
 
 {% block title %}
 	Вход
 {% endblock %}
 
-{% block content %}
-	<div align="center">
-		<h2>Добро пожаловать на <a href="/">telephone</a></h2>
-		<h3>Войдите в профиль используюя логин и пароль</h3>
-	</div>
+{% block resources %}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static "auth-controller.js" %}"></script>
+	<script type="text/javascript" src="{% static "models/auth-model.js" %}"></script>
+{% endblock %}
 
-	<div align="center">
-		<div class="auth-group">
-			<form class="form-horizontal" >
-				{% csrf_token %}
-				<input type="hidden" id="redirect_url" name="redirect_url" value="{{ redirect_url }}">
-				<div class="form-group">
-					<input class="form-control input-lg" id="username" onfocus="validate.hideError($(event.target))" name="username" type="text" placeholder="Логин">
-				</div>
-				<div class="form-group">
-					<input class="form-control input-lg" id="password" onfocus="validate.hideError($(event.target))" name="password" type="password" placeholder="Пароль">
-				</div>
-				<div class="form-group">
-					<button type="button" onclick="auth.login(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Войти</button>
-				</div>
-			</form>
+{% block content %}
+	<div class="auth-container" align="center">
+		<div class="auth-block" >
+			<h2>Добро пожаловать на <a href="/">web-tel</a></h2>
+			<h3>Войдите в профиль используюя логин и пароль</h3>
+		</div>
+		<div class="auth-block">
+			<div class="auth-group">
+				<form class="form-horizontal" >
+					{% csrf_token %}
+					<input type="hidden" id="redirect_url" name="redirect_url" value="{{ redirect_url }}">
+					<div class="form-group">
+						<input class="form-control input-lg" id="username" name="username" type="text" placeholder="Логин" required>
+					</div>
+					<div class="form-group">
+						<input class="form-control input-lg" id="password" name="password" type="password" placeholder="Пароль" required>
+					</div>
+					<div class="form-group">
+						<button type="button" onclick="auth.login(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Войти</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 {% endblock %}

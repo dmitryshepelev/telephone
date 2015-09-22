@@ -68,7 +68,7 @@ var services = (function () {
         var cls = arguments[0];
         var instance = new cls;
         if (!cls.prototype.setData) {
-             cls.prototype.setData = _setData
+             cls.prototype.setData = _setData;
         }
         if (arguments.length > 1) {
             var data = arguments[1];
@@ -78,7 +78,7 @@ var services = (function () {
                     data = collectedData.data;
                     instance.creationErrors = collectedData.errors.length > 0 ? collectedData.errors : null
                 } else {
-                    throw '{0} Class hasn\'t model'.format(errorTitle);
+                    throw '{0} Class hasn\'t model. Ensure that class \'{1}\' has \'getModel()\' method'.format(errorTitle, cls.name);
                 }
             }
             instance.setData(data);
@@ -125,12 +125,30 @@ var services = (function () {
             }
         }
     }
-    
+
+    /**
+     * Validate html element by its id
+     * @param elementId string
+     * @param isValid leave undefined or set false value to make element invalid
+     * @private
+     */
+    function _validate (elementId, isValid) {
+        var errorCss = 'error';
+        var element = $('#' + elementId);
+        if (isValid == true) {
+            element.removeClass(errorCss);
+        } else {
+            element.addClass(errorCss);
+            element.on('change', _validate.bind(this, elementId, true))
+        }
+    }
+
     return {
         collectModelData: _collectModelData,
         getParamsString: _getParamsString,
         createInstance: _createInstance,
         executeCallback: _executeCallback,
-        getApiUrls: _getApiUrls
+        getApiUrls: _getApiUrls,
+        validate: _validate
     }
 })();

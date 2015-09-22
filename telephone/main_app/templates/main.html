@@ -3,15 +3,6 @@
 {% block resources %}
 	{% load staticfiles %}
 
-	<script>
-
-		$(document).ready(function () {
-			var message = new Messager();
-			$('#showMes').on('click', function (e) {
-				message.success('Hello, spaceboy ' + e.timeStamp);
-			})
-		});
-	</script>
 {% endblock %}
 
 {% block title %}

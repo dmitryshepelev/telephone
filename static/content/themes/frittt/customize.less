@@ -131,4 +131,36 @@ ul.navbar-nav >
 	}
 }
 
+/* AUTH PAGE */
+
+.auth-container {
+	margin-top: 8%;
+	padding: 0 15px;
+	.auth-block {
+		width: 50%;
+	}
+}
+
+/* MEDIA */
+
+@media (max-width: 992px) {
+	.auth-container {
+		.auth-block {
+			width: 70%;
+		}
+	}
+}
+
+@media (max-width: 768px){
+	.auth-container {
+		.auth-block {
+			width: 90%;
+		}
+	}
+}
+
 /* OTHER */
+
+.error {
+	border-color: @error-color;
+}

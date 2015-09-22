@@ -11,22 +11,6 @@ def get_logger():
 	return __logger
 
 
-def sing_in(username, password, request):
-	"""
-	Authenticate and Sign in user by login and password
-	:param username: username, string
-	:param password: password, string
-	:param request: HTTP request
-	:return: True if the user was singed in
-	"""
-	auth_user = authenticate(username=username, password=password)
-	if auth_user is not None:
-		login(request, auth_user)
-		return True
-	get_logger().error('Error user login', request.path, request, {'Username': username, 'Password': password})
-	return False
-
-
 def get_redirect_url_prop():
 	"""
 	Returns name of the redirect url property

@@ -37,3 +37,12 @@ class CommonService():
 		for item in iter_csv:
 			arr.append(item.split(delimiter))
 		return arr
+
+	@staticmethod
+	def parse_form_errors(errors):
+		"""
+		Parse form errors to the array of string
+		:param errors: errors dictionary
+		:return:
+		"""
+		return ['%s:%s' % (name, errors[name][0]) for name in errors]

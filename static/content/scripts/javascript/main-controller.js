@@ -13,3 +13,5 @@ var mainController = (function () {
         initRequiredFields: _initRequiredFields
     }
 })();
+
+/* APP INIT. GLOBAL VARIABLES */
