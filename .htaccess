@@ -1,5 +1,0 @@
-AddDefaultCharset utf-8
-AddHandler wsgi-script .py
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /telephone/wsgi.py/$1 [QSA,L]
