@@ -1,3 +1,4 @@
+import json
 import string
 from django.utils import crypto
 from telephone import settings
@@ -43,6 +44,10 @@ class CommonService():
 		"""
 		Parse form errors to the array of string
 		:param errors: errors dictionary
-		:return:
+		:return: dct - dictionary
 		"""
-		return ['%s:%s' % (name, errors[name][0]) for name in errors]
+		dct = {}
+		for error in errors:
+			for key, value in error.iteritems():
+				dct[key] = value
+		return dct

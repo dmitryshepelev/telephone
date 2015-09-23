@@ -6,6 +6,7 @@ from telephone.classes.Parameters import MailParameters
 from telephone.service_app.services.CommonService import CommonService
 
 from telephone.service_app.services.ApiService import ApiService
+from telephone.service_app.services.LocalizeService import LocalizeService
 
 
 @login_required

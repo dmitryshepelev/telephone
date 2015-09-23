@@ -144,8 +144,6 @@ TEMPLATE_DIRS = (
 
 LOGIN_URL = '/auth/login/'
 
-SCHEMA_URL = '/calls/'
-
 S_KEY = 'e6eddf38406a4fa03d09'
 
 API_URLS = {

@@ -26,6 +26,15 @@ class ServiceResponse():
 		"""
 		return self.__data
 
+	@data.setter
+	def data(self, value):
+		"""
+		Setter og __data
+		:param value: data
+		:return:
+		"""
+		self.__data = value
+
 	@property
 	def message(self):
 		"""

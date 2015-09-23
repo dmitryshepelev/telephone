@@ -143,12 +143,35 @@ var services = (function () {
         }
     }
 
+    /**
+     * Bind key pressed
+     * @param key keyname to bind
+     * @param handler to execute
+     * @private
+     */
+    function _bindKey (key, handler) {
+        var keyMatch = [
+            { name: 'enter', code: 13 }
+        ];
+        var keyToBind = keyMatch.filter(function (k) {
+            return k.name == key
+        })[0];
+        if (keyToBind) {
+            $(document).keypress(function (e) {
+                if (e.which == keyToBind.code) {
+                    _executeCallback(handler)
+                }
+            })
+        }
+    }
+
     return {
         collectModelData: _collectModelData,
         getParamsString: _getParamsString,
         createInstance: _createInstance,
         executeCallback: _executeCallback,
         getApiUrls: _getApiUrls,
-        validate: _validate
+        validate: _validate,
+        bindKey: _bindKey
     }
 })();
