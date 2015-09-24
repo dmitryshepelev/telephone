@@ -54,6 +54,4 @@ class ApiService():
 		"""
 		request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['create_mail'])
 		api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
-		if api_response.ok:
-			return ServiceResponse(api_response.ok, json.loads(api_response.content))
-		return ServiceResponse(api_response.ok)
+		return ServiceResponse(api_response.ok, json.loads(api_response.content))

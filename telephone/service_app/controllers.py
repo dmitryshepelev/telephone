@@ -36,8 +36,11 @@ def get_oauth_token(request):
 		code = request.POST.get('code')
 		if code:
 			result = ApiService.get_token(code)
-			if result.is_success:
-				return JsonResponse(json.loads(result.data))
+			status_code = 200
+			if not result.is_success:
+				status_code = 400
+			data = json.loads(result.data)
+			return JsonResponse(data, status=status_code)
 	return HttpResponse(status=500)
 
 
@@ -63,6 +66,8 @@ def create_mail(request):
 	if request.POST:
 		params = MailParameters(request.POST)
 		result = ApiService.create_domain_mail(params)
-		if result.is_success and result.data['success'] == 'ok':
-			return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
+		if result.is_success:
+			if result.data['success'] == 'ok':
+				return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
+			return JsonResponse(result.data, status=400)
 	return HttpResponse(status=500)

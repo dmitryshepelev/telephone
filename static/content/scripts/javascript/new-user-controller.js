@@ -1,7 +1,6 @@
 var controller = (function (services) {
     $(document).ready(function () {
         mainController.initTooltips();
-        mainController.initRequiredFields();
     });
 
     var _userPassword = {
@@ -11,7 +10,9 @@ var controller = (function (services) {
             })
         },
         set: function (value) {
-            $('#user_password').attr('value', value)
+            var element = $('#userPassword');
+            element.prop('value', value);
+            element.attr('value', value)
         }
     };
 
@@ -21,32 +22,26 @@ var controller = (function (services) {
         },
         createMail: function (event) {
             var mailInstance = services.createInstance(Mail, null);
-            var messageElement = new MessageElement($(event.target), { setMode: 'replace', size: 'lg' });
-
             if (!mailInstance.creationErrors) {
-                loader.show();
                 mailInstance.createMail().success(function (result) {
                     $('#uid').attr('value', result.uid);
-                    messageElement.success({ message: 'Почта создана успешно' });
-
+                    message.success('Почта создана успешно');
                     var tokenContainerElement = $('#token-form-container');
-                    var oauth = new OAuth(tokenContainerElement);
-                    var tokenMessageElement = new MessageElement(tokenContainerElement, { size: 'lg', position: 'right'});
-                    oauth.setGettingTokenCallback(function (result) {
+                    tokenContainerElement.show();
+                    var oauth = new OAuth(function (result) {
                         $('#token').attr('value', result.access_token);
-                        tokenMessageElement.success({ size: 'lg', setMode: 'replace', message: 'Токен получен успешно' });
-                    }, function () {
-                        tokenMessageElement.error({ size: 'sm', setMode: 'append', message: 'Произошла ошибка. Повторите операцию'});
+                        message.success('Токен успешно получен')
                     });
-                    oauth.getOAuthCode();
-
-                }).fail(function () {
-                    messageElement.error({ message: 'Операция не завершена' });
+                }).fail(function (xhr) {
+                    message.success('Mailbox creation error: {0}'.format(JSON.parse(xhr.responseText).error));
                 }).always(function () {
-                    loader.hide();
+                    //loader.hide();
                 });
             } else {
-                $.toaster({ message : mailInstance.creationErrors.join('; '), title: 'Следующие поля не заполнены', priority : 'danger', settings: {timeout: 5000} });
+                mailInstance.creationErrors.forEach(function (errorFieldName) {
+                    services.validate(errorFieldName);
+                });
+                message.error('Не все поля заполнены');
             }
         },
         createUser: function () {
@@ -56,22 +51,26 @@ var controller = (function (services) {
                 $.post('/admin/newUser/', newUserInstance.getData(), function (result) {
                     if (result.isSuccess) {
                         window.location.href = '/';
-                    } else {
-                        var errors = [];
-                        for (var d in result.data) {
-                            if (result.data.hasOwnProperty(d)) {
-                                errors.push('{0}: {1}'.format(d, result.data[d][0]))
+                    }
+                }).fail(function (xhr) {
+                    var errors = [];
+                    if (xhr.responseText) {
+                        var data = JSON.parse(xhr.responseText);
+                        for (var d in data.data) {
+                            if (data.data.hasOwnProperty(d)) {
+                                errors.push('{0}: {1}'.format(d, data.data[d][0]))
                             }
                         }
-                        $.toaster({ message : errors.join('\n'), title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
                     }
-                }).fail(function () {
-                    $.toaster({ message : 'Профиль не создан', title: 'Операция не завершена', priority : 'danger', settings: {timeout: 5000} });
+                    message.error(errors.join('\n'));
                 }).always(function () {
-                    loader.hide();
+
                 })
             } else {
-                $.toaster({ message : newUserInstance.creationErrors.join('; '), title: 'Следующие поля не заполнены', priority : 'danger', settings: {timeout: 5000} });
+                newUserInstance.creationErrors.forEach(function (errorFieldName) {
+                    services.validate(errorFieldName);
+                });
+                message.error('Не все поля заполнены');
             }
         }
     }

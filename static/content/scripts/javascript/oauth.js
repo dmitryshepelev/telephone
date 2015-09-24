@@ -1,19 +1,8 @@
 var OAuth = (function (services) {
-    function OAuth(element) {
-        this._element = element;
-        this._getTokenSucccesCallback = null;
-        this._getTokenErrorCallback = null;
-        this._templates = {
-            codeForm:
-                '<form id="oauth-code-form" class="form-horizontal">' +
-                    '<div class="input-group disk-form btn-group pull-right">' +
-                        '<input id="oauth-code" style="max-width: 120px" class="form-control" type="text" placeholder="Код" value="">' +
-                        '<button id="oauth-send-code" class="btn btn-default" type="button">Получить токен</button>' +
-                        '<button id="oauth-get-new-code" class="btn btn-default" type="button"><span class="glyphicon glyphicon-repeat"></span></button>' +
-                    '</div>' +
-                '</form>'
-        };
-        this.initCodeForm();
+    function OAuth(onSuccess) {
+        this._getTokenSucccesCallback = onSuccess;
+
+        this._initElementsActions()
     }
     OAuth.prototype = {
         constructor: OAuth,
@@ -21,8 +10,7 @@ var OAuth = (function (services) {
         /**
          * Creates code form in DOM
          */
-        initCodeForm: function () {
-            this._element.append(this._templates.codeForm);
+        _initElementsActions: function () {
             $('#oauth-get-new-code').on('click', this.getOAuthCode.bind(this));
             $('#oauth-send-code').on('click', this.getOAuthToken.bind(this))
         },
@@ -50,15 +38,31 @@ var OAuth = (function (services) {
          * Get api access token
          */
         getOAuthToken: function () {
-            var _that = this;
-            var value = $('#oauth-code')[0].value;
-            if (value) {
-                $.post('/services/getOAuthToken/', { code: value }).success(function (result) {
-                    services.executeCallback(_that._getTokenSucccesCallback, result);
-                }).fail(function () {
-                    services.executeCallback(_that._getTokenErrorCallback);
-                });
+            var isMailboxCreated = $('#uid').val() != '';
+            if (isMailboxCreated) {
+                var _that = this;
+                var value = $('#oauth-code')[0].value;
+                if (value) {
+                    $.post('/services/getOAuthToken/', { code: value }).success(function (result) {
+                        services.executeCallback(_that._getTokenSucccesCallback, result);
+                    }).fail(function (xhr) {
+                        var errorString = '';
+                        if (xhr.responseText) {
+                            var data = JSON.parse(xhr.responseText);
+                            errorString = '{0}: {1}'.format(data.error, data.error_description);
+                        } else {
+                            errorString = xhr.statusText;
+                        }
+                        message.error('Token creation error: {0}'.format(errorString))
+                    });
+                } else {
+                    services.validate('oauth-code');
+                    message.error('Token creation error: value cannot be null')
+                }
+            } else {
+                message.error('Error: token cannot be get. Mailbox isn\'t created')
             }
+
         }
     };
 

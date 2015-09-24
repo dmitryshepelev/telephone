@@ -123,40 +123,6 @@ ApiParams.prototype = {
 
 
 /**
- * Class represents Mail entity
- * @constructor Mail
- */
-function Mail() {
-    this._data = {
-        login: null,
-        password: null
-    };
-    this._url = '/services/createMail/';
-}
-
-Mail.prototype = {
-    constructor: Mail,
-
-    /**
-     * Returns Mail form fields
-     * @returns {{login: string, password: string}}
-     */
-    getModel: function () {
-        return {
-            login: 'login',
-            password: 'password'
-        }
-    },
-    /**
-     * Create request to the server to create new mail
-     * @returns JQuery.Deferred
-     */
-    createMail: function () {
-        return $.post(this._url, this._data)
-    }
-};
-
-/**
  * Class represents NewUser entity
  * @constructor NewUser
  */
@@ -187,11 +153,11 @@ NewUser.prototype = {
             password: 'password',
             uid: 'uid',
             token: 'token',
-            userKey: 'user_key',
-            secretKey: 'secret_key',
-            userEmail: 'user_email',
-            userPassword: 'user_password',
-            userName: 'user_name'
+            userKey: 'userKey',
+            secretKey: 'secretKey',
+            userEmail: 'userEmail',
+            userPassword: 'userPassword',
+            userName: 'userName'
         }
     },
 

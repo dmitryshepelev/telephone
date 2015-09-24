@@ -2,10 +2,9 @@
 
 {% block resources %}
 	{% load staticfiles %}
-	<script type="text/javascript" src="{% static 'jquery.toaster.js' %}"></script>
 	<script type="text/javascript" src="{% static 'new-user-controller.js' %}"></script>
-    <script type="text/javascript" src="{% static 'message-element.js' %}"></script>
     <script type="text/javascript" src="{% static 'oauth.js' %}"></script>
+	<script type="text/javascript" src="{% static 'models/mail-model.js' %}"></script>
 {% endblock %}
 
 {% block title %}
@@ -13,76 +12,91 @@
 {% endblock %}
 
 {% block content %}
-    <div class="section padding-left">
-		<div class="container">
-			<div class="row col-md-offset-2 form-container">
-				<div class="col-md-9 vertical-block">
-					<h1>Почта</h1>
-					<form role="form">
-						{% csrf_token %}
-						<div class="form-group has-feedback">
-							<label class="control-label" for="login">Логин</label>
-							<input class="form-control input-lg domain" id="login" name="login" value="{{ email_id }}" placeholder="Логин" type="text" required>
-							<span class="fa fa-check form-control-feedback">{{ domain }}</span>
-						</div>
-						<div class="form-group has-feedback">
-							<label class="control-label" for="password">Пароль</label>
-							<input class="form-control input-lg" id="password" name="password" value="{{ password }}" placeholder="Пароль" type="text" required>
-						</div>
-                        <input type="hidden" id="uid" name="uid" value="" required/>
-                        <input type="hidden" id="token" name="token" value="" required/>
-						<div class="row">
-							<div class="col-md-6">
-								<button type="button" class="btn btn-link-empty btn-lg pull-left" loader onclick="controller.createMail(event)">
-									<span class="glyphicon glyphicon-envelope"></span> Создать
-								</button>
-							</div>
-							<div class="col-md-6">
-                                <div id="token-form-container"></div>
+	<div class="container">
+		<div class="row col-md-offset-2 form-container">
+			<div class="col-md-9 form-block">
+				<h1>Почта</h1>
+				<form role="form">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="control-label" for="login">Логин</label>
+								<input class="form-control input-lg domain" id="login" name="login" value="{{ email_id }}{{ domain }}" placeholder="Логин" type="text" required>
 							</div>
 						</div>
-					</form>
-				</div>
-				<div class="col-md-9 vertical-block">
-					<h1>
-						Данные АТС
-						<small>
-							<a href="https://ss.zadarma.com/registration/?lang=ru&ref=aa0b36c330a52f8f42aae33496717f06" target="_blank">Создать профиль</a>
-						</small>
-					</h1>
-					<form role="form">
-						<div class="form-group">
-							<label class="control-label" for="user_key">Ключ пользователя</label>
-							<input class="form-control input-lg" id="user_key" name="user_key" placeholder="Ключ" type="text" required>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="control-label" for="password">Пароль</label>
+								<input class="form-control input-lg" id="password" name="password" value="{{ password }}" placeholder="Пароль" type="text" required>
+							</div>
 						</div>
-						<div class="form-group">
-							<label class="control-label" for="secret_key">Секретный ключ</label>
-							<input class="form-control input-lg" id="secret_key" name="secret_key" placeholder="Секретный ключ" type="text" required>
+					</div>
+                    <input type="hidden" id="uid" name="uid" value="" required/>
+                    <input type="hidden" id="token" name="token" value="" required/>
+					<div class="row">
+						<div class="col-sm-6">
+							<button type="button" class="btn btn-link-empty btn-lg pull-left" loader onclick="controller.createMail(event)">Создать</button>
+							<div id="token-form-container" style="display: none">
+								<span id="oauth-get-new-code" class="form-control-feedback icon-spinner11 input-icon pointer pull-right" tooltip data-placement="bottom" data-original-title="Получить доступ"></span>
+								<span id="oauth-send-code" class="form-control-feedback icon-arrow-right2 input-icon pointer pull-right" tooltip data-placement="bottom" data-original-title="Получить токен"></span>
+		                        <input id="oauth-code" class="form-control input-lg has-icon-2" type="text" placeholder="Код" value="" autocomplete="off">
+							</div>
 						</div>
-					</form>
-				</div>
-				<div class="col-md-9 vertical-block">
-					<h1>Данные профиля</h1>
-					<form role="form">
-						<div class="form-group">
-							<label class="control-label" for="user_email">Адрес пользователя</label>
-							<input class="form-control input-lg" id="user_email" name="user_email" placeholder="E-mail" type="email" required>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-9 form-block">
+				<h1>
+					Данные АТС
+					<small>
+						<a class="shadow-link" href="https://ss.zadarma.com/registration/?lang=ru&ref=aa0b36c330a52f8f42aae33496717f06" target="_blank">Создать профиль</a>
+					</small>
+				</h1>
+				<form role="form">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="control-label" for="userKey">Ключ пользователя</label>
+								<input class="required-field form-control input-lg" id="userKey" name="user_key" placeholder="Ключ" type="text" required autocomplete="off">
+							</div>
 						</div>
-						<div class="form-group has-feedback">
-							<label class="control-label" for="user_password">Пароль</label>
-							<input class="form-control input-lg password" id="user_password" name="user_password" placeholder="Пароль" type="text" required>
-							<span class="fa fa-check form-control-feedback glyphicon glyphicon-text-size allow-events pointer" onclick="controller.getNewPassword()" tooltip data-placement="bottom" data-original-title="Генерировать пароль"></span>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="control-label" for="secretKey">Секретный ключ</label>
+								<input class="form-control input-lg" id="secretKey" name="secret_key" placeholder="Секретный ключ" type="text" required autocomplete="off">
+							</div>
 						</div>
-						<div class="form-group">
-							<label class="control-label" for="user_name">Имя пользователя</label>
-							<input class="form-control input-lg" id="user_name" name="user_name" required placeholder="Имя" type="text">
+					</div>
+				</form>
+			</div>
+			<div class="col-md-9 form-block">
+				<h1>Данные профиля</h1>
+				<form role="form">
+					<div class="form-group">
+						<label class="control-label" for="userEmail">Адрес пользователя</label>
+						<input class="form-control input-lg" id="userEmail" name="user_email" placeholder="E-mail" type="email" required autocomplete="off">
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="control-label" for="userName">Имя пользователя</label>
+								<input class="form-control input-lg" id="userName" name="user_name" required placeholder="Имя" type="text" autocomplete="off">
+							</div>
 						</div>
-					</form>
-				</div>
-				<div class="col-md-9">
-					<button type="button" class="btn btn-default btn-lg pull-right" onclick="controller.createUser()">Создать профиль</button>
-				</div>
+						<div class="col-sm-6">
+							<div class="form-group has-feedback">
+								<label class="control-label" for="userPassword">Пароль</label>
+								<span class="form-control-feedback icon-spinner11 input-icon offset-top-inverse-3 pointer pull-right" onclick="controller.getNewPassword()" tooltip data-placement="bottom" data-original-title="Генерировать пароль"></span>
+								<input class="form-control input-lg has-icon" id="userPassword" name="user_password" placeholder="Пароль" type="text" required autocomplete="off">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-9">
+				<button type="button" class="btn btn-default btn-lg pull-right" onclick="controller.createUser()">Создать профиль</button>
 			</div>
 		</div>
-    </div>
+	</div>
 {% endblock %}
