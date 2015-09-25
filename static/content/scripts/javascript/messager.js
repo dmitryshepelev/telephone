@@ -3,6 +3,7 @@ var message = (function () {
         this._element = {};
         this._id = 'messager';
         this._template = '<div id="' + this._id + '" align="center" style="display: none; cursor: pointer"></div>'
+        this._timeoutId = null;
     }
 
     Message.prototype = {
@@ -24,12 +25,16 @@ var message = (function () {
             this._element.text(text);
         },
 
-        _hide: function () {
+        _hide: function (e) {
             this._initElement();
             if (this._element.attr('style').indexOf('display: none') == -1) {
                 this._element.fadeOut(200, function () {
                     this._element.removeClass();
                     this._element.text('');
+                    if (this._timeoutId) {
+                        clearTimeout(this._timeoutId);
+                        this._timeoutId = null;
+                    }
                 }.bind(this));
             }
         },
@@ -39,7 +44,7 @@ var message = (function () {
             this._setValues(text, type);
             var _that = this;
             this._element.fadeIn(200, function () {
-                setTimeout(function () { _that._hide.apply(_that) }, 7000);
+                _that._timeoutId = setTimeout(function () { _that._hide.apply(_that) }, 7000);
             });
         },
 

@@ -52,12 +52,8 @@ Mail.prototype = {
         var model = this.getModel();
         for (var m in model) {
             if (model.hasOwnProperty(m)) {
-                var element = $('#' + model[m]);
-                var value = this._data[m];
-                element.val(value);
-                element.attr('value', value)
+                $('#' + model[m]).val(this._data[m]);
             }
         }
     }
-
 };

@@ -28,4 +28,4 @@ def create_new_user(request, template):
 			return HttpResponse(status=201)
 		return HttpResponse(status=500)
 	else:
-		return render_to_response(template, ApiService.generate_mailbox_data().data, context_instance=RequestContext(request))
+		return render_to_response(template, {}, context_instance=RequestContext(request))

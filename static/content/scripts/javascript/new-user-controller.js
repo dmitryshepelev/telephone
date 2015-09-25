@@ -2,6 +2,7 @@ var controller = (function (services) {
     $(document).ready(function () {
         mainController.initTooltips();
         _getNewPassword();
+        _getMailboxData();
     });
 
     function _getNewPassword() {
@@ -70,11 +71,13 @@ var controller = (function (services) {
             var newUserInstance = services.createInstance(NewUser, null);
             if (!newUserInstance.creationErrors) {
                 loader.show();
-                $.post('/admin/newUser/', newUserInstance.getData(), function (result) {
+                $.post('/admin/newuser/', newUserInstance.getData(), function (result) {
                     services.cleanModelData(newUserInstance.getModel(), function () {
                         _getNewPassword();
                         _getMailboxData();
                     });
+                    message.success('Пользователь создан успешно');
+                    $('html, body').animate({ scrollTop: 0}, 500);
                 }).fail(function (xhr) {
                     var errors = [];
                     if (xhr.responseText) {
