@@ -3,6 +3,7 @@ import requests
 import datetime
 from telephone import settings
 from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.service_app.services.CommonService import CommonService
 
 
 class ApiService():
@@ -55,3 +56,13 @@ class ApiService():
 		request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['create_mail'])
 		api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
 		return ServiceResponse(api_response.ok, json.loads(api_response.content))
+
+	@staticmethod
+	def generate_mailbox_data():
+		"""
+		Generate new mailbox data
+		:return: ServiceResponse: {'login': <login>, 'password': <password>}
+		"""
+		login = CommonService.get_random_string(6, only_digits=True)
+		password = ApiService.generate_email_password(login)
+		return ServiceResponse(True, {'login': '%s@%s' % (login, settings.DOMAIN), 'password': password})

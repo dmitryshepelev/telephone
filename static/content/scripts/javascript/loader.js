@@ -1,13 +1,11 @@
 var loader = (function () {
-    var _id = 'loader';
-    var _template = '<div id="' + _id + '" class="loader-main" align="center"><img src="/static/content/images/loader.gif" /></div>';
-
+    var _container = '.loader-container';
     return {
         show: function () {
-            $('body').append(_template);
+            $(_container).fadeIn(200);
         },
         hide: function () {
-            $('body').children('#' + _id).remove()
+            $(_container).fadeOut(200)
         }
     }
 })();

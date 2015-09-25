@@ -71,3 +71,14 @@ def create_mail(request):
 				return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
 			return JsonResponse(result.data, status=400)
 	return HttpResponse(status=500)
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def get_mailbox_data(request):
+	"""
+	Controller to get new mailbox data
+	:param request: HTTP request
+	:return: JsonResponse
+	"""
+	return JsonResponse(ApiService.generate_mailbox_data().data)

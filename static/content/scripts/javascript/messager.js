@@ -2,7 +2,7 @@ var message = (function () {
     function Message () {
         this._element = {};
         this._id = 'messager';
-        this._template = '<div id="' + this._id + '" align="center" style="display: none; cursor: pointer"></div>';
+        this._template = '<div id="' + this._id + '" align="center" style="display: none; cursor: pointer"></div>'
     }
 
     Message.prototype = {
@@ -26,16 +26,21 @@ var message = (function () {
 
         _hide: function () {
             this._initElement();
-            this._element.fadeOut(200, function () {
-                this._element.removeClass();
-                this._element.text('')
-            }.bind(this));
+            if (this._element.attr('style').indexOf('display: none') == -1) {
+                this._element.fadeOut(200, function () {
+                    this._element.removeClass();
+                    this._element.text('');
+                }.bind(this));
+            }
         },
 
         _show: function (text, type) {
             this._initElement();
             this._setValues(text, type);
-            this._element.fadeIn(200);
+            var _that = this;
+            this._element.fadeIn(200, function () {
+                setTimeout(function () { _that._hide.apply(_that) }, 7000);
+            });
         },
 
         success: function (text) {

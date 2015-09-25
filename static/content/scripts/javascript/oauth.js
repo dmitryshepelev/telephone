@@ -1,6 +1,10 @@
 var OAuth = (function (services) {
     function OAuth(onSuccess) {
         this._getTokenSucccesCallback = onSuccess;
+        this._errors = {
+            EMBNCR: 'Error: token cannot be get. Mailbox isn\'t created',
+            ETOKCR: 'Token creation error: {0}'
+        };
 
         this._initElementsActions()
     }
@@ -16,22 +20,17 @@ var OAuth = (function (services) {
         },
 
         /**
-         * Sets events callbacks
-         * @param success
-         * @param error
-         */
-        setGettingTokenCallback: function (success, error) {
-            this._getTokenSucccesCallback = success || null;
-            this._getTokenErrorCallback = error || null;
-        },
-
-        /**
          * Get url and redirect to get code
          */
         getOAuthCode: function () {
-            services.getApiUrls().OAuthCodeUrl().success(function (result) {
-                window.open(result.url, '_blank');
-            });
+            var isMailboxCreated = $('#uid').val() != '';
+            if (isMailboxCreated) {
+                services.getApiUrls().OAuthCodeUrl().success(function (result) {
+                    window.open(result.url, '_blank');
+                });
+            } else {
+                message.error(this._errors.EMBNCR)
+            }
         },
 
         /**
@@ -53,16 +52,15 @@ var OAuth = (function (services) {
                         } else {
                             errorString = xhr.statusText;
                         }
-                        message.error('Token creation error: {0}'.format(errorString))
+                        message.error(_that._errors.ETOKCR.format(errorString))
                     });
                 } else {
                     services.validate('oauth-code');
-                    message.error('Token creation error: value cannot be null')
+                    message.error(_that._errors.ETOKCR.format('value cannot be null'))
                 }
             } else {
-                message.error('Error: token cannot be get. Mailbox isn\'t created')
+                message.error(this._errors.EMBNCR)
             }
-
         }
     };
 

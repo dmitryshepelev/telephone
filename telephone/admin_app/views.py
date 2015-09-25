@@ -25,9 +25,7 @@ def create_new_user(request, template):
 			return JsonResponse({'data': new_user_form.errors}, status=400)
 		result = ProfileService.create_profile(new_user_form.data)
 		if result.is_success:
-			return JsonResponse({'isSuccess': True}, status=201)
+			return HttpResponse(status=201)
 		return HttpResponse(status=500)
 	else:
-		email_id = CommonService.get_random_string(6, only_digits=True)
-		response_params = {'email_id': email_id, 'password': ApiService.generate_email_password(email_id), 'domain': '@%s' % settings.DOMAIN}
-		return render_to_response(template, response_params, context_instance=RequestContext(request))
+		return render_to_response(template, ApiService.generate_mailbox_data().data, context_instance=RequestContext(request))

@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="{% static 'new-user-controller.js' %}"></script>
     <script type="text/javascript" src="{% static 'oauth.js' %}"></script>
 	<script type="text/javascript" src="{% static 'models/mail-model.js' %}"></script>
+	<script type="text/javascript" src="{% static 'models/new-user-model.js' %}"></script>
 {% endblock %}
 
 {% block title %}
@@ -15,20 +16,25 @@
 	<div class="container">
 		<div class="row col-md-offset-2 form-container">
 			<div class="col-md-9 form-block">
-				<h1>Почта</h1>
+				<h1>
+					Почта
+					<small>
+						<a class="shadow-link icon-spinner11 pointer" onclick="controller.getMailboxData()"></a>
+					</small>
+				</h1>
 				<form role="form">
 					{% csrf_token %}
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label" for="login">Логин</label>
-								<input class="form-control input-lg domain" id="login" name="login" value="{{ email_id }}{{ domain }}" placeholder="Логин" type="text" required>
+								<input class="form-control input-lg domain" id="login" name="login" value="{{ login }}{{ domain }}" placeholder="Логин" type="text" required autocomplete="off">
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label" for="password">Пароль</label>
-								<input class="form-control input-lg" id="password" name="password" value="{{ password }}" placeholder="Пароль" type="text" required>
+								<input class="form-control input-lg" id="password" name="password" value="{{ password }}" placeholder="Пароль" type="text" required autocomplete="off">
 							</div>
 						</div>
 					</div>
@@ -36,8 +42,8 @@
                     <input type="hidden" id="token" name="token" value="" required/>
 					<div class="row">
 						<div class="col-sm-6">
-							<button type="button" class="btn btn-link-empty btn-lg pull-left" loader onclick="controller.createMail(event)">Создать</button>
-							<div id="token-form-container" style="display: none">
+							<button type="button" class="btn btn-link-empty btn-lg pull-left" onclick="controller.createMail(event)">Создать</button>
+							<div id="token-form-container">
 								<span id="oauth-get-new-code" class="form-control-feedback icon-spinner11 input-icon pointer pull-right" tooltip data-placement="bottom" data-original-title="Получить доступ"></span>
 								<span id="oauth-send-code" class="form-control-feedback icon-arrow-right2 input-icon pointer pull-right" tooltip data-placement="bottom" data-original-title="Получить токен"></span>
 		                        <input id="oauth-code" class="form-control input-lg has-icon-2" type="text" placeholder="Код" value="" autocomplete="off">

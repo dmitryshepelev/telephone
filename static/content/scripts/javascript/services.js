@@ -40,6 +40,21 @@ var services = (function () {
     }
 
     /**
+     * Clean data in html page based on the class model
+     * @param model
+     * @param onClean callback to execute when data will be cleared
+     * @private
+     */
+    function _cleanModelData(model, onClean) {
+        for (var m in model) {
+            if (model.hasOwnProperty(m)) {
+                $('#' + model[m]).val('');
+            }
+        }
+        _executeCallback(onClean);
+    }
+
+    /**
      * Generate params string as 'param1=value&param2=value...' from object
      * @param data
      * @returns {string}
@@ -167,6 +182,7 @@ var services = (function () {
 
     return {
         collectModelData: _collectModelData,
+        cleanModelData: _cleanModelData,
         getParamsString: _getParamsString,
         createInstance: _createInstance,
         executeCallback: _executeCallback,
