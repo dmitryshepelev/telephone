@@ -37,12 +37,14 @@ var OAuth = (function (services) {
          * Get api access token
          */
         getOAuthToken: function () {
+            var oauthCodeElement = $('#oauth-code');
             var isMailboxCreated = $('#uid').val() != '';
             if (isMailboxCreated) {
                 var _that = this;
-                var value = $('#oauth-code')[0].value;
+                var value = oauthCodeElement.val();
                 if (value) {
                     $.post('/services/getOAuthToken/', { code: value }).success(function (result) {
+                        oauthCodeElement.val('');
                         services.executeCallback(_that._getTokenSucccesCallback, result);
                     }).fail(function (xhr) {
                         var errorString = '';

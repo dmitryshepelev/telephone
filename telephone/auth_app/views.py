@@ -26,6 +26,7 @@ def login(request, template):
 		result = AuthService().sign_in(request)
 		if not result.is_success:
 			data = [{key: LocalizeService(value[0]).get_localized_value()} for key, value in result.data.iteritems()]
+			LoggerService.error()
 			return JsonResponse(CommonService.parse_form_errors(data), status=400)
 		return JsonResponse({redirect_property_name: request.POST.get(redirect_property_name)})
 

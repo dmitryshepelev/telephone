@@ -1,9 +1,29 @@
 var controller = (function (services) {
+    var _tokenContainerElement = null;
+
     $(document).ready(function () {
         mainController.initTooltips();
         _getNewPassword();
         _getMailboxData();
+        _tokenContainerElement = $('#token-form-container');
     });
+
+    function _tokenContainerToggle (toShow) {
+        var easeType = 'swing';
+        if (toShow) {
+            _tokenContainerElement.parent().animate({
+                height: 147
+            }, 600, easeType, function () {
+                _tokenContainerElement.showElement(400);
+            });
+        } else {
+            _tokenContainerElement.hideElement(400, function () {
+                _tokenContainerElement.parent().animate({
+                    height: 72
+                }, 600, easeType)
+            });
+        }
+    }
 
     function _getNewPassword() {
         _userPassword.get(_userPassword.set);
@@ -45,18 +65,14 @@ var controller = (function (services) {
                 mailInstance.createMail().success(function (result) {
                     $('#uid').attr('value', result.uid);
                     message.success('Почта создана успешно');
-                    var tokenContainerElement = $('#token-form-container');
-                    tokenContainerElement.parent().animate({
-                        height: 147
-                    }, 600, 'swing', function () {
-                        tokenContainerElement.showElement(400);
-                    });
+                    _tokenContainerToggle(true);
                     var oauth = new OAuth(function (result) {
                         $('#token').attr('value', result.access_token);
-                        message.success('Токен успешно получен')
+                        message.success('Токен успешно получен');
+                        _tokenContainerToggle(false);
                     });
                 }).fail(function (xhr) {
-                    message.success('Mailbox creation error: {0}'.format(JSON.parse(xhr.responseText).error));
+                    message.error('Mailbox creation error: {0}'.format(JSON.parse(xhr.responseText).error));
                 }).always(function () {
                     loader.hide();
                 });

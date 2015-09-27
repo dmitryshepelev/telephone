@@ -36,6 +36,10 @@ $.prototype.showElement = function (delay) {
     this.fadeIn(delay || 200);
 };
 
+$.prototype.hideElement = function (delay, onEnd) {
+    this.fadeOut(delay || 200, onEnd);
+};
+
 function Period(from, to, maxDate) {
     this._maxDate = maxDate || new Date(Date.now());
     this._from = from || new Date(Date.now());

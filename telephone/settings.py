@@ -123,7 +123,6 @@ USE_TZ = True
 STATICFILES_DIRS = (
 	'static/content/fonts',
 	'static/content/themes/',
-	'static/content/themes/default',
 	# 'static/content/scripts/coffee',
 	'static/content/scripts/javascript',
 	'static/content/scripts/shared',
@@ -203,25 +202,9 @@ LOGGING = {
 			'class': 'logging.handlers.RotatingFileHandler',
 			'maxBytes': 10*1024*1024,
 			'backupCount': 0,
-			'filename': os.path.join(BASE_DIR,  'app_log.log'),
+			'filename': os.path.join(BASE_DIR,  'log.log'),
 			'formatter': 'verbose',
-		},
-		'auth_logger_handler': {
-			'level': 'INFO',
-			'class': 'logging.handlers.RotatingFileHandler',
-			'maxBytes': 10*1024*1024,
-			'backupCount': 0,
-			'filename': os.path.join(BASE_DIR,  'auth.log'),
-			'formatter': 'verbose',
-		},
-		'main_logger_handler': {
-			'level': 'INFO',
-			'class': 'logging.handlers.RotatingFileHandler',
-			'maxBytes': 10*1024*1024,
-			'backupCount': 0,
-			'filename': os.path.join(BASE_DIR,  'main.log'),
-			'formatter': 'verbose',
-		},
+		}
 	},
 	'loggers': {
 		'django': {
@@ -231,16 +214,6 @@ LOGGING = {
 		},
 		'app_logger': {
 			'handlers': ['app_logger_handler'],
-			'level': 'INFO',
-			'propagate': True,
-		},
-		'auth_logger': {
-			'handlers': ['auth_logger_handler'],
-			'level': 'INFO',
-			'propagate': True,
-		},
-		'main_logger': {
-			'handlers': ['main_logger_handler'],
 			'level': 'INFO',
 			'propagate': True,
 		},
