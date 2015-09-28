@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -9,9 +7,10 @@ from django.template import RequestContext
 from telephone.service_app.services.AuthService import AuthService
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LocalizeService import LocalizeService
+from telephone.service_app.services.LogService import LogService, Code
 
 
-logger = logging.getLogger('auth_logger')
+logger = LogService()
 
 
 def login(request, template):
@@ -26,7 +25,7 @@ def login(request, template):
 		result = AuthService().sign_in(request)
 		if not result.is_success:
 			data = [{key: LocalizeService(value[0]).get_localized_value()} for key, value in result.data.iteritems()]
-			LoggerService.error()
+			logger.warning(Code.INVLOG, data=data, POST=request.POST, path=request.path)
 			return JsonResponse(CommonService.parse_form_errors(data), status=400)
 		return JsonResponse({redirect_property_name: request.POST.get(redirect_property_name)})
 

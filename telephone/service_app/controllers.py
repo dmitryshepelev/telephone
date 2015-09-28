@@ -2,11 +2,13 @@ import json
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
+
 from telephone.classes.Parameters import MailParameters
 from telephone.service_app.services.CommonService import CommonService
-
 from telephone.service_app.services.ApiService import ApiService
-from telephone.service_app.services.LocalizeService import LocalizeService
+from telephone.service_app.services.LogService import LogService, Code
+
+logger = LogService()
 
 
 @login_required
@@ -39,8 +41,8 @@ def get_oauth_token(request):
 			status_code = 200
 			if not result.is_success:
 				status_code = 400
-			data = json.loads(result.data)
-			return JsonResponse(data, status=status_code)
+				logger.error(Code.GTKERR, data=result.data, POST=request.POST)
+			return JsonResponse(result.data, status=status_code)
 	return HttpResponse(status=500)
 
 
@@ -66,10 +68,10 @@ def create_mail(request):
 	if request.POST:
 		params = MailParameters(request.POST)
 		result = ApiService.create_domain_mail(params)
-		if result.is_success:
-			if result.data['success'] == 'ok':
-				return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
-			return JsonResponse(result.data, status=400)
+		if result.is_success and result.data['success'] == 'ok':
+			return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
+		logger.error(Code.MCRERR, data=result.data, POST=request.POST)
+		return JsonResponse(result.data, status=400)
 	return HttpResponse(status=500)
 
 

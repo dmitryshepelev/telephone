@@ -97,14 +97,19 @@ var controller = (function (services) {
                 }).fail(function (xhr) {
                     var errors = [];
                     if (xhr.responseText) {
-                        var data = JSON.parse(xhr.responseText);
-                        for (var d in data.data) {
-                            if (data.data.hasOwnProperty(d)) {
-                                errors.push('{0}: {1}'.format(d, data.data[d][0]))
+                        var data = null;
+                        try {
+                            data = JSON.parse(xhr.responseText);
+                            for (var d in data.data) {
+                                if (data.data.hasOwnProperty(d)) {
+                                    errors.push('{0}: {1}'.format(d, data.data[d][0]))
+                                }
                             }
+                            message.error(errors.join('\n'));
+                        } catch (e) {
+                            message.error(xhr.responseText)
                         }
                     }
-                    message.error(errors.join('\n'));
                 }).always(function () {
                     loader.hide();
                 })

@@ -35,7 +35,7 @@ class ApiService():
 		"""
 		request_string = '%s%s' % (settings.API_URLS['oauth']['host'], settings.API_URLS['oauth']['token'])
 		api_response = requests.post(request_string, {'grant_type': 'authorization_code', 'code': code, 'client_id': settings.O_AUTH_ID, 'client_secret': settings.O_AUTH_SECRET}, headers={'Content-type': 'application/x-www-form-urlencoded'})
-		return ServiceResponse(api_response.ok, api_response.content)
+		return ServiceResponse(api_response.ok, json.loads(api_response.content))
 
 	@staticmethod
 	def generate_email_password(email_id):

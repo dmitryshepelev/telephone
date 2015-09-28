@@ -22,4 +22,4 @@ class ProfileService():
 			user_profile.save()
 			return ServiceResponse(True)
 		except Exception as e:
-			return ServiceResponse(False, e)
+			return ServiceResponse(False, e.message)
