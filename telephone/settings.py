@@ -150,6 +150,7 @@ API_URLS = {
 	'api_version': '/v1',
 	'get_record': '/record',
 	'statistics': '/statistics',
+	'statisticspbx': '/statistics/pbx',
 	'oauth': {
 		'host': 'https://oauth.yandex.ru',
 		'authorize': '/authorize?response_type=code',
@@ -158,6 +159,7 @@ API_URLS = {
 	'mail': {
 		'host': 'https://pddimp.yandex.ru',
 		'create_mail': '/api2/admin/email/add',
+		'update_mail': '/api2/admin/email/edit',
 	},
 	'disk': {
 		''

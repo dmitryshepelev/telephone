@@ -1,11 +1,14 @@
 var controller = (function (services) {
     var _tokenContainerElement = null;
+    var _isMailExistElement = null;
+    var _createMailBoxBtn = null;
 
     $(document).ready(function () {
         mainController.initTooltips();
         _getNewPassword();
         _getMailboxData();
         _tokenContainerElement = $('#token-form-container');
+        _createMailBoxBtn = $('#createMailBtn');
     });
 
     function _tokenContainerToggle (toShow) {
@@ -13,14 +16,14 @@ var controller = (function (services) {
         if (toShow) {
             _tokenContainerElement.parent().animate({
                 height: 147
-            }, 600, easeType, function () {
+            }, 500, easeType, function () {
                 _tokenContainerElement.showElement(400);
             });
         } else {
             _tokenContainerElement.hideElement(400, function () {
                 _tokenContainerElement.parent().animate({
                     height: 72
-                }, 600, easeType)
+                }, 500, easeType)
             });
         }
     }

@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th><span class="glyphicon glyphicon-option-vertical"></span></th>
+	        <th>Call ID</th>
             <th>Состояние</th>
             <th>Дата</th>
             <th>Номер </th>
@@ -23,6 +24,7 @@
 	    {% for call in calls %}
 	        <tr>
 	            <td>{{ forloop.revcounter }}</td>
+		        <td>{{ call.call_id }}</td>
 	            <td>{{ call.disposition|call_state_localize }}</td>
 {#	            <td>#}
 {#	                <span class="glyphicon {% if call.status %} glyphicon-earphone {% endif %} pointer"></span>#}

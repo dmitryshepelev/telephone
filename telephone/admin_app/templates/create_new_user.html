@@ -42,7 +42,7 @@
                     <input type="hidden" id="token" name="token" value="" required/>
 					<div class="row">
 						<div class="col-sm-6">
-							<button type="button" class="btn btn-link-empty btn-lg pull-left" onclick="controller.createMail(event)">Создать</button>
+							<button type="button" id="createMailBtn" class="btn btn-link-empty btn-lg" onclick="controller.createMail(event)">Создать</button>
 							<div id="token-form-container">
 								<span id="oauth-get-new-code" class="form-control-feedback icon-spinner11 input-icon pointer pull-right" tooltip data-placement="bottom" data-original-title="Получить доступ"></span>
 								<span id="oauth-send-code" class="form-control-feedback icon-arrow-right2 input-icon pointer pull-right" tooltip data-placement="bottom" data-original-title="Получить токен"></span>

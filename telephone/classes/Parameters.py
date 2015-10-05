@@ -1,3 +1,4 @@
+# coding=utf-8
 from base64 import b64encode
 import hashlib
 import datetime
@@ -34,7 +35,7 @@ class Parameters():
 		Generate request string from parameters
 		:return: request string
 		"""
-		return urllib.urlencode(sorted(params.items()))
+		return urllib.urlencode(sorted(filter(lambda item: item[1], params.items())))
 
 	def sha_encode(self, method_name, request_string, secret_key):
 		"""
@@ -67,7 +68,7 @@ class Parameters():
 class CallsParameters(Parameters):
 	__date_now = datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT)
 
-	def __init__(self, start=__date_now, end=__date_now, sip='', cost_only='', type=''):
+	def __init__(self, start=__date_now, end=__date_now, sip='', cost_only='', type='', is_pbx=False):
 		Parameters.__init__(self)
 		self.__params = {
 			# Start date: 'd.m.Y' *Required*
@@ -81,7 +82,7 @@ class CallsParameters(Parameters):
 			# Call type: doesn't include - common; 'toll' - 800 number; ru495 - 495 number
 			'type': type
 		}
-		self.__method = settings.API_URLS['statistics']
+		self.__method = settings.API_URLS['statisticspbx'] if is_pbx else settings.API_URLS['statistics']
 
 	def get_sign(self, secret_key):
 		"""
@@ -109,6 +110,9 @@ class CallsParameters(Parameters):
 		for key, value in params.items():
 			self.__params[key] = params[key]
 
+	def set_method(self, is_pbx):
+		self.__method = settings.API_URLS['statisticspbx'] if is_pbx else settings.API_URLS['statistics']
+
 
 class MailParameters(Parameters):
 	def __init__(self, params):
@@ -118,6 +122,28 @@ class MailParameters(Parameters):
 			'login': params['login'],
 			'password': params['password']
 		}
+
+	def get_request_string(self):
+		return Parameters.get_params_string(self.__params)
+
+	def get_params(self):
+		return self.__params
+
+
+class MailboxParameters(Parameters):
+	def __init__(self, login, **params):
+		Parameters.__init__(self)
+		self.__params = {
+			'domain': settings.DOMAIN,
+			'login': login,
+			'iname': 'Анатолий',
+			'fname': 'Кузнецов',
+			'hintq': '2+2',
+			'hinta': '4'
+		}
+		if params:
+			for key, value in params.items():
+				self.__params[key] = params[key]
 
 	def get_request_string(self):
 		return Parameters.get_params_string(self.__params)

@@ -2,6 +2,7 @@ import json
 import requests
 import datetime
 from telephone import settings
+from telephone.classes.Parameters import MailboxParameters
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.service_app.services.CommonService import CommonService
 
@@ -44,7 +45,7 @@ class ApiService():
 		:param email_id: user's login
 		:return: string password
 		"""
-		return 'wt%s$%s' % (datetime.datetime.now().strftime('%d%m%y'), email_id)
+		return 'wt%sp%s' % (datetime.datetime.now().strftime('%d%m%y'), email_id)
 
 	@staticmethod
 	def create_domain_mail(params):
@@ -54,6 +55,19 @@ class ApiService():
 		:return: ServiceResponse, api response data: {'domain': 'name', 'login': 'email', 'uid': 'uid, 'success': 'status'}
 		"""
 		request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['create_mail'])
+		api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
+		return ServiceResponse(api_response.ok, json.loads(api_response.content))
+
+	@staticmethod
+	def update_mailbox_params(login, **params):
+		"""
+		Update mailbox params
+		:param params: MailboxParameters instance; Set default params if value is None
+		:return: ServiceResponse
+		"""
+		request_string = '%s%s' % (settings.API_URLS['mail']['host'], settings.API_URLS['mail']['update_mail'])
+		if not params:
+			params = MailboxParameters(login=login, params=params)
 		api_response = requests.post(request_string, params.get_params(), headers={'PddToken': settings.MAIL_A_TOKEN})
 		return ServiceResponse(api_response.ok, json.loads(api_response.content))
 

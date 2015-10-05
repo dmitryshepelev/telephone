@@ -216,6 +216,32 @@ ul.navbar-nav >
 
 /* END MEDIA*/
 
+/* CHECKBOX */
+
+input[type="checkbox"] {
+	display:none;
+
+	& + label {
+		display: inline-block;
+		width: auto;
+		height: 19px;
+		margin: -1px 4px 0 0;
+		padding-left: 25px;
+		vertical-align: middle;
+		background: url(/static/content/images/check-false.png) left top no-repeat;
+		cursor: pointer;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	&:checked + label {
+		background:url(/static/content/images/check-true.png) left top no-repeat
+	}
+}
+
+/* END CHECKBOX */
+
 /* CUSTOM CLASSES */
 
 .error {
@@ -250,7 +276,7 @@ a.shadow-link {
 
 .input-icon {
 	position: relative;
-	top: 102px;
+	top: 45px;
 	left: -15px;
 	&:first-child {
 		margin-left: 10px;

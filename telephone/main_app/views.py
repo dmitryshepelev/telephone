@@ -43,6 +43,8 @@ def get_statistic(request, template):
 	if request.GET:
 		params.set_params(request.GET)
 	result = DataService.get_statistics(params, request.user)
+	params.set_method(True)
+	result_pbx = DataService.get_statistics(params, request.user)
 	if result.is_success:
 		return render_to_response(template, {'calls': result.data}, context_instance=RequestContext(request))
 	# TODO: Logger

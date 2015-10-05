@@ -69,7 +69,9 @@ def create_mail(request):
 		params = MailParameters(request.POST)
 		result = ApiService.create_domain_mail(params)
 		if result.is_success and result.data['success'] == 'ok':
-			return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
+			update_result = ApiService.update_mailbox_params(result.data['login'])
+			if update_result.is_success:
+				return JsonResponse({'login': result.data['login'], 'uid': result.data['uid']})
 		logger.error(Code.MCRERR, data=result.data, POST=request.POST)
 		return JsonResponse(result.data, status=400)
 	return HttpResponse(status=500)
