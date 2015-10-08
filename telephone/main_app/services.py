@@ -3,7 +3,7 @@
 import requests
 
 from telephone import settings
-from telephone.classes.Parameters import Parameters
+from telephone.classes.ApiParameters import ApiParameters
 from telephone.services import AppLogger
 
 
@@ -19,7 +19,7 @@ def get_call_record(params, is_superuser):
 		path = settings.BASE_DIR + '/static/content/test.mp3'
 		return open(path, 'rb')
 
-	request_string = '?%shash=%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(params.items())), Parameters.Parameters.get_hash_string(params))
+	request_string = '?%shash=%s' % (''.join('{}={}&'.format(key, value) for key, value in sorted(params.items())), ApiParameters.Parameters.get_hash_string(params))
 	url = '%s%s%s' % (settings.API_URLS['base_api_url'], settings.API_URLS['get_record'], request_string,)
 	api_request = requests.get(url, headers={'Content-Disposition': 'attachment', 'filename': '%s.mp3' % (id,)})
 	if api_request.ok:

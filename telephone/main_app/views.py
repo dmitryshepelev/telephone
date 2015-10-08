@@ -4,10 +4,11 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from telephone.classes.Parameters import CallsParameters
+from telephone.classes.ApiParameters import StatApiParameters, StatATSApiParameters
 from telephone.main_app.services import get_logger
 from telephone import services
-from json import loads
+from operator import itemgetter
+from itertools import groupby
 from telephone.service_app.services.DataService import DataService
 
 
@@ -37,16 +38,19 @@ def get_statistic(request, template):
 	"""
 	Controller to get test calls file
 	:param request: HTTP GET request
+	:param template: html template
 	:return: json format
 	"""
-	params = CallsParameters()
-	if request.GET:
-		params.set_params(request.GET)
-	result = DataService.get_statistics(params, request.user)
-	params.set_method(True)
-	result_pbx = DataService.get_statistics(params, request.user)
-	if result.is_success:
-		return render_to_response(template, {'calls': result.data}, context_instance=RequestContext(request))
+	params = request.GET or None
+
+	stat_params = StatApiParameters(params)
+	stat_result = DataService.get_statistics(stat_params, request.user)
+
+	stat_ats_params = StatATSApiParameters(params)
+	stat_ats_result = DataService.get_ats_statistic(stat_ats_params, request.user)
+	if stat_result.is_success and stat_ats_result.is_success:
+		calls = DataService.merge_calls(stat_result.data, stat_ats_result.data)
+		return render_to_response(template, {'calls': calls.data}, context_instance=RequestContext(request))
 	# TODO: Logger
 	return HttpResponse(status=500)
 

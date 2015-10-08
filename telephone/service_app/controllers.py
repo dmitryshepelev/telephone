@@ -2,8 +2,8 @@ import json
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
+from telephone.classes.MailParameters import MailParameters
 
-from telephone.classes.Parameters import MailParameters
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.ApiService import ApiService
 from telephone.service_app.services.LogService import LogService, Code

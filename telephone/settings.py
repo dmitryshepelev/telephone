@@ -146,6 +146,12 @@ LOGIN_URL = '/auth/login/'
 S_KEY = 'e6eddf38406a4fa03d09'
 
 API_URLS = {
+	'api': {
+		'host': 'https://api.zadarma.com',
+		'api_version': '/v1',
+		'statistics': '/statistics',
+		'statisticspbx': '/statistics/pbx',
+	},
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',
 	'get_record': '/record',
