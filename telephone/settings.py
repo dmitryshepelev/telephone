@@ -184,7 +184,10 @@ CORS_ORIGIN_ALLOW_ALL = (
 
 DELIMITER = ';'
 
-DATETIME_FORMAT = '%d.%m.%Y %H:%M:%S'
+DATE_CLIENT_FORMAT = '%d.%m.%Y'
+DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+DATETIME_FORMAT_START = '%Y-%m-%d 00:00:00'
+DATETIME_FORMAT_END = '%Y-%m-%d 23:59:59'
 
 LOGGING = {
 	'version': 1,

@@ -299,6 +299,8 @@ a.shadow-link {
 	color: @background-color - 140;
 }
 
+/* DATEPICKER */
+
 .datepicker-input {
     border: none;
     box-shadow: none;
@@ -336,3 +338,36 @@ input.datepicker-input {
     width: 75px !important;
 	background-color: transparent !important;
 }
+
+/* END DATEPICKER */
+
+/* TABLE SORTER */
+
+table {
+	& th {
+		&:hover {
+			cursor: pointer;
+			color: @default-color;
+		}
+	}
+}
+
+.table-sort {
+    padding-left: 20px !important;
+}
+
+.table-sort-asc {
+    background: url("/static/content/images/icon-chevron-down.png") no-repeat center left;
+	&:hover {
+		background: url("/static/content/images/icon-chevron-down-hover.png") no-repeat center left;
+	}
+}
+
+.table-sort-desc {
+    background: url("/static/content/images/icon-chevron-up.png") no-repeat center left;
+	&:hover {
+		background: url("/static/content/images/icon-chevron-up-hover.png") no-repeat center left;
+	}
+}
+
+/* END TABLE SORTER */

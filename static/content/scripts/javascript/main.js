@@ -2,7 +2,7 @@
  * Convert date to string formatted as 'dd.mm.yyyy'
  * @returns {string}
  */
-Date.prototype.toRightDateString = function () {
+Date.prototype.toRightDatetimeString = function () {
     var day = this.getDate().toString();
     var month = (this.getMonth() + 1).toString();
     var date = [
@@ -75,23 +75,22 @@ Period.prototype = {
     },
 
     toPeriodString: function (locale) {
-        // TODO: Locale
         if (this._from.toDateString() == new Date(Date.now()).toDateString()) {
             return 'сегодня';
         }
         if (this._from.toDateString() == this._to.toDateString()) {
-            return this._from.toRightDateString()
+            return this._from.toRightDatetimeString()
         }
-        return 'период с ' + this._from.toRightDateString() + ' по ' + this._to.toRightDateString();
+        return 'период с ' + this._from.toRightDatetimeString() + ' по ' + this._to.toRightDatetimeString();
     }
 };
 
 function ApiParams(params) {
     this._params = {
         // Start date: 'YYYY-MM-dd HH:mm:ss' *Required*
-        'start': '',
+        'start': Date.getNowDate().toRightDatetimeString(),
         // End date (inclusively): 'YYYY-MM-dd HH:mm:ss' *Required*
-        'end': '',
+        'end': Date.getNowDate().toRightDatetimeString(),
         // Determine SIP number
         'sip': '',
         // Wasted cash

@@ -8,40 +8,50 @@ var controller = (function () {
     function _initDatepicker() {
         var container = $('#datepicker');
         container.datepicker({
-            endDate: Date.getNowDate().toRightDateString(),
+            endDate: Date.getNowDate().toRightDatetimeString(),
             todayBtn: 'linked',
             language: 'ru',
             keyboardNavigation: false,
             todayHighlight: true,
             autoclose: true
         }).on('changeDate', function (event) {
-            $(event.target).attr('value', event.date.toRightDateString());
+            $(event.target).attr('value', event.date.toRightDatetimeString());
         });
-        container.find('input.pseudo-hidden').attr('value', Date.getNowDate().toRightDateString());
+        container.find('input.pseudo-hidden').attr('value', Date.getNowDate().toRightDatetimeString());
     }
 
     function _makeSortable() {
-        $('#callsTable').tablesorter({sortList: [[2,1]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
-            var value = node.innerHTML;
-            if (value.search(/(мин|сек)/g) != -1) {
-                var textArr = value.split(' ');
-                value = (textArr.length === 2 ? textArr[0] : Number(textArr[0]) * 60 + Number(textArr[2])).toString();
-            }
-            return value
-        }});
+        var table = $('#callsTable');
+        if (table && table.children('tbody').children('tr').length > 1) {
+            table.tablesorter({sortList: [[0,0]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
+                var value = node.innerHTML;
+                if (value.search(/(мин|сек)/g) != -1) {
+                    var textArr = value.split(' ');
+                    value = (textArr.length === 2 ? textArr[0] : Number(textArr[0]) * 60 + Number(textArr[2])).toString();
+                }
+                return value
+            }});
+        }
     }
 
     function _updateContainer(data) {
-        var loaderTemplate = '<div align="center"><img src="/static/content/images/loader.gif" class="loader"></div>';
-        _container.empty();
-        _container.append(data.toString() === 'true' ? loaderTemplate : data);
-        _makeSortable();
+        if (data){
+            _container.append(data);
+            _makeSortable();
+            _container.showElement();
+        } else {
+          _container.hideElement(200, function () {
+                _container.empty();
+            });
+        }
     }
 
     function _getCalls(request_string, callback) {
-        _updateContainer(true);
+        _updateContainer();
+        loader.show();
         $.get('/getCalls/{0}'.format(request_string || ''), function (data) {
             _updateContainer(data);
+            loader.hide();
         }).fail(function () {
             window.location.href = '/e/';
         })

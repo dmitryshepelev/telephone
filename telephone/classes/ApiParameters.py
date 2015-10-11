@@ -7,36 +7,21 @@ import urllib
 
 from telephone import settings
 
+__date_now = datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT)
+
 
 class ApiParameters(object):
-	__date_now = datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT)
 
-	def __init__(self, params=None, start=datetime.datetime.now().date(), end=datetime.datetime.now().date()):
+	def __init__(self, params=None):
 		self.__domain = settings.API_URLS['api']['host']
 		self.__api_version = settings.API_URLS['api']['api_version']
 		self.__params = {
 			# Start date: 'd.m.Y' *Required*
-			'start': start,
+			'start': datetime.datetime.now().strftime(settings.DATETIME_FORMAT_START),
 			# End date (inclusively): 'd.m.Y' *Required*
-			'end': end,
+			'end': datetime.datetime.now().strftime(settings.DATETIME_FORMAT_END),
 		}
 		self.set_params(params)
-
-	@property
-	def api_version(self):
-		"""
-		Getter of __api_version
-		:return: api_version
-		"""
-		return self.__api_version
-
-	@property
-	def domain(self):
-		"""
-		Getter of domain
-		:return: domain
-		"""
-		return self.__domain
 
 	def __get_params_string(self):
 		"""
@@ -53,7 +38,7 @@ class ApiParameters(object):
 		:return: sha1 encoded string
 		"""
 		params_string = self.__get_params_string()
-		return hmac.new(secret_key.encode(), '%s%s%s%s' % (self.api_version, method_name, params_string, hashlib.md5(params_string).hexdigest()), hashlib.sha1).hexdigest()
+		return hmac.new(secret_key.encode(), '%s%s%s%s' % (self.__api_version, method_name, params_string, hashlib.md5(params_string).hexdigest()), hashlib.sha1).hexdigest()
 
 	def __get_domain_url(self, method):
 		"""
@@ -61,7 +46,7 @@ class ApiParameters(object):
 		:param method: api method name
 		:return: domain url as 'https://domain/api_version/method'
 		"""
-		return '%s%s%s?' % (self.domain, self.api_version, method)
+		return '%s%s%s?' % (self.__domain, self.__api_version, method)
 
 	def generate_sign(self, method, secret_key):
 		"""
@@ -88,7 +73,12 @@ class ApiParameters(object):
 		"""
 		if params:
 			for key, value in params.items():
-				self.__params[key] = params[key]
+				if value:
+					if key == 'start':
+						value = datetime.datetime.strptime(value, settings.DATE_CLIENT_FORMAT).strftime(settings.DATETIME_FORMAT_START)
+					elif key == 'end':
+						value = datetime.datetime.strptime(value, settings.DATE_CLIENT_FORMAT).strftime(settings.DATETIME_FORMAT_END)
+					self.__params[key] = value
 
 
 class StatApiParameters(ApiParameters):
@@ -115,7 +105,7 @@ class StatApiParameters(ApiParameters):
 
 class StatATSApiParameters(ApiParameters):
 	def __init__(self, params):
-		super(StatATSApiParameters, self).__init__(start=params['start'], end=params['end'])
+		super(StatATSApiParameters, self).__init__({'start': params['start'] or '', 'end': params['end'] or ''})
 		self.__method = settings.API_URLS['api']['statisticspbx']
 
 	@property
