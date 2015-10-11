@@ -88,10 +88,10 @@ Period.prototype = {
 
 function ApiParams(params) {
     this._params = {
-        // Start date: 'd.m.Y' *Required*
-        'start': '2015-09-05 00:00:00',
-        // End date (inclusively): 'd.m.Y' *Required*
-        'end': '2015-10-05 00:00:00',
+        // Start date: 'YYYY-MM-dd HH:mm:ss' *Required*
+        'start': '',
+        // End date (inclusively): 'YYYY-MM-dd HH:mm:ss' *Required*
+        'end': '',
         // Determine SIP number
         'sip': '',
         // Wasted cash

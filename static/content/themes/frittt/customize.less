@@ -156,7 +156,7 @@ ul.navbar-nav >
 	}
 }
 
-.dropdown-menu {
+ul.dropdown-menu {
 	min-width: 180px;
 	border: none;
 	border-radius: 0;
@@ -297,4 +297,42 @@ a.shadow-link {
 .username-dropdown {
 	padding: 3px 20px;
 	color: @background-color - 140;
+}
+
+.datepicker-input {
+    border: none;
+    box-shadow: none;
+    font-size: 14px;
+    padding-left: 0;
+    padding-right: 0;
+    color: transparent;
+    display: inline-block;
+    text-shadow: 0 0 0 @default-text-color;
+    font-weight: bold;
+	background-color: transparent;
+}
+
+input.datepicker-input {
+	text-shadow: 0 0 0 @default-text-color;
+	&:hover, &:focus {
+		text-shadow: 0 0 0 @default-color;
+		box-shadow: none;
+		outline: none;
+	}
+}
+
+.datepicker-input-group-addon {
+    display: table-cell;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    min-width: 16px;
+    padding: 4px 3px;
+    width: auto;
+}
+
+.input-daterange.input-group {
+    display: inline-flex !important;
+    width: 75px !important;
+	background-color: transparent !important;
 }

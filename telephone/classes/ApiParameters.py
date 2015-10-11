@@ -11,7 +11,7 @@ from telephone import settings
 class ApiParameters(object):
 	__date_now = datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT)
 
-	def __init__(self, params=None, start=__date_now, end=__date_now):
+	def __init__(self, params=None, start=datetime.datetime.now().date(), end=datetime.datetime.now().date()):
 		self.__domain = settings.API_URLS['api']['host']
 		self.__api_version = settings.API_URLS['api']['api_version']
 		self.__params = {
@@ -86,10 +86,9 @@ class ApiParameters(object):
 		:param params: array of parameters
 		:return: None
 		"""
-		if not params:
-			return
-		for key, value in params.items():
-			self.__params[key] = params[key]
+		if params:
+			for key, value in params.items():
+				self.__params[key] = params[key]
 
 
 class StatApiParameters(ApiParameters):

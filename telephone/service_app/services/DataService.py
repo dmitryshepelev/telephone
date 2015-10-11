@@ -51,7 +51,6 @@ class DataService():
 		:return: ServiceResponse
 		"""
 		result = []
-		stat_filtered = []
 
 		key_value = None
 		group = []
@@ -59,16 +58,17 @@ class DataService():
 		for s in stat:
 			if not key_value:
 				key_value = s.date
-			if abs(key_value - s.date).seconds < 3 or not group:
+			if abs(key_value - s.date).seconds < settings.TIME_CORRECTION or not group:
 				group.append(s)
 			else:
 				grouped.append(group)
 				group = [s]
 				key_value = s.date
-				# TODO: last elements
+			if s == stat[-1] and group:
+				grouped.append(group)
 
-		for key, group in groupby(stat, lambda s: s.date):
-			__group = [g for g in group]
+		stat_filtered = []
+		for __group in grouped:
 			record = __group[0]
 			if len(__group) > 1:
 				records = filter(lambda x: x.disposition == 'answered', __group)
@@ -78,6 +78,6 @@ class DataService():
 		for stat_filtered_record in stat_filtered:
 			stat_ATS_filtered = filter(lambda y: y.destination == stat_filtered_record.destination, stat_ATS)
 			for stat_ATS_filtered_record in stat_ATS_filtered:
-				if abs(stat_ATS_filtered_record.date - stat_filtered_record.date).seconds < 3:
+				if abs(stat_ATS_filtered_record.date - stat_filtered_record.date).seconds < settings.TIME_CORRECTION:
 					result.append(CallRecord(stat_filtered_record, stat_ATS_filtered_record))
 		return ServiceResponse(True, result)

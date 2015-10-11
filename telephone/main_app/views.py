@@ -51,7 +51,6 @@ def get_statistic(request, template):
 	if stat_result.is_success and stat_ats_result.is_success:
 		calls = DataService.merge_calls(stat_result.data, stat_ats_result.data)
 		return render_to_response(template, {'calls': calls.data}, context_instance=RequestContext(request))
-	# TODO: Logger
 	return HttpResponse(status=500)
 
 
