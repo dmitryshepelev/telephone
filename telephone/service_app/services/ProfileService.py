@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from telephone import settings
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.classes.models.UserProfileModel import UserProfile
+from telephone.main_app.models import UserProfile
 
 
 class ProfileService():

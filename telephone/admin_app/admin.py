@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from telephone.classes.models.UserProfileModel import UserProfile
+from telephone.main_app.models import UserProfile
 
 
 class UserProfileAdmin(admin.ModelAdmin):

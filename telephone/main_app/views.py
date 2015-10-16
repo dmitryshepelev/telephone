@@ -1,10 +1,13 @@
 # coding=utf-8
+import datetime
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.classes.ApiParameters import StatApiParameters, StatATSApiParameters
+from telephone.main_app.models import Call
 from telephone.main_app.services import get_logger
 from telephone import services
 from operator import itemgetter
@@ -44,13 +47,18 @@ def get_statistic(request, template):
 	params = request.GET or None
 
 	stat_params = StatApiParameters(params)
+	stat_ats_params = StatATSApiParameters(params)
+	if stat_params.end == datetime.datetime.now().strftime(settings.DATETIME_FORMAT_END):
+		DataService.update_calls_list(stat_params, stat_ats_params, request.user)
 	stat_result = DataService.get_statistics(stat_params, request.user)
 
 	stat_ats_params = StatATSApiParameters(params)
 	stat_ats_result = DataService.get_ats_statistic(stat_ats_params, request.user)
+
 	if stat_result.is_success and stat_ats_result.is_success:
 		calls = DataService.merge_calls(stat_result.data, stat_ats_result.data)
-		return render_to_response(template, {'calls': calls.data}, context_instance=RequestContext(request))
+
+		return render_to_response(template, {'calls': calls}, context_instance=RequestContext(request))
 	return HttpResponse(status=500)
 
 

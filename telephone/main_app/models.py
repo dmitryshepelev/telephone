@@ -13,3 +13,20 @@ class UserProfile(models.Model):
 
 	class Meta:
 		app_label = 'main_app'
+
+
+class Call(models.Model):
+	call_id = models.CharField(max_length=30, null=False)
+	sip = models.CharField(max_length=20)
+	date = models.DateTimeField()
+	destination = models.CharField(max_length=30)
+	description = models.CharField(max_length=100)
+	disposition = models.CharField(max_length=20)
+	bill_seconds = models.IntegerField()
+	cost = models.FloatField()
+	bill_cost = models.FloatField()
+	currency = models.CharField(max_length=20)
+	user_profile = models.ForeignKey(UserProfile)
+
+	class Meta:
+		app_label = 'main_app'

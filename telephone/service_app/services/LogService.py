@@ -12,6 +12,8 @@ class Code(Enum):
 	GTKERR = 'GTKERR Get token error'
 	MCRERR = 'MCRERR Mail creation error'
 
+	UCLSWR = 'UCLSWR Update calls list warning. Cannot update calls list'
+
 
 class LogService():
 	def __init__(self):

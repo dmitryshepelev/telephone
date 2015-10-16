@@ -23,6 +23,22 @@ class ApiParameters(object):
 		}
 		self.set_params(params)
 
+	@property
+	def start(self):
+		"""
+		Getter of Start param
+		:return: DateTime
+		"""
+		return self.__params['start']
+
+	@property
+	def end(self):
+		"""
+		Getter of End param
+		:return: DateTime
+		"""
+		return self.__params['end']
+
 	def __get_params_string(self):
 		"""
 		Generate request string from parameters
@@ -82,7 +98,7 @@ class ApiParameters(object):
 
 
 class StatApiParameters(ApiParameters):
-	def __init__(self, params):
+	def __init__(self, params=None):
 		super(StatApiParameters, self).__init__(params)
 		self.__method = settings.API_URLS['api']['statistics']
 
