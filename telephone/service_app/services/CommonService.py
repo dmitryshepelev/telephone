@@ -1,7 +1,14 @@
-import json
 import string
+import datetime
+
 from django.utils import crypto
+from enum import Enum
 from telephone import settings
+
+
+class Constants(Enum):
+	CUR_DATE_DAY_START_STR = datetime.datetime.now().strftime(settings.DATETIME_FORMAT_START)
+	CUR_DATE_DAY_END_STR = datetime.datetime.now().strftime(settings.DATETIME_FORMAT_END)
 
 
 class CommonService():

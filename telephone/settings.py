@@ -149,8 +149,8 @@ API_URLS = {
 	'api': {
 		'host': 'https://api.zadarma.com',
 		'api_version': '/v1',
-		'statistics': '/statistics',
-		'statisticspbx': '/statistics/pbx',
+		'common_stat': '/statistics',
+		'pbx_stat': '/statistics/pbx',
 	},
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',

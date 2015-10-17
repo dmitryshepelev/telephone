@@ -7,10 +7,8 @@ import urllib
 
 from telephone import settings
 
-__date_now = datetime.datetime.strptime(datetime.datetime.now().strftime(settings.DATETIME_FORMAT), settings.DATETIME_FORMAT)
 
-
-class ApiParameters(object):
+class ApiParams(object):
 
 	def __init__(self, params=None):
 		self.__domain = settings.API_URLS['api']['host']
@@ -64,7 +62,7 @@ class ApiParameters(object):
 		"""
 		return '%s%s%s?' % (self.__domain, self.__api_version, method)
 
-	def generate_sign(self, method, secret_key):
+	def get_sign(self, method, secret_key):
 		"""
 		Generate authorization sigh
 		:param method: api method
@@ -95,47 +93,3 @@ class ApiParameters(object):
 					elif key == 'end':
 						value = datetime.datetime.strptime(value, settings.DATE_CLIENT_FORMAT).strftime(settings.DATETIME_FORMAT_END)
 					self.__params[key] = value
-
-
-class StatApiParameters(ApiParameters):
-	def __init__(self, params=None):
-		super(StatApiParameters, self).__init__(params)
-		self.__method = settings.API_URLS['api']['statistics']
-
-	@property
-	def request_string(self):
-		"""
-		Getter of request string
-		:return: request string
-		"""
-		return self.get_request_string(self.__method)
-
-	def get_sign(self, secret_key):
-		"""
-		Generate authorization sign
-		:param secret_key: user secret ket to api access
-		:return: authorization sign
-		"""
-		return self.generate_sign(self.__method, secret_key)
-
-
-class StatATSApiParameters(ApiParameters):
-	def __init__(self, params):
-		super(StatATSApiParameters, self).__init__({'start': params['start'] or '', 'end': params['end'] or ''})
-		self.__method = settings.API_URLS['api']['statisticspbx']
-
-	@property
-	def request_string(self):
-		"""
-		Getter of request string
-		:return: request string
-		"""
-		return self.get_request_string(self.__method)
-
-	def get_sign(self, secret_key):
-		"""
-		Generate authorization sign
-		:param secret_key: user secret ket to api access
-		:return: authorization sign
-		"""
-		return self.generate_sign(self.__method, secret_key)
