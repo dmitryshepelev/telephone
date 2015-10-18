@@ -12,7 +12,7 @@ class Code(Enum):
 	GTKERR = 'GTKERR Get token error'
 	MCRERR = 'MCRERR Mail creation error'
 
-	UCLEXE = 'UCLEXE Update calls list executed'
+	UCLEXE = 'UCLEXE Update calls list executed succeed'
 	UCLNTU = 'UCLNTU Nothing to update'
 	UCLSWE = 'UCLSWE Succeed with errors'
 	UCLUNS = 'UCLUNS Unsucceed'

@@ -17,7 +17,7 @@ class Call():
 		self.currency = data['currency']
 
 
-class CallATS():
+class CallPBX():
 	def __init__(self, data):
 		self.call_id = data['call_id']
 		self.sip = data['sip']
@@ -29,14 +29,14 @@ class CallATS():
 
 
 class CallRecord():
-	def __init__(self, call, callATS):
-		self.call_id = callATS.call_id
-		self.sip = callATS.sip
-		self.date = callATS.date
-		self.destination = call.destination
-		self.description = call.description
-		self.disposition = call.disposition
-		self.bill_seconds = call.bill_seconds
-		self.cost = call.cost
-		self.bill_cost = call.bill_cost
-		self.currency = call.currency
+	def __init__(self, call_common, call_pbx):
+		self.call_id = call_pbx.call_id
+		self.sip = call_pbx.sip
+		self.date = call_pbx.date
+		self.destination = call_common.destination
+		self.description = call_common.description
+		self.disposition = call_common.disposition
+		self.bill_seconds = call_common.bill_seconds
+		self.cost = call_common.cost
+		self.bill_cost = call_common.bill_cost
+		self.currency = call_common.currency

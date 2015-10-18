@@ -2,9 +2,8 @@ import json
 import requests
 
 from telephone import settings
-from telephone.classes.Call import Call, CallATS, CallRecord
+from telephone.classes.Call import Call, CallRecord, CallPBX
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.service_app.services.LogService import LogService
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import Code
 from telephone.main_app.models import Call as CallModel
@@ -46,7 +45,7 @@ class ATSDataService():
 
 		api_response = requests.get(params.get_request_string(method), headers={'Authorization': '%s:%s' % (user.userprofile.user_key, params.get_sign(method, user.userprofile.secret_key))})
 		if api_response.ok:
-			return ServiceResponse(api_response.ok, [CallATS(s) for s in json.loads(api_response.content)['stats']])
+			return ServiceResponse(api_response.ok, [CallPBX(s) for s in json.loads(api_response.content)['stats']])
 		return ServiceResponse(api_response.ok, status_code=api_response.status_code)
 
 	@staticmethod
