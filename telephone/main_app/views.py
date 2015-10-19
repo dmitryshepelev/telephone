@@ -8,7 +8,7 @@ from django.template import RequestContext
 from telephone.classes.ApiParams import ApiParams
 from telephone.main_app.services import get_logger
 from telephone import services
-from telephone.service_app.services.ATSDataService import ATSDataService
+from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -46,8 +46,8 @@ def get_statistic(request, template):
 	"""
 	params = ApiParams(request.GET or None)
 
-	update_res = ATSDataService.update_calls_list(params, request.user)
-	logger.info(Code.UCLEXE.value, is_success=update_res.is_success, status_code=update_res.status_code, message=update_res.message, data=update_res.data)
+	update_res = PBXDataService.update_calls_list(params, request.user)
+	logger.info(Code.UCLEXE, is_success=update_res.is_success, status_code=update_res.status_code, message=update_res.message, data=update_res.data)
 
 	calls = [call for call in request.user.userprofile.call_set.filter(date__gte=params.start, date__lte=params.end).order_by('date')]
 	return render_to_response(template, {'calls': calls}, context_instance=RequestContext(request))

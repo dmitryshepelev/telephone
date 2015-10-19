@@ -4,12 +4,12 @@ import requests
 from telephone import settings
 from telephone.classes.Call import Call, CallRecord, CallPBX
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.service_app.services.CommonService import CommonService
+from telephone.service_app.services.CommonService import CommonService, CallsConstants
 from telephone.service_app.services.LogService import Code
 from telephone.main_app.models import Call as CallModel
 
 
-class ATSDataService():
+class PBXDataService():
 	def __init__(self):
 		pass
 
@@ -49,43 +49,83 @@ class ATSDataService():
 		return ServiceResponse(api_response.ok, status_code=api_response.status_code)
 
 	@staticmethod
-	def merge_calls(stat, stat_ATS):
+	def filter_group(group):
+		"""
+		Filter the group of the calls
+		:param group: stat_pbx group
+		:return: CallRecord
+		"""
+		# filter answered calls form group
+		answ_calls = [g for g in group if g.disposition == CallsConstants.ANSWERED]
+
+		call = CallRecord()
+
+		# check if call wasn't answered
+		if not answ_calls:
+			# ser params with 'destination' = None
+			call.set_params(call_id=group[0].call_id, clid=group[0].clid, date=group[0].date, disposition=group[0].disposition, bill_seconds=group[0].seconds, sip=group[0].sip)
+			call.is_answered = False
+			return call
+
+		# find incoming call
+		for c in answ_calls:
+			if c.destination == CallsConstants.INCOMING:
+				call.set_params(call_id=c.call_id, bill_seconds=c.seconds)
+			else:
+				call.set_params(clid=c.clid, date=c.date, destination=c.destination, disposition=c.disposition, sip=c.sip)
+		return call
+
+	@staticmethod
+	def filter_stat_pbx(stat_pbx):
+		"""
+		Filter stat_pbx calls
+		:param stat_pbx: List of calls
+		:return: List of filtered calls
+		"""
+		result = []
+		key_date_val = None
+		key_sip_val = None
+		group = []
+		for s in stat_pbx:
+			if not key_date_val:
+				# init key_date_val
+				key_date_val = s.date
+			if not key_sip_val:
+				# init key_sip_val
+				key_sip_val = s.sip
+			if CommonService.is_dates_equals(key_date_val, s.date, True and s.sip == key_sip_val) or not group:
+				# add to group if values are equals
+				group.append(s)
+			else:
+				result.append(PBXDataService.filter_group(group))
+				# set current call as the first group item
+				group = [s]
+				# update key values
+				key_date_val = s.date
+				key_sip_val = s.sip
+			if s == stat_pbx[-1] and group:
+				# add last group
+				result.append(PBXDataService.filter_group(group))
+		return result
+
+
+	@staticmethod
+	def merge_calls(stat_common, stat_pbx):
 		"""
 		Merge statistic
-		:param stat: calls statistic
-		:param stat_ATS: ATS calls statistic
+		:param stat_common: calls statistic
+		:param stat_pbx: PBX calls statistic
 		:return: ServiceResponse
 		"""
 		result = []
-
-		key_value = None
-		group = []
-		grouped = []
-		for s in stat:
-			if not key_value:
-				key_value = s.date
-			if abs(key_value - s.date).seconds < settings.TIME_CORRECTION or not group:
-				group.append(s)
-			else:
-				grouped.append(group)
-				group = [s]
-				key_value = s.date
-			if s == stat[-1] and group:
-				grouped.append(group)
-
-		stat_filtered = []
-		for __group in grouped:
-			record = __group[0]
-			if len(__group) > 1:
-				records = filter(lambda x: x.disposition == 'answered', __group)
-				if records:
-					record = records[0]
-			stat_filtered.append(record)
-		for stat_filtered_record in stat_filtered:
-			stat_ATS_filtered = filter(lambda y: y.destination == stat_filtered_record.destination, stat_ATS)
-			for stat_ATS_filtered_record in stat_ATS_filtered:
-				if abs(stat_ATS_filtered_record.date - stat_filtered_record.date).seconds < settings.TIME_CORRECTION:
-					result.append(CallRecord(stat_filtered_record, stat_ATS_filtered_record))
+		stat_pbx_filtered = PBXDataService.filter_stat_pbx(stat_pbx)
+		for s in stat_pbx_filtered:
+			stat_common_filtered = filter(lambda x: abs(x.bill_seconds - s.bill_seconds) <= 1 and
+													(x.destination == s.destination if s.destination else CommonService.is_dates_equals(x.date, s.date, False) and
+													 CommonService.is_dates_equals(x.date, s.date, False)), stat_common)
+			if stat_common_filtered:
+				s.set_params(bill_cost=stat_common_filtered[0].bill_cost, cost=stat_common_filtered[0].cost, currency=stat_common_filtered[0].currency, description=stat_common_filtered[0].description)
+				result.append(s)
 		return result
 
 	@staticmethod
@@ -97,16 +137,16 @@ class ATSDataService():
 		:return:
 		"""
 		# get common stat
-		stat_common_res = ATSDataService.get_common_stat(params, user)
+		stat_common_res = PBXDataService.get_common_stat(params, user)
 		if not stat_common_res.is_success:
 			return ServiceResponse(False, message=Code.UCLUNS, data={'params': params, 'user_id': user.pk}, status_code=stat_common_res.status_code)
 
 		# get pbx stat
-		stat_pbx_res = ATSDataService.get_pbx_stat(params, user)
+		stat_pbx_res = PBXDataService.get_pbx_stat(params, user)
 		if not stat_pbx_res.is_success:
 			return ServiceResponse(False, message=Code.UCLUNS, data={'params': params, 'user_id': user.pk}, status_code=stat_pbx_res.status_code)
 
-		merged_stat = ATSDataService.merge_calls(stat_common_res.data, stat_pbx_res.data)
+		merged_stat = PBXDataService.merge_calls(stat_common_res.data, stat_pbx_res.data)
 		user_stat = user.userprofile.call_set.filter(date__gte=params.start, date__lte=params.end)
 
 		row_to_update = len(merged_stat) - len(user_stat)
@@ -128,6 +168,7 @@ class ATSDataService():
 							cost=m_s.cost,
 							bill_cost=m_s.bill_cost,
 							currency=m_s.currency,
+							is_answered=m_s.is_answered,
 							user_profile=user.userprofile
 						)
 						stat_record.save()
@@ -136,5 +177,5 @@ class ATSDataService():
 			if update_errors:
 				message += Code.UCLSWE
 		else:
-			message = Code.UCLNTU.value
+			message = Code.UCLNTU
 		return ServiceResponse(True, data=update_errors, message=message)

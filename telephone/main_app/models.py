@@ -17,15 +17,16 @@ class UserProfile(models.Model):
 
 class Call(models.Model):
 	call_id = models.CharField(max_length=30, null=False)
-	sip = models.CharField(max_length=20)
-	date = models.DateTimeField()
-	destination = models.CharField(max_length=30)
-	description = models.CharField(max_length=100)
-	disposition = models.CharField(max_length=20)
-	bill_seconds = models.IntegerField()
-	cost = models.FloatField()
-	bill_cost = models.FloatField()
-	currency = models.CharField(max_length=20)
+	sip = models.CharField(max_length=20, null=True)
+	date = models.DateTimeField(null=True)
+	destination = models.CharField(max_length=30, null=True)
+	description = models.CharField(max_length=100, null=True)
+	disposition = models.CharField(max_length=20, null=True)
+	bill_seconds = models.IntegerField(null=True)
+	cost = models.FloatField(null=True)
+	bill_cost = models.FloatField(null=True)
+	currency = models.CharField(max_length=20, null=True)
+	is_answered = models.BooleanField(default=True)
 	user_profile = models.ForeignKey(UserProfile)
 
 	class Meta:

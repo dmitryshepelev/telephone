@@ -49,11 +49,10 @@ footer {
 
 @font-face {
 	font-family: 'icomoon';
-	src:url('/static/content/fonts/icomoon.eot?dpsubd');
-	src:url('/static/content/fonts/icomoon.eot?#iefixdpsubd') format('embedded-opentype'),
-		url('/static/content/fonts/icomoon.ttf?dpsubd') format('truetype'),
-		url('/static/content/fonts/icomoon.woff?dpsubd') format('woff'),
-		url('/static/content/fonts/icomoon.svg?dpsubd#icomoon') format('svg');
+//	src:url('/static/content/fonts/icomoon.eot?dpsubd');
+	src:
+//	url('/static/content/fonts/icomoon.eot?#iefixdpsubd') format('embedded-opentype'),
+		url('/static/content/fonts/IcoMoonPack.ttf?dpsubd') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -73,13 +72,13 @@ footer {
 
 .icon-exit {
 	&:before {
-		content: "\e600";
+		content: "\ea14";
 	}
 }
 
 .icon-enter {
 	&:before {
-		content: "\e714";
+		content: "\ea13";
 	}
 }
 
@@ -115,7 +114,43 @@ footer {
 
 .icon-user {
 	&:before {
-    	content: "\e672";
+    	content: "\e971";
+	}
+}
+
+.icon-menu {
+	&:before {
+		content: "\e9be";
+	}
+}
+
+.icon-phone {
+	&:before {
+		content: "\e942";
+	}
+}
+
+.icon-list2 {
+	&:before {
+		content: "\e9bb";
+	}
+}
+
+.icon-blocked {
+	&:before {
+		content: "\ea0e";
+	}
+}
+
+.icon-play {
+	&:before {
+		content: "\ea1c";
+	}
+}
+
+.icon-download {
+	&:before {
+		content: "\e9c7";
 	}
 }
 
@@ -371,3 +406,10 @@ table {
 }
 
 /* END TABLE SORTER */
+
+.btn-xs-custom {
+	padding: 1px 5px !important;
+	font-size: 12px !important;
+	line-height: 1.5 !important;
+	margin: 0 !important;
+}

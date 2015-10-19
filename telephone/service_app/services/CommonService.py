@@ -11,6 +11,11 @@ class Constants(Enum):
 	CUR_DATE_DAY_END_STR = datetime.datetime.now().strftime(settings.DATETIME_FORMAT_END)
 
 
+class CallsConstants(Enum):
+	ANSWERED = 'answered'
+	INCOMING = 'incoming'
+
+
 class CommonService():
 	def __init__(self):
 		pass
@@ -58,3 +63,16 @@ class CommonService():
 			for key, value in error.iteritems():
 				dct[key] = value
 		return dct
+
+	@staticmethod
+	def is_dates_equals(date1, date2, with_sec):
+		"""
+		Check if the dates are equals with error
+		:param date1: DateTime
+		:param date2: DateTime
+		:param with_sec: comparison by secs
+		:return: Boolean
+		"""
+		if with_sec:
+			return abs(date1 - date2).seconds <= settings.TIME_CORRECTION_SEC
+		return date1.date() == date2.date() and date1.hour == date2.hour and abs(date1.minute - date2.minute) <= settings.TIME_CORRECTION_MIN

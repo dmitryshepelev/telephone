@@ -23,7 +23,7 @@ var controller = (function () {
     function _makeSortable() {
         var table = $('#callsTable');
         if (table && table.children('tbody').children('tr').length > 1) {
-            table.tablesorter({sortList: [[0,0]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
+            table.tablesorter({sortList: [[1,1]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
                 var value = node.innerHTML;
                 if (value.search(/(мин|сек)/g) != -1) {
                     var textArr = value.split(' ');
@@ -38,6 +38,7 @@ var controller = (function () {
         if (data){
             _container.append(data);
             _makeSortable();
+            mainController.initTooltips()
             _container.showElement();
         } else {
           _container.hideElement(200, function () {

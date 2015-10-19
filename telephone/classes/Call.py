@@ -29,14 +29,49 @@ class CallPBX():
 
 
 class CallRecord():
-	def __init__(self, call_common, call_pbx):
-		self.call_id = call_pbx.call_id
-		self.sip = call_pbx.sip
-		self.date = call_pbx.date
-		self.destination = call_common.destination
-		self.description = call_common.description
-		self.disposition = call_common.disposition
-		self.bill_seconds = call_common.bill_seconds
-		self.cost = call_common.cost
-		self.bill_cost = call_common.bill_cost
-		self.currency = call_common.currency
+	def __init__(self):
+		self.call_id = None
+		self.clid = None
+		self.sip = None
+		self.date = None
+		self.destination = None
+		self.description = None
+		self.disposition = None
+		self.bill_seconds = None
+		self.cost = None
+		self.bill_cost = None
+		self.currency = None
+
+		self.__is_answered = True
+
+	def set_params(self, **kwargs):
+		"""
+		Sets the params by name
+		:param kwargs: params
+		:return:
+		"""
+		if not kwargs:
+			return None
+
+		for key, value in kwargs.items():
+			setattr(self, key, value)
+
+	@property
+	def is_answered(self):
+		"""
+		Getter of __is_answered
+		:return: is_answered
+		"""
+		return self.__is_answered
+
+	@is_answered.setter
+	def is_answered(self, value):
+		"""
+		Setter og __is_answered
+		:param value: value to set
+		:return: TypeError if value isn't type of bool
+		"""
+		if type(value) is bool:
+			self.__is_answered = value
+		else:
+			raise TypeError

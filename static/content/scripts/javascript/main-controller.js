@@ -4,7 +4,7 @@ var mainController = (function () {
     }
 
     return {
-        initTooltips: _initTooltips,
+        initTooltips: _initTooltips
     }
 })();
 

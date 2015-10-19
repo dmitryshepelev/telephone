@@ -1,16 +1,16 @@
 <table class="table table-striped table-hover tablesorter" id="callsTable">
     <thead>
         <tr>
-            <th><span class="glyphicon glyphicon-option-vertical"></span></th>
-	        <th>Call ID</th>
-            <th>Состояние</th>
-            <th>Дата</th>
-            <th>Номер </th>
-{#            <th>Описание</th>#}
-            <th>Sip</th>
-            <th>Время звонка</th>
-            <th>Стоимость минуты</th>
-            <th>Оплачено</th>
+            <th align="center"></th>
+	        <th>Дата</th>
+            <th></th>
+	        <th>Номер звонящего</th>
+            <th>Описание</th>
+	        <th>Номер ответа</th>
+	        <th>Время звонка</th>
+	        <th>Цена минуты</th>
+            <th>Стоимость</th>
+	        <th>Запись</th>
         </tr>
     </thead>
     <tbody>
@@ -24,22 +24,24 @@
 	    {% for call in calls %}
 	        <tr>
 	            <td>{{ forloop.revcounter }}</td>
-		        <td>{{ call.call_id }}</td>
-	            <td>{{ call.disposition|call_state_localize }}</td>
-{#	            <td>#}
-{#	                <span class="glyphicon {% if call.status %} glyphicon-earphone {% endif %} pointer"></span>#}
-{#	            </td>#}
-	            <td>{{ call.date|date:'d.m.Y H.i.s' }}</td>
-	            <td>{{ call.destination }}</td>
-{#	            <td>{{ call.description }}</td>#}
-	            <td>{{ call.sip }}</td>
-	            <td>{{ call.bill_seconds|t_fs }}</td>
-		        <td>{{ call.cost }}</td>
-		        <td>{{ call.bill_cost }}</td>
-{#	            <td>#}
-{#	                <button class="btn btn-default btn-xs" onclick="audio.action(event)" data-record-id="{{ call.recordId }}"><span class="glyphicon glyphicon-play"></span></button>#}
-{#	                <button onclick="audio.download(event)" data-record-id="{{ call.recordId }}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-download-alt"></span></button>#}
-{#	            </td>#}
+		        <td>{{ call.date|date:'d.m.Y H.i.s' }}</td>
+	            <td><span class="icon-{% if call.is_answered %}phone{% else %}blocked{% endif %}" tooltip data-toggle="tooltip" data-placement="bottom" title="{{ call.disposition|call_state_localize }}"></span></td>
+		        <td>{{ call.sip }}</td>
+	            <td>{{ call.description }}</td>
+                <td>{% if call.is_answered %}{{ call.destination }}{% else %}-{% endif %}</td>
+	            <td>{% if call.is_answered %}{{ call.bill_seconds|t_fs }}{% else %}-{% endif %}</td>
+		        <td>{% if call.is_answered %}{{ call.cost }}{% else %}-{% endif %}</td>
+		        <td>{% if call.is_answered %}{{ call.bill_cost }}{% else %}-{% endif %}</td>
+	            <td>
+		            {% if call.is_answered %}
+			            <span>
+		                    <button class="btn-xs-custom btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-play"></span></button>
+		                    <button class="btn-xs-custom btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-download"></span></button>
+		                </span>
+		            {% else %}
+			            -
+		            {% endif %}
+	            </td>
 	        </tr>
 	    {% endfor %}
     {% endif %}
