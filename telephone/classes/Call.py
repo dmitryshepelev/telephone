@@ -29,7 +29,7 @@ class CallPBX():
 
 
 class CallRecord():
-	def __init__(self):
+	def __init__(self, call=None):
 		self.call_id = None
 		self.clid = None
 		self.sip = None
@@ -43,18 +43,30 @@ class CallRecord():
 		self.currency = None
 
 		self.__is_answered = True
+		self.__is_first_call = False
+
+		if call:
+			self.__init_with_instance(call)
+
+	def __init_with_instance(self, call):
+		self.set_params(**call.__dict__)
+		self.sip = call.callee.sip
+		self.description = call.callee.description
+		self.__is_answered = call.is_answered
+		self.__is_first_call = call.callee.first_call_date == call.date
 
 	def set_params(self, **kwargs):
 		"""
 		Sets the params by name
 		:param kwargs: params
-		:return:
+		:return: None
 		"""
 		if not kwargs:
 			return None
 
 		for key, value in kwargs.items():
-			setattr(self, key, value)
+			if key in vars(self):
+				setattr(self, key, value)
 
 	@property
 	def is_answered(self):
@@ -67,11 +79,31 @@ class CallRecord():
 	@is_answered.setter
 	def is_answered(self, value):
 		"""
-		Setter og __is_answered
+		Setter of __is_answered
 		:param value: value to set
 		:return: TypeError if value isn't type of bool
 		"""
 		if type(value) is bool:
 			self.__is_answered = value
+		else:
+			raise TypeError
+
+	@property
+	def is_first_call(self):
+		"""
+		Getter of __is_first_call
+		:return: is_first_call
+		"""
+		return self.__is_first_call
+
+	@is_first_call.setter
+	def is_first_call(self, value):
+		"""
+		Setter of __is_first_call
+		:param value: value to set
+		:return: TypeError if value isn't type of bool
+		"""
+		if type(value) is bool:
+			self.__is_first_call = value
 		else:
 			raise TypeError

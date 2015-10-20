@@ -45,117 +45,6 @@ footer {
 
 /* END OVERRIDES */
 
-/* ICONS */
-
-@font-face {
-	font-family: 'icomoon';
-//	src:url('/static/content/fonts/icomoon.eot?dpsubd');
-	src:
-//	url('/static/content/fonts/icomoon.eot?#iefixdpsubd') format('embedded-opentype'),
-		url('/static/content/fonts/IcoMoonPack.ttf?dpsubd') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
-
-[class^="icon-"], [class*=" icon-"] {
-	font-family: 'icomoon', serif;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.icon-exit {
-	&:before {
-		content: "\ea14";
-	}
-}
-
-.icon-enter {
-	&:before {
-		content: "\ea13";
-	}
-}
-
-.icon-spinner11 {
-	&:before {
-    	content: "\e685";
-	}
-}
-
-.icon-arrow-right2{
-	&:before {
-	    content: "\e73c";
-	}
-}
-
-.icon-cross {
-	&:before {
-    	content: "\e710";
-	}
-}
-
-.icon-checkbox-checked {
-	&:before {
-    	content: "\e752";
-	}
-}
-
-.icon-user-tie { &
-	:before {
-    	content: "\e677";
-	}
-}
-
-.icon-user {
-	&:before {
-    	content: "\e971";
-	}
-}
-
-.icon-menu {
-	&:before {
-		content: "\e9be";
-	}
-}
-
-.icon-phone {
-	&:before {
-		content: "\e942";
-	}
-}
-
-.icon-list2 {
-	&:before {
-		content: "\e9bb";
-	}
-}
-
-.icon-blocked {
-	&:before {
-		content: "\ea0e";
-	}
-}
-
-.icon-play {
-	&:before {
-		content: "\ea1c";
-	}
-}
-
-.icon-download {
-	&:before {
-		content: "\e9c7";
-	}
-}
-
-/* END ICONS*/
-
 ul.navbar-nav >
     li {
 		transition: all 0.15s linear;
@@ -407,9 +296,32 @@ table {
 
 /* END TABLE SORTER */
 
-.btn-xs-custom {
+/* BUTTONS OVERRIDES */
+
+.btn-xs-wt {
 	padding: 1px 5px !important;
 	font-size: 12px !important;
 	line-height: 1.5 !important;
 	margin: 0 !important;
+}
+
+.btn-sm-wt {
+	padding: 5px 10px !important;
+	font-size: 12px !important;
+	line-height: 1.5 !important;
+	border-radius: 2px !important;
+}
+
+/* END BUTTONS OVERRIDES */
+
+.text-error {
+	color: @error-color;
+}
+
+.text-success {
+	color: @success-color;
+}
+
+.text-bold {
+	font-weight: bold;
 }

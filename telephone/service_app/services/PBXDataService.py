@@ -5,6 +5,7 @@ from telephone import settings
 from telephone.classes.Call import Call, CallRecord, CallPBX
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.service_app.services.CommonService import CommonService, CallsConstants
+from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LogService import Code
 from telephone.main_app.models import Call as CallModel
 
@@ -149,33 +150,23 @@ class PBXDataService():
 		merged_stat = PBXDataService.merge_calls(stat_common_res.data, stat_pbx_res.data)
 		user_stat = user.userprofile.call_set.filter(date__gte=params.start, date__lte=params.end)
 
+		# count of the rows need to be updated
 		row_to_update = len(merged_stat) - len(user_stat)
 		message = '{row_to_update} row(s) to be updated. '.format(row_to_update=row_to_update)
 		update_errors = []
 		if row_to_update > 0:
 			for m_s in merged_stat:
+				# check if current call already exist
 				stat_record = user_stat.filter(call_id=m_s.call_id)
+				# save to db if not
 				if not stat_record:
-					try:
-						stat_record = CallModel(
-							call_id=m_s.call_id,
-							sip=m_s.sip,
-							date=m_s.date,
-							destination=m_s.destination,
-							description=m_s.description,
-							disposition=m_s.disposition,
-							bill_seconds=m_s.bill_seconds,
-							cost=m_s.cost,
-							bill_cost=m_s.bill_cost,
-							currency=m_s.currency,
-							is_answered=m_s.is_answered,
-							user_profile=user.userprofile
-						)
-						stat_record.save()
-					except Exception as e:
-						update_errors.append((stat_record, e.message,))
+					result = DBService.create_call(m_s, user.userprofile)
+					if not result.is_success:
+						update_errors.append((result.data, result.message,))
 			if update_errors:
+				# Update calls list succeed with errors
 				message += Code.UCLSWE
 		else:
+			# Nothing to update
 			message = Code.UCLNTU
 		return ServiceResponse(True, data=update_errors, message=message)

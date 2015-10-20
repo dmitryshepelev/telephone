@@ -15,12 +15,19 @@ class UserProfile(models.Model):
 		app_label = 'main_app'
 
 
+class Callee(models.Model):
+	sip = models.CharField(max_length=20, unique=True)
+	description = models.CharField(max_length=100, null=True)
+	first_call_date = models.DateTimeField(null=True)
+
+	class Meta:
+		app_label = 'main_app'
+
+
 class Call(models.Model):
 	call_id = models.CharField(max_length=30, null=False)
-	sip = models.CharField(max_length=20, null=True)
 	date = models.DateTimeField(null=True)
 	destination = models.CharField(max_length=30, null=True)
-	description = models.CharField(max_length=100, null=True)
 	disposition = models.CharField(max_length=20, null=True)
 	bill_seconds = models.IntegerField(null=True)
 	cost = models.FloatField(null=True)
@@ -28,6 +35,7 @@ class Call(models.Model):
 	currency = models.CharField(max_length=20, null=True)
 	is_answered = models.BooleanField(default=True)
 	user_profile = models.ForeignKey(UserProfile)
+	callee = models.ForeignKey(Callee)
 
 	class Meta:
 		app_label = 'main_app'

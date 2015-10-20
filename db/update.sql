@@ -39,4 +39,12 @@ CREATE INDEX "main_app_call_06037614" ON "main_app_call" ("user_profile_id");
 ALTER TABLE "main_app_call" ADD COLUMN "is_answered" boolean DEFAULT true NOT NULL;
 ALTER TABLE "main_app_call" ALTER COLUMN "is_answered" DROP DEFAULT;
 
+CREATE TABLE "main_app_callee" ("id" serial NOT NULL PRIMARY KEY, "sip" varchar(20) NOT NULL UNIQUE, "description" varchar(100) NULL, "first_call_date" timestamp with time zone NULL);
+ALTER TABLE "main_app_call" DROP COLUMN "description" CASCADE;
+ALTER TABLE "main_app_call" DROP COLUMN "sip" CASCADE;
+ALTER TABLE "main_app_call" ADD COLUMN "callee_id" integer NOT NULL;
+CREATE INDEX "main_app_callee_sip_38a802ef_like" ON "main_app_callee" ("sip" varchar_pattern_ops);
+CREATE INDEX "main_app_call_56286df8" ON "main_app_call" ("callee_id");
+ALTER TABLE "main_app_call" ADD CONSTRAINT "main_app_call_callee_id_70a0e395_fk_main_app_callee_id" FOREIGN KEY ("callee_id") REFERENCES "main_app_callee" ("id") DEFERRABLE INITIALLY DEFERRED;
+
 -- --

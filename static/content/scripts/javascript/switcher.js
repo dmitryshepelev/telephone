@@ -33,13 +33,13 @@ var Switcher = (function () {
             var bgColor = '';
             switch (this._params.value) {
                 case 0:
-                    bgColor = '#60BD68';
+                    bgColor = '#1ABB9C';
                     break;
                 case 1:
                     bgColor = '#DDDDDD';
                     break;
                 case 2:
-                    bgColor = '#F15854';
+                    bgColor = '#D9534F';
                     break;
                 default: throw 'Unexpected value {0}'.format(this._params.value);
             }

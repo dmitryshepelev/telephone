@@ -17,6 +17,8 @@ class Code(Enum):
 	UCLSWE = 'UCLSWE Succeed with errors'
 	UCLUNS = 'UCLUNS Unsucceed'
 
+	ECRERR = 'ECRERR Entity creation error'
+
 
 class LogService():
 	def __init__(self):

@@ -90,13 +90,7 @@ function ApiParams(params) {
         // Start date: 'YYYY-MM-dd HH:mm:ss' *Required*
         'start': Date.getNowDate().toRightDatetimeString(),
         // End date (inclusively): 'YYYY-MM-dd HH:mm:ss' *Required*
-        'end': Date.getNowDate().toRightDatetimeString(),
-        // Determine SIP number
-        'sip': '',
-        // Wasted cash
-        'cost_only': '',
-        // Call type: doesn't include - common; 'toll' - 800 number; ru495 - 495 number
-        'type': ''
+        'end': Date.getNowDate().toRightDatetimeString()
     };
 
     this._init(params);

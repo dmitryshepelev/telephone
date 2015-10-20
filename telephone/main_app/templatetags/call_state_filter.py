@@ -33,3 +33,20 @@ def call_state_localize(value):
 		return 'Превышен лимит линии'
 	else:
 		return ''
+
+
+@register.filter(name='call_state_icon')
+def cal_state_icon(value):
+	"""
+	Return icomoon class
+	:param value: call state value
+	:return: class
+	"""
+	success = ' text-success'
+	error = ' text-error'
+	if value == 'answered':
+		return 'arrow-down' + success
+	elif value == 'no answer':
+		return 'arrow-down' + error
+	else:
+		return 'blocked' + error

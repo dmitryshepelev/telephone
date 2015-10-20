@@ -5,12 +5,12 @@
 	        <th>Дата</th>
             <th></th>
 	        <th>Номер звонящего</th>
-            <th>Описание</th>
 	        <th>Номер ответа</th>
 	        <th>Время звонка</th>
+	        <th></th>
 	        <th>Цена минуты</th>
             <th>Стоимость</th>
-	        <th>Запись</th>
+	        <th>Описание</th>
         </tr>
     </thead>
     <tbody>
@@ -18,30 +18,30 @@
     {% load call_state_filter %}
     {% if not calls %}
 	    <tr>
-		    <td colspan="9" align="center">Нет данных</td>
+		    <td colspan="10" align="center">Нет данных</td>
 	    </tr>
     {% else %}
 	    {% for call in calls %}
 	        <tr>
 	            <td>{{ forloop.revcounter }}</td>
 		        <td>{{ call.date|date:'d.m.Y H.i.s' }}</td>
-	            <td><span class="icon-{% if call.is_answered %}phone{% else %}blocked{% endif %}" tooltip data-toggle="tooltip" data-placement="bottom" title="{{ call.disposition|call_state_localize }}"></span></td>
-		        <td>{{ call.sip }}</td>
-	            <td>{{ call.description }}</td>
+	            <td><span class="icon-{{ call.disposition|call_state_icon }}" tooltip data-toggle="tooltip" data-placement="bottom" title="{{ call.disposition|call_state_localize }}"></span></td>
+		        <td {% if call.is_first_call %}class="text-bold"{% endif %}>{{ call.sip }}</td>
                 <td>{% if call.is_answered %}{{ call.destination }}{% else %}-{% endif %}</td>
 	            <td>{% if call.is_answered %}{{ call.bill_seconds|t_fs }}{% else %}-{% endif %}</td>
-		        <td>{% if call.is_answered %}{{ call.cost }}{% else %}-{% endif %}</td>
-		        <td>{% if call.is_answered %}{{ call.bill_cost }}{% else %}-{% endif %}</td>
-	            <td>
+		        <td>
 		            {% if call.is_answered %}
-			            <span>
-		                    <button class="btn-xs-custom btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-play"></span></button>
-		                    <button class="btn-xs-custom btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-download"></span></button>
+                        <span class="pull-right">
+		                    <button class="btn-xs-wt btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-play"></span></button>
+		                    <button class="btn-xs-wt btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-download"></span></button>
 		                </span>
 		            {% else %}
 			            -
 		            {% endif %}
 	            </td>
+		        <td>{% if call.is_answered %}{{ call.cost }}{% else %}-{% endif %}</td>
+		        <td>{% if call.is_answered %}{{ call.bill_cost }}{% else %}-{% endif %}</td>
+	            <td>{{ call.description }}</td>
 	        </tr>
 	    {% endfor %}
     {% endif %}

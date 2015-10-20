@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.classes.ApiParams import ApiParams
+from telephone.classes.Call import CallRecord
 from telephone.main_app.services import get_logger
 from telephone import services
 from telephone.service_app.services.PBXDataService import PBXDataService
@@ -49,7 +50,7 @@ def get_statistic(request, template):
 	update_res = PBXDataService.update_calls_list(params, request.user)
 	logger.info(Code.UCLEXE, is_success=update_res.is_success, status_code=update_res.status_code, message=update_res.message, data=update_res.data)
 
-	calls = [call for call in request.user.userprofile.call_set.filter(date__gte=params.start, date__lte=params.end).order_by('date')]
+	calls = [CallRecord(call=call) for call in request.user.userprofile.call_set.filter(date__gte=params.start, date__lte=params.end).order_by('date')]
 	return render_to_response(template, {'calls': calls}, context_instance=RequestContext(request))
 
 
