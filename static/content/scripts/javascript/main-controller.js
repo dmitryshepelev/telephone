@@ -7,5 +7,3 @@ var mainController = (function () {
         initTooltips: _initTooltips
     }
 })();
-
-/* APP INIT. GLOBAL VARIABLES */

@@ -38,7 +38,7 @@ var controller = (function () {
         if (data){
             _container.append(data);
             _makeSortable();
-            mainController.initTooltips()
+            mainController.initTooltips();
             _container.showElement();
         } else {
           _container.hideElement(200, function () {
@@ -52,9 +52,13 @@ var controller = (function () {
         loader.show();
         $.get('/getCalls/{0}'.format(request_string || ''), function (data) {
             _updateContainer(data);
-            loader.hide();
+            //loader.hide();
         }).fail(function () {
-            window.location.href = '/e/';
+            services.errors().getDefaultErrorPage().success(function (result) {
+                _updateContainer(result)
+            })
+        }).always(function () {
+            loader.hide()
         })
     }
 

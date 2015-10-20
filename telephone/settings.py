@@ -139,6 +139,7 @@ TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'main_app/templates'),
 	os.path.join(BASE_DIR,  'auth_app/templates'),
 	os.path.join(BASE_DIR,  'admin_app/templates'),
+	os.path.join(BASE_DIR,  'servise_app/templates'),
 )
 
 LOGIN_URL = '/auth/login/'

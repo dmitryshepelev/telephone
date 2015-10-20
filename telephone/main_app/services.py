@@ -4,14 +4,6 @@ import requests
 
 from telephone import settings
 from telephone.classes.ApiParams import ApiParams
-from telephone.services import AppLogger
-
-
-__logger = AppLogger('main_logger')
-
-
-def get_logger():
-	return __logger
 
 
 def get_call_record(params, is_superuser):

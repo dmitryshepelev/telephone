@@ -180,6 +180,15 @@ var services = (function () {
         }
     }
 
+    function _errors () {
+        var baseUrl = '/services/e/';
+        return {
+            getDefaultErrorPage: function () {
+                return $.get(baseUrl)
+            }
+        }
+    }
+
     return {
         collectModelData: _collectModelData,
         cleanModelData: _cleanModelData,
@@ -188,6 +197,7 @@ var services = (function () {
         executeCallback: _executeCallback,
         getApiUrls: _getApiUrls,
         validate: _validate,
-        bindKey: _bindKey
+        bindKey: _bindKey,
+        errors: _errors
     }
 })();

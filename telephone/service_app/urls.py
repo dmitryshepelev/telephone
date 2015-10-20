@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from telephone.service_app.controllers import get_api_urls, get_oauth_token, generate_password, create_mail, \
 	get_mailbox_data
+from telephone.service_app.error_pages import default_error
 
 urlpatterns = [
 	url(r'^getApiUrls/', get_api_urls),
@@ -8,4 +9,6 @@ urlpatterns = [
 	url(r'^generatePassword/$', generate_password),
 	url(r'^createMail/$', create_mail),
 	url(r'^getMailboxData/$', get_mailbox_data),
+
+	url(r'e/$', default_error, {'template': 'default_error.html'})
 ]
