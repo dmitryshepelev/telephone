@@ -22,7 +22,7 @@
 	    </tr>
     {% else %}
 	    {% for call in calls %}
-	        <tr>
+	        <tr data-call-id="{{ call.call_id }}">
 	            <td>{{ forloop.revcounter }}</td>
 		        <td>{{ call.date|date:'d.m.Y H.i.s' }}</td>
 	            <td><span class="icon-{{ call.disposition|call_state_icon }}" tooltip data-toggle="tooltip" data-placement="bottom" title="{{ call.disposition|call_state_localize }}"></span></td>
@@ -32,8 +32,8 @@
 		        <td>
 		            {% if call.is_answered %}
                         <span class="pull-right">
-		                    <button class="btn-xs-wt btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-play"></span></button>
-		                    <button class="btn-xs-wt btn btn-default" data-record-id="{{ call.call_id }}"><span class="icon-download"></span></button>
+		                    <button class="btn-xs-wt btn btn-default" onclick="controller.playRecord(event)"><span class="icon-play"></span></button>
+		                    <button class="btn-xs-wt btn btn-default"><span class="icon-download"></span></button>
 		                </span>
 		            {% else %}
 			            -

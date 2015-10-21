@@ -36,7 +36,6 @@ class DBService():
 				return ServiceResponse(False, data=callee, message=e.message)
 			return ServiceResponse(True, data=callee)
 
-
 	@staticmethod
 	def create_call(call_record, userprofile):
 		"""
@@ -75,3 +74,15 @@ class DBService():
 			return ServiceResponse(True, data=call)
 		# Callee isn't created
 		return ServiceResponse(False, data=result.data, message=result.message)
+
+	@staticmethod
+	def get_call(**kwargs):
+		"""
+		Get Call entity by prop name
+		:param kwargs: prop names
+		:return: Call entity
+		"""
+		try:
+			return ServiceResponse(True, data=Call.objects.get(**kwargs))
+		except Exception as e:
+			return ServiceResponse(False, data=kwargs, message=e.message)

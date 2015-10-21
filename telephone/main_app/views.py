@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -53,21 +54,25 @@ def get_statistic(request, template):
 	return render_to_response(template, {'calls': calls}, context_instance=RequestContext(request))
 
 
-# @login_required
-# def get_call_record(request):
-# 	"""
-# 	Controller to get test call record file
-# 	:param request: HTTP GET request
-# 	:return: mp3 file
-# 	"""
-# 	params = {'user': request.user.userprofile.user_code}
-# 	if request.GET:
-# 		params['id'] = request.GET.get('id')
-# 	record = services.get_call_record(params, request.user.is_superuser)
-# 	if not record:
-# 		get_logger().error('Get record error', request.path, request, params)
-# 		return HttpResponse(status=500)
-# 	response = HttpResponse(content_type='audio/mp3')
-# 	response['Content-Disposition'] = 'attachment; filename=%s' % 'record.mp3'
-# 	response.content = record
-# 	return response
+@login_required
+def get_call_record(request):
+	"""
+	Controller to get test call record file
+	:param request: HTTP GET request
+	:return: wav file
+	"""
+	call_id = request.GET.get('call_id') or None
+	if not call_id:
+		return HttpResponse(status=400)
+	record = PBXDataService.get_record(call_id, request.user)
+	# params = {'user': request.user.userprofile.user_code}
+	# if request.GET:
+	# 	params['id'] = request.GET.get('id')
+	# record = services.get_call_record(params, request.user.is_superuser)
+	# if not record:
+	# 	get_logger().error('Get record error', request.path, request, params)
+	# 	return HttpResponse(status=500)
+	# response = HttpResponse(content_type='audio/mp3')
+	# response['Content-Disposition'] = 'attachment; filename=%s' % 'record.mp3'
+	# response.content = record
+	return None

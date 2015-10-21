@@ -169,7 +169,9 @@ API_URLS = {
 		'update_mail': '/api2/admin/email/edit',
 	},
 	'disk': {
-		''
+		'host': 'https://cloud-api.yandex.net/v1/disk/resources',
+		'file_download_link': '/download',
+		'files_info': '/files'
 	}
 }
 

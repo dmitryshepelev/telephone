@@ -73,6 +73,12 @@ var controller = (function () {
         return data;
     }
 
+    function _getRecord(callId) {
+        if (callId) {
+            return $.get('/getRecord?call_id={0}'.format(callId))
+        }
+    }
+
     $(document).ready(function () {
         _setContainer();
         _initDatepicker();
@@ -89,6 +95,13 @@ var controller = (function () {
             var params = _collectData();
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
+        },
+        playRecord: function (e) {
+            var attr = 'data-call-id';
+            var element = $(e.target);
+            var callId = element.closest('tr[{0}]'.format(attr)).attr(attr);
+            console.log(callId);
+            _getRecord(callId)
         }
     };
 })();

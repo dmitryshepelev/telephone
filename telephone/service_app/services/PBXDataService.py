@@ -6,6 +6,7 @@ from telephone.classes.Call import Call, CallRecord, CallPBX
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.service_app.services.CommonService import CommonService, CallsConstants
 from telephone.service_app.services.DBService import DBService
+from telephone.service_app.services.DiskService import DiskService
 from telephone.service_app.services.LogService import Code
 from telephone.main_app.models import Call as CallModel
 
@@ -71,9 +72,9 @@ class PBXDataService():
 		# find incoming call
 		for c in answ_calls:
 			if c.destination == CallsConstants.INCOMING:
-				call.set_params(call_id=c.call_id, bill_seconds=c.seconds)
+				call.set_params(bill_seconds=c.seconds)
 			else:
-				call.set_params(clid=c.clid, date=c.date, destination=c.destination, disposition=c.disposition, sip=c.sip)
+				call.set_params(call_id=c.call_id, clid=c.clid, date=c.date, destination=c.destination, disposition=c.disposition, sip=c.sip)
 		return call
 
 	@staticmethod
@@ -170,3 +171,19 @@ class PBXDataService():
 			# Nothing to update
 			message = Code.UCLNTU
 		return ServiceResponse(True, data=update_errors, message=message)
+
+	@staticmethod
+	def get_record(call_id, user):
+		"""
+		Get call record by call_id
+		:param call_id: id of the call
+		:return: call record
+		"""
+		result = DBService.get_call(call_id=call_id)
+		if result.is_success:
+			call = result.data
+			if call.user_profile_id != user.userprofile.pk:
+				ServiceResponse(False, message=Code.PMDERR)
+			disk_service = DiskService(user.userprofile.token)
+			files_info = disk_service.get_files_info()
+		return ServiceResponse(False, data=result.data, message=result.message)

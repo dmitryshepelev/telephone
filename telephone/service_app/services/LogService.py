@@ -12,6 +12,8 @@ class Code(Enum):
 	GTKERR = 'GTKERR Get token error'
 	MCRERR = 'MCRERR Mail creation error'
 
+	PMDERR = 'PMDERR Permission denied'
+
 	UCLEXE = 'UCLEXE Update calls list executed succeed'
 	UCLNTU = 'UCLNTU Nothing to update'
 	UCLSWE = 'UCLSWE Succeed with errors'
