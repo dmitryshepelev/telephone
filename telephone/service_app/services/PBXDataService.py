@@ -1,14 +1,18 @@
+import email
+import imaplib
 import json
+import re
+
 import requests
 
 from telephone import settings
 from telephone.classes.Call import Call, CallRecord, CallPBX
+from telephone.classes.CallAudio import CallAudio
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.service_app.services.CommonService import CommonService, CallsConstants
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.DiskService import DiskService
 from telephone.service_app.services.LogService import Code
-from telephone.main_app.models import Call as CallModel
 
 
 class PBXDataService():
@@ -173,6 +177,62 @@ class PBXDataService():
 		return ServiceResponse(True, data=update_errors, message=message)
 
 	@staticmethod
+	def get_audio(call_id, user):
+		"""
+		Check user mailbox to find the record
+		:param call_id: id of the call
+		:param user: current logged user
+		:return: filename
+		"""
+		username = user.userprofile.profile_email
+		password = user.userprofile.profile_password
+		imap_server = 'imap.yandex.ru'
+		header_start = 'audio/wav; name="'
+		call_audio = None
+
+		try:
+			mailbox = imaplib.IMAP4_SSL(imap_server)
+			mailbox.login(username, password)
+			mailbox.select('INBOX')
+
+			for msg_id in range(len(mailbox.search(None, 'ALL')[1][0].split()), 0, -1):
+				message = email.message_from_string(mailbox.fetch(msg_id, '(RFC822)')[1][0][1])
+				for part in message.get_payload():
+					header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
+					if header and len(header) > 0:
+						filename = header[0].strip(header_start)
+						call_audio = CallAudio(part.get_payload(decode=True), filename + 'wav')
+						break
+				if call_audio:
+					break
+			mailbox.logout()
+		except Exception as e:
+			return ServiceResponse(False, message=e.message)
+		return ServiceResponse(True, data=call_audio)
+
+	@staticmethod
+	def load_record_file(call, user):
+		"""
+		Load audio, upload to disk and update db with filename
+		:param call: Call instance
+		:param user: current user
+		:return: ServiceResponse
+		"""
+		# get audio
+		result = PBXDataService.get_audio(call.call_id, user)
+		if result.is_success:
+			call_audio = result.data
+			disk_service = DiskService(user.userprofile.token)
+			# upload to Disk
+			upload_result = disk_service.upload_file(call_audio, settings.CALL_RECORDS_DISK_FOLDER)
+			if upload_result.is_success:
+				# save to db
+				call.record_filename = upload_result.data
+				call.save()
+				return ServiceResponse(True, data=call.record_filename)
+		return ServiceResponse(False)
+
+	@staticmethod
 	def get_record(call_id, user):
 		"""
 		Get call record by call_id
@@ -180,10 +240,25 @@ class PBXDataService():
 		:return: call record
 		"""
 		result = DBService.get_call(call_id=call_id)
+
 		if result.is_success:
 			call = result.data
+			# check if current user is the master of the call
 			if call.user_profile_id != user.userprofile.pk:
 				ServiceResponse(False, message=Code.PMDERR)
-			disk_service = DiskService(user.userprofile.token)
-			files_info = disk_service.get_files_info()
+			# check if the record was already loaded
+			filename = call.record_filename
+			if not filename:
+				load_result = PBXDataService.load_record_file(call, user)
+				if load_result.is_success:
+					filename = load_result.data
+				else:
+					return ServiceResponse(False)
+			# get file from Disk
+
+
+			if result.is_success:
+				url = settings.API_URLS['mail']['download_attach'].format(filename=result.data, uid=user.userprofile.uid)
+				response = requests.get(url, headers={'Content-Disposition': 'attachment'})
+				return ServiceResponse(response.ok, data=response.content, status_code=response.status_code)
 		return ServiceResponse(False, data=result.data, message=result.message)

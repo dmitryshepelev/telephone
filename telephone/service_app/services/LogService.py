@@ -20,6 +20,11 @@ class Code(Enum):
 	UCLUNS = 'UCLUNS Unsucceed'
 
 	ECRERR = 'ECRERR Entity creation error'
+	GCLERR = 'Get call record error'
+
+	DFCRER = 'Disk. Folder creation error'
+	DGULER = 'Disk. Get upload link error'
+	DFUPER = 'Disk. File upload error'
 
 
 class LogService():

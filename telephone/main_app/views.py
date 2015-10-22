@@ -64,7 +64,15 @@ def get_call_record(request):
 	call_id = request.GET.get('call_id') or None
 	if not call_id:
 		return HttpResponse(status=400)
-	record = PBXDataService.get_record(call_id, request.user)
+	result = PBXDataService.get_record(call_id, request.user)
+	if not result.is_success:
+		logger.error(Code.GCLERR, status_code=result.status_code, message=result.message, data=result.data)
+		return HttpResponse(status=500)
+	response = HttpResponse(content_type='audio/wav')
+	response['Content-Disposition'] = 'attachment; filename=%s %s.wav' % (request.user.username, call_id)
+	response.content = result.data
+	return response
+
 	# params = {'user': request.user.userprofile.user_code}
 	# if request.GET:
 	# 	params['id'] = request.GET.get('id')
@@ -75,4 +83,3 @@ def get_call_record(request):
 	# response = HttpResponse(content_type='audio/mp3')
 	# response['Content-Disposition'] = 'attachment; filename=%s' % 'record.mp3'
 	# response.content = record
-	return None

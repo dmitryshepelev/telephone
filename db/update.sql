@@ -47,4 +47,7 @@ CREATE INDEX "main_app_callee_sip_38a802ef_like" ON "main_app_callee" ("sip" var
 CREATE INDEX "main_app_call_56286df8" ON "main_app_call" ("callee_id");
 ALTER TABLE "main_app_call" ADD CONSTRAINT "main_app_call_callee_id_70a0e395_fk_main_app_callee_id" FOREIGN KEY ("callee_id") REFERENCES "main_app_callee" ("id") DEFERRABLE INITIALLY DEFERRED;
 
+ALTER TABLE "main_app_call" ADD COLUMN "record_filename" varchar(100) NULL;
+ALTER TABLE "main_app_callee" ALTER COLUMN "description" TYPE varchar(1000);
+
 -- --

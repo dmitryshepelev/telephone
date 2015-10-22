@@ -167,13 +167,18 @@ API_URLS = {
 		'host': 'https://pddimp.yandex.ru',
 		'create_mail': '/api2/admin/email/add',
 		'update_mail': '/api2/admin/email/edit',
+		'download_attach': 'https://mail.yandex.by/message_part/{filename}?_uid={uid}&name={filename}'
 	},
 	'disk': {
 		'host': 'https://cloud-api.yandex.net/v1/disk/resources',
 		'file_download_link': '/download',
-		'files_info': '/files'
+		'file_upload_link': '/upload?path=',
+		'files_info': '/files',
+		'create_folder': '?path='
 	}
 }
+
+CALL_RECORDS_DISK_FOLDER = 'pbxrec'
 
 TIME_CORRECTION_SEC = 3
 TIME_CORRECTION_MIN = 1

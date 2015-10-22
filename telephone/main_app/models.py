@@ -17,7 +17,7 @@ class UserProfile(models.Model):
 
 class Callee(models.Model):
 	sip = models.CharField(max_length=20, unique=True)
-	description = models.CharField(max_length=100, null=True)
+	description = models.CharField(max_length=1000, null=True)
 	first_call_date = models.DateTimeField(null=True)
 
 	class Meta:
@@ -36,6 +36,7 @@ class Call(models.Model):
 	is_answered = models.BooleanField(default=True)
 	user_profile = models.ForeignKey(UserProfile)
 	callee = models.ForeignKey(Callee)
+	record_filename = models.CharField(max_length=100, null=True, default=None)
 
 	class Meta:
 		app_label = 'main_app'
