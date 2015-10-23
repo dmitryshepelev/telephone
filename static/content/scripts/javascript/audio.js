@@ -1,8 +1,9 @@
 var audio = (function () {
-    var _playClass = 'glyphicon-play';
-    var _stopClass = 'glyphicon-stop';
+    var _playClass = 'icon-play';
+    var _stopClass = 'icon-stop2';
     var _audioElement = document.createElement('audio');
-    var _url = '/getCallRecord?id=';
+    _audioElement.setAttribute('type', 'audio/wav');
+    var _url = '/getCallRecord?call_id=';
 
     _audioElement.addEventListener('ended', function () {
         _reset_buttons()
@@ -39,12 +40,16 @@ var audio = (function () {
         }
     }
 
+    function _getId(element) {
+        var attr = 'data-call-id';
+        return $(element).closest('tr[{0}]'.format(attr)).attr(attr);
+    }
+
     return {
         action: function (event) {
             var element = event.target;
             if ($(element.children).hasClass(_playClass)) {
-                console.log(element);
-                _play(element.attributes['data-record-id'].value);
+                _play(_getId(element));
                 _reset_buttons();
             } else {
                 _stop()
@@ -52,7 +57,7 @@ var audio = (function () {
             _update_status.apply(event.target.children)
         },
         download: function (event) {
-            window.location.href = _url + event.target.attributes['data-record-id'].value
+            window.location.href = _url + _getId(event.target)
         }
     }
 })();

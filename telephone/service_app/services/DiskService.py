@@ -1,6 +1,7 @@
 import json
 import requests
 from telephone import settings
+from telephone.classes.File import File
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.service_app.services.LogService import LogService, Code
 
@@ -37,13 +38,20 @@ class DiskService():
 		logger.error(Code.DGULER, data=response.content, status_code=response.status_code)
 		return False
 
-	# def get_files_info(self, limit=1000, media_type='audio', fields='"name,path,size"'):
-	# 	url = '%s%s?limit=%s&media_type=%s&fields=%s' % (self.__host_url, self.__files_info_url, limit, media_type, fields)
-	#
-	# 	api_response = requests.get(url, headers=self.__headers)
-	# 	if api_response.ok:
-	# 		data = json.loads(api_response.content)
-	# 	return None
+	def get_download_link(self, filename, folder_name=None):
+		"""
+		Get url to download file
+		:param filename: filename
+		:param folder_name: folder name
+		:return: {str} link
+		"""
+		path = '{folder_name}/{filename}'.format(folder_name=folder_name, filename=filename)
+		url = '{host}{method}{path}'.format(host=self.__host_url, method=self.__file_download_link_url, path=path)
+		response = requests.get(url, headers=self.__headers)
+		if response.ok:
+			return ServiceResponse(True, data=json.loads(response.content)['href'])
+		logger.error(Code.DGDLER, data=response.content, status_code=response.status_code)
+		return ServiceResponse(False, data=response.content, status_code=response.status_code)
 
 	def create_folder(self, folder_name):
 		"""
@@ -67,6 +75,7 @@ class DiskService():
 		"""
 		Upload file to Disk
 		:param file: file instance
+		:param folder_name: folder name
 		:return:
 		"""
 		result = self.create_folder(folder_name)
@@ -79,4 +88,16 @@ class DiskService():
 					return ServiceResponse(True, data=file.filename)
 				else:
 					logger.error(Code.DFUPER, data=json.loads(response.content), status_code=response.status_code)
+		return ServiceResponse(False)
+
+	def download_file(self, download_link):
+		"""
+		Download file from Disk
+		:param download_link: link to download file
+		:return: File instance
+		"""
+		response = requests.get(download_link)
+		if response.ok:
+			return ServiceResponse(True, data=File(response.content))
+		logger.error(Code.DFDPER, data=json.loads(response.content), status_code=response.status_code)
 		return ServiceResponse(False)

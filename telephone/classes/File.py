@@ -1,5 +1,5 @@
-class CallAudio():
-	def __init__(self, stream, filename):
+class File():
+	def __init__(self, stream, filename=None):
 		self.__stream = stream
 		self.__filename = filename
 

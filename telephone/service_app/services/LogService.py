@@ -24,7 +24,9 @@ class Code(Enum):
 
 	DFCRER = 'Disk. Folder creation error'
 	DGULER = 'Disk. Get upload link error'
+	DGDLER = 'Disk. Get download link error'
 	DFUPER = 'Disk. File upload error'
+	DFDPER = 'Disk. File download error'
 
 
 class LogService():

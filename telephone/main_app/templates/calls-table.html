@@ -32,8 +32,8 @@
 		        <td>
 		            {% if call.is_answered %}
                         <span class="pull-right">
-		                    <button class="btn-xs-wt btn btn-default" onclick="controller.playRecord(event)"><span class="icon-play"></span></button>
-		                    <button class="btn-xs-wt btn btn-default"><span class="icon-download"></span></button>
+		                    <button class="btn-xs-wt btn btn-default" onclick="audio.action(event)"><span class="icon-play"></span></button>
+		                    <button class="btn-xs-wt btn btn-default" onclick="audio.download(event)"><span class="icon-download"></span></button>
 		                </span>
 		            {% else %}
 			            -

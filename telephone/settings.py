@@ -171,7 +171,7 @@ API_URLS = {
 	},
 	'disk': {
 		'host': 'https://cloud-api.yandex.net/v1/disk/resources',
-		'file_download_link': '/download',
+		'file_download_link': '/download?path=',
 		'file_upload_link': '/upload?path=',
 		'files_info': '/files',
 		'create_folder': '?path='

@@ -73,11 +73,19 @@ var controller = (function () {
         return data;
     }
 
-    function _getRecord(callId) {
-        if (callId) {
-            return $.get('/getRecord?call_id={0}'.format(callId))
-        }
-    }
+    //function _getCallRecordLink(callId, onSuccess) {
+    //    if (callId) {
+    //        $.get('/getCallRecordLink?call_id={0}'.format(callId), function (data) {
+    //            services.executeCallback(onSuccess, data)
+    //        })
+    //    }
+    //}
+    //
+    //function _getCallId(e) {
+    //    var attr = 'data-call-id';
+    //    var element = $(e.target);
+    //    return element.closest('tr[{0}]'.format(attr)).attr(attr);
+    //}
 
     $(document).ready(function () {
         _setContainer();
@@ -95,13 +103,21 @@ var controller = (function () {
             var params = _collectData();
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
-        },
-        playRecord: function (e) {
-            var attr = 'data-call-id';
-            var element = $(e.target);
-            var callId = element.closest('tr[{0}]'.format(attr)).attr(attr);
-            console.log(callId);
-            _getRecord(callId)
         }
+        //playAction: function (e) {
+        //    var callId = _getCallId(e);
+        //    console.log(callId);
+        //    _getCallRecordLink(callId, function (link) {
+        //        console.log(link);
+        //    })
+        //},
+        //downloadRecord: function (e) {
+        //    var callId = _getCallId(e);
+        //    console.log(callId);
+        //    _getCallRecordLink(callId, function (link) {
+        //        console.log(link);
+        //        window.location.href = link
+        //    })
+        //}
     };
 })();
