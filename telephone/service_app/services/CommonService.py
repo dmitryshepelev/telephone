@@ -1,17 +1,25 @@
+import os
 import string
 import datetime
 
 from django.utils import crypto
-from enum import Enum
+
 from telephone import settings
+from telephone.classes.ServiceResponse import ServiceResponse
 
 
-class Constants(Enum):
+class Constants():
+	def __init__(self):
+		pass
+
 	CUR_DATE_DAY_START_STR = datetime.datetime.now().strftime(settings.DATETIME_FORMAT_START)
 	CUR_DATE_DAY_END_STR = datetime.datetime.now().strftime(settings.DATETIME_FORMAT_END)
 
 
-class CallsConstants(Enum):
+class CallsConstants():
+	def __init__(self):
+		pass
+
 	ANSWERED = 'answered'
 	INCOMING = 'incoming'
 
@@ -76,3 +84,29 @@ class CommonService():
 		if with_sec:
 			return abs(date1 - date2).seconds <= settings.TIME_CORRECTION_SEC
 		return date1.date() == date2.date() and date1.hour == date2.hour and abs(date1.minute - date2.minute) <= settings.TIME_CORRECTION_MIN
+
+	@staticmethod
+	def write_temp_file(file_instance):
+		"""
+		Write the file to the filesystem
+		:param file_instance: File instance
+		:return: path to the file
+		"""
+		folder_path = 'static/temp'
+		file_path = '%s/%s' % (folder_path, file_instance.filename)
+		try:
+			if not os.path.exists(folder_path):
+				os.makedirs(folder_path)
+			open(file_path, 'wb').write(file_instance.content)
+			return ServiceResponse(True, data=file_path)
+		except Exception as e:
+			return ServiceResponse(False, message=e.message, data=file_path)
+
+	@staticmethod
+	def delete_temp_file(filename):
+		"""
+		Delete temp file from the filesystem
+		:param filename: name of the file
+		:return:
+		"""
+		os.remove('static/temp/' + filename)

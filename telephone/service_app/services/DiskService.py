@@ -90,7 +90,7 @@ class DiskService():
 					logger.error(Code.DFUPER, data=json.loads(response.content), status_code=response.status_code)
 		return ServiceResponse(False)
 
-	def download_file(self, download_link):
+	def download_file(self, download_link, filename=None):
 		"""
 		Download file from Disk
 		:param download_link: link to download file
@@ -98,6 +98,6 @@ class DiskService():
 		"""
 		response = requests.get(download_link)
 		if response.ok:
-			return ServiceResponse(True, data=File(response.content))
+			return ServiceResponse(True, data=File(response.content, filename))
 		logger.error(Code.DFDPER, data=json.loads(response.content), status_code=response.status_code)
 		return ServiceResponse(False)

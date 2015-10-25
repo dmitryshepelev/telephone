@@ -1,9 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
+import pytz
+
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.main_app.models import Call, Callee
-from telephone.service_app.services.LogService import Code
-import datetime
-import pytz
 
 
 class DBService():

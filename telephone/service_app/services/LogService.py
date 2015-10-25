@@ -1,11 +1,13 @@
 import inspect
 import logging
-from enum import Enum
 
 __logger = logging.getLogger('app_logger')
 
 
-class Code(Enum):
+class Code():
+	def __init__(self):
+		pass
+
 	INVLOG = 'INVLOG Invalid logging data'
 
 	PCRERR = 'PCRERR Profile creation error'

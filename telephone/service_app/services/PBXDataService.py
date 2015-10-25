@@ -3,6 +3,7 @@ import imaplib
 import json
 
 import requests
+from pydub import AudioSegment
 
 from telephone import settings
 from telephone.classes.Call import Call, CallRecord, CallPBX
@@ -212,7 +213,7 @@ class PBXDataService():
 	@staticmethod
 	def load_call_record_file(call, user):
 		"""
-		Load audio, upload to disk and update db with filename
+		Load audio, convert, upload to disk and update db with filename
 		:param call: Call instance
 		:param user: current user
 		:return: ServiceResponse
@@ -221,14 +222,23 @@ class PBXDataService():
 		result = PBXDataService.get_audio(call.call_id, user)
 		if result.is_success:
 			call_audio = result.data
-			disk_service = DiskService(user.userprofile.token)
-			# upload to Disk
-			upload_result = disk_service.upload_file(call_audio, settings.CALL_RECORDS_DISK_FOLDER)
-			if upload_result.is_success:
-				# save to db
-				call.record_filename = upload_result.data
-				call.save()
-				return ServiceResponse(True, data=call.record_filename)
+			# convert audio
+			result = CommonService.write_temp_file(call_audio)
+			if result.is_success:
+				file_path = result.data
+				file_path_new = file_path.replace('.wav', '.mp3')
+				file_mp3 = AudioSegment.from_wav(file_path).export(file_path_new, format='mp3')
+				filename_new = call_audio.filename.replace('.wav', '.mp3')
+				CommonService.delete_temp_file(call_audio.filename)
+				# upload to Disk
+				disk_service = DiskService(user.userprofile.token)
+				upload_result = disk_service.upload_file(File(file_mp3, filename_new), settings.CALL_RECORDS_DISK_FOLDER)
+				if upload_result.is_success:
+					# delete source file and save to db
+					CommonService.delete_temp_file(filename_new)
+					call.record_filename = upload_result.data
+					call.save()
+					return ServiceResponse(True, data=call.record_filename)
 		return ServiceResponse(False)
 
 	@staticmethod
@@ -271,13 +281,13 @@ class PBXDataService():
 			disk_service = DiskService(user.userprofile.token)
 			result = disk_service.get_download_link(filename, settings.CALL_RECORDS_DISK_FOLDER)
 			if result.is_success:
-				return ServiceResponse(True, data=result.data)
+				return ServiceResponse(True, data=result.data, message=filename)
 		return ServiceResponse(False, data=result.data, message=result.message)
 
 	@staticmethod
 	def get_call_record_file(call_id, user):
 		"""
-		Get call record fi;e by call_id
+		Get call record file by call_id
 		:param call_id: id of the call
 		:param user: current user
 		:return: call record File instance
@@ -285,8 +295,10 @@ class PBXDataService():
 		result = PBXDataService.get_call_record_download_link(call_id, user)
 		if result.is_success:
 			link = result.data
+			filename = result.message
 			disk_service = DiskService(user.userprofile.token)
-			result = disk_service.download_file(link)
+			result = disk_service.download_file(link, filename)
 			if result.is_success:
-				return ServiceResponse(True, data=result.data)
+				if result.is_success:
+					return ServiceResponse(True, data=result.data)
 		return ServiceResponse(False, data=result.data, message=result.message)

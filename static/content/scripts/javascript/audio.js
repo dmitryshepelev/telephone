@@ -2,7 +2,7 @@ var audio = (function () {
     var _playClass = 'icon-play';
     var _stopClass = 'icon-stop2';
     var _audioElement = document.createElement('audio');
-    _audioElement.setAttribute('type', 'audio/wav');
+    _audioElement.setAttribute('type', 'audio/mp3');
     var _url = '/getCallRecord?call_id=';
 
     _audioElement.addEventListener('ended', function () {
