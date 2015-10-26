@@ -54,6 +54,7 @@ INSTALLED_APPS = (
 	'telephone.auth_app',
 	'telephone.service_app',
 	'telephone.admin_app',
+	'celery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -243,3 +244,12 @@ LOGGING = {
 		},
 	},
 }
+
+CELERYBEAT_SCHEDULE = {
+	'add-every-30-seconds': {
+		'task': 'tasks.cleanup_temp',
+		'schedule': datetime.timedelta(seconds=10),
+	},
+}
+
+CELERY_TIMEZONE = 'UTC'
