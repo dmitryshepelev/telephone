@@ -236,21 +236,24 @@ class PBXDataService():
 
 		# upload new file to Disk
 		disk_service = DiskService(user.userprofile.token)
-		result = disk_service.upload_file(call_audio)
+		result = disk_service.upload_file(call_audio_mp3)
 		if not result.is_success:
 			return None
 
+		filename = call_audio_mp3.filename
+		# call_audio_mp3.clear()
 		# delete mp3 file form filesystem and save to db
-		CommonService.delete_temp_file(call_audio_mp3.filename)
+		CommonService.delete_temp_file(filename)
 
 		try:
-			DBService.update_call(call, record_filename=call_audio_mp3.filename)
+			call.record_filename = filename
+			call.save()
 		except Exception as e:
 			logger = LogService()
-			logger.error(Code.UPDATE_CALL_ERR, message=e.message, call_id=call.pk, filename=call_audio_mp3.filename)
+			logger.error(Code.UPDATE_CALL_ERR, message=e.message, call_id=call.pk, filename=filename)
 			return None
 
-		return call_audio_mp3
+		return filename
 
 	@staticmethod
 	def get_call_record_filename(call_id, user):
@@ -272,10 +275,9 @@ class PBXDataService():
 		filename = call.record_filename
 		if not filename:
 			# load new record
-			file_instance = PBXDataService.load_call_record_file(call, user)
-			if not file_instance:
+			filename = PBXDataService.load_call_record_file(call, user)
+			if not filename:
 				return None
-			filename = file_instance.filename
 		return filename
 
 	@staticmethod

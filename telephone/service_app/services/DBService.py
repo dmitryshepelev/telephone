@@ -88,15 +88,3 @@ class DBService():
 			logger = LogService()
 			logger.error(Code.GET_CALL_ERR, props=kwargs, message=e.message)
 			return None
-
-	@staticmethod
-	def update_call(call, **kwargs):
-		"""
-		Update call entity
-		:param call: call db instance
-		:param kwargs: values to update
-		"""
-		for key, value in kwargs.iteritems():
-			if key in call.keys():
-				call[key] = value
-		call.save()

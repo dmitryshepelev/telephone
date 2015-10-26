@@ -113,7 +113,7 @@ class DiskService():
 		if not folder_name:
 			return None
 
-		upload_link = self.__get_upload_link(folder_name, file_instance.filename)
+		upload_link = self.__get_upload_link(file_instance.filename)
 		if not upload_link:
 			return None
 
@@ -133,7 +133,7 @@ class DiskService():
 		"""
 		response = requests.get(download_link)
 		if response.ok:
-			return File(response.content)
+			return File(response.content, filename=response.headers['content-disposition'].split('attachment; filename*=UTF-8')[1][2:])
 
 		logger.error(Code.DOWNLOAD_FILE_ERR, data=json.loads(response.content), status_code=response.status_code)
 		return None
