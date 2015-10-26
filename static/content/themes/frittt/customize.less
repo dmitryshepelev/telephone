@@ -257,10 +257,16 @@ input.datepicker-input {
     width: auto;
 }
 
-.input-daterange.input-group {
-    display: inline-flex !important;
-    width: 75px !important;
-	background-color: transparent !important;
+.input-daterange {
+	width: 200px !important;
+	&.input-group {
+    	display: inline-flex !important;
+//    	width: 75px !important;
+		background-color: transparent !important;
+	}
+	& > .datepicker-input {
+		width: 80px !important;
+	}
 }
 
 /* END DATEPICKER */

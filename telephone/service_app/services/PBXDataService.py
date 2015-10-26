@@ -243,7 +243,7 @@ class PBXDataService():
 		filename = call_audio_mp3.filename
 		# call_audio_mp3.clear()
 		# delete mp3 file form filesystem and save to db
-		CommonService.delete_temp_file(filename)
+		# CommonService.delete_temp_file(filename)
 
 		try:
 			call.record_filename = filename
