@@ -23,20 +23,43 @@ class DiskService():
 			'Authorization': 'OAuth %s' % self.__token
 		}
 
-	def __get_upload_link(self, folder_name, filename, overwrite=True):
+		self.__default_folder = settings.DISK_UPLOAD_FOLDER
+
+	@property
+	def default_folder(self):
+		"""
+		Getter of __upload_folder
+		:return: upload folder
+		"""
+		return self.__default_folder
+
+	@default_folder.setter
+	def default_folder(self, value):
+		"""
+		Setter of upload folder
+		:param value: value to set
+		"""
+		self.__default_folder = value
+
+	def __get_upload_link(self, filename, folder_name=None, overwrite=True):
 		"""
 		Get url to upload file
+		:param filename: name of the file to upload
 		:param folder_name: name of the folder
 		:param overwrite: overwrite file flag. Default value - True
 		:return: {str} link
 		"""
-		path = '{folder_name}/{filename}'.format(folder_name=folder_name, filename=filename)
+		path = '{folder_name}/{filename}'.format(folder_name=folder_name or self.__default_folder, filename=filename)
 		url = '{host}{method}{path}&overwrite={overwrite}'.format(host=self.__host_url, method=self.__file_upload_link_url, path=path, overwrite=str(overwrite).lower())
+
 		response = requests.get(url, headers=self.__headers)
+		content = json.loads(response.content)
+
 		if response.ok:
-			return json.loads(response.content)['href']
-		logger.error(Code.DGULER, data=response.content, status_code=response.status_code)
-		return False
+			return content['href']
+
+		logger.error(Code.GET_UPLOAD_LINK_ERR, data=content, status_code=response.status_code)
+		return None
 
 	def get_download_link(self, filename, folder_name=None):
 		"""
@@ -45,52 +68,64 @@ class DiskService():
 		:param folder_name: folder name
 		:return: {str} link
 		"""
+		if not folder_name:
+			folder_name = self.__default_folder
+
 		path = '{folder_name}/{filename}'.format(folder_name=folder_name, filename=filename)
 		url = '{host}{method}{path}'.format(host=self.__host_url, method=self.__file_download_link_url, path=path)
-		response = requests.get(url, headers=self.__headers)
-		if response.ok:
-			return ServiceResponse(True, data=json.loads(response.content)['href'])
-		logger.error(Code.DGDLER, data=response.content, status_code=response.status_code)
-		return ServiceResponse(False, data=response.content, status_code=response.status_code)
 
-	def create_folder(self, folder_name):
+		response = requests.get(url, headers=self.__headers)
+		content = json.loads(response.content)
+
+		if response.ok:
+			return content['href']
+
+		logger.error(Code.GET_DOWNLOAD_LINK_ERR, data=content, status_code=response.status_code)
+		return None
+
+	def create_folder(self, folder_name=None):
 		"""
 		Create folder
 		:param folder_name: name
-		:return:
+		:return: folder_name
 		"""
 		if not folder_name:
-			raise ValueError
+			folder_name = self.__default_folder
 
 		url = '{host}{method}{folder_name}'.format(host=self.__host_url, method=self.__create_folder_url, folder_name=folder_name)
 
 		response = requests.put(url, headers=self.__headers)
-
 		if response.ok or response.status_code == 409:
-			return ServiceResponse(True, data=folder_name, status_code=response.status_code)
-		logger.error(Code.DFCRER, data=json.loads(response.content), message=folder_name, status_code=response.status_code)
-		return ServiceResponse(False, data=json.loads(response.content), status_code=response.status_code)
+			# if folder created or already exist, return folder name
+			return folder_name
 
-	def upload_file(self, file, folder_name=None):
+		logger.error(Code.CREATE_FOLDER_ERR, data=json.loads(response.content), message=folder_name, status_code=response.status_code)
+		return None
+
+	def upload_file(self, file_instance, folder_name=None):
 		"""
 		Upload file to Disk
-		:param file: file instance
+		:param file_instance: file instance
 		:param folder_name: folder name
-		:return:
+		:return: File instance
 		"""
-		result = self.create_folder(folder_name)
+		folder_name = self.create_folder(folder_name)
+		if not folder_name:
+			return None
 
-		if result.is_success:
-			upload_link = self.__get_upload_link(result.data, file.filename)
-			if upload_link:
-				response = requests.put(upload_link, file.content)
-				if response.ok:
-					return ServiceResponse(True, data=file.filename)
-				else:
-					logger.error(Code.DFUPER, data=json.loads(response.content), status_code=response.status_code)
-		return ServiceResponse(False)
+		upload_link = self.__get_upload_link(folder_name, file_instance.filename)
+		if not upload_link:
+			return None
 
-	def download_file(self, download_link, filename=None):
+		# upload file
+		response = requests.put(upload_link, file_instance.content)
+		if response.ok:
+			return ServiceResponse(True, data=file_instance)
+
+		logger.error(Code.UPLOAD_FILE_ERR, data=json.loads(response.content), status_code=response.status_code)
+		return None
+
+	def download_file(self, download_link):
 		"""
 		Download file from Disk
 		:param download_link: link to download file
@@ -98,6 +133,7 @@ class DiskService():
 		"""
 		response = requests.get(download_link)
 		if response.ok:
-			return ServiceResponse(True, data=File(response.content, filename))
-		logger.error(Code.DFDPER, data=json.loads(response.content), status_code=response.status_code)
-		return ServiceResponse(False)
+			return File(response.content)
+
+		logger.error(Code.DOWNLOAD_FILE_ERR, data=json.loads(response.content), status_code=response.status_code)
+		return None

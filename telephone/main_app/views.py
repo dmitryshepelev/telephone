@@ -64,28 +64,12 @@ def get_call_record(request):
 	call_id = request.GET.get('call_id') or None
 	if not call_id:
 		return HttpResponse(status=400)
-	result = PBXDataService.get_call_record_file(call_id, request.user)
-	if not result.is_success:
-		logger.error(Code.GCLERR, status_code=result.status_code, message=result.message, data=result.data)
+
+	file_instance = PBXDataService.get_call_record_file(call_id, request.user)
+	if not file_instance:
 		return HttpResponse(status=500)
-	file_instance = result.data
+
 	response = HttpResponse(content_type='audio/mp3')
 	response['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=file_instance.filename)
 	response.content = file_instance.content
 	return response
-
-@login_required
-def get_call_record_link(request):
-	"""
-	Controller to get test call record download link
-	:param request: HTTP GET request
-	:return: {str} download link
-	"""
-	call_id = request.GET.get('call_id') or None
-	if not call_id:
-		return HttpResponse(status=400)
-	result = PBXDataService.get_call_record_download_link(call_id, request.user)
-	if not result.is_success:
-		logger.error(Code.GCLERR, status_code=result.status_code, message=result.message, data=result.data)
-		return HttpResponse(status=500)
-	return HttpResponse(content=result.data)

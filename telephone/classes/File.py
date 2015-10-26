@@ -1,7 +1,8 @@
 class File():
-	def __init__(self, stream, filename=None):
+	def __init__(self, stream=None, filename=None, path=None):
 		self.__stream = stream
 		self.__filename = filename
+		self.__path = path
 
 	@property
 	def content(self):
@@ -10,6 +11,14 @@ class File():
 		:return: stream
 		"""
 		return self.__stream
+
+	@content.setter
+	def content(self, value):
+		"""
+		Setter of __content
+		:param value: value to set
+		"""
+		self.__stream = value
 
 	@property
 	def filename(self):
@@ -29,3 +38,19 @@ class File():
 			raise ValueError
 
 		self.__filename = value
+
+	@property
+	def path(self):
+		"""
+		Getter of __path
+		:return: path
+		"""
+		return self.__path
+
+	@path.setter
+	def path(self, value):
+		"""
+		Setter of __path
+		:param value: value to set
+		"""
+		self.__path = value

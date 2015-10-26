@@ -3,9 +3,12 @@ import string
 import datetime
 
 from django.utils import crypto
+from pydub import AudioSegment
 
 from telephone import settings
+from telephone.classes.File import File
 from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.service_app.services.LogService import LogService, Code
 
 
 class Constants():
@@ -92,15 +95,17 @@ class CommonService():
 		:param file_instance: File instance
 		:return: path to the file
 		"""
-		folder_path = 'static/temp'
-		file_path = '%s/%s' % (folder_path, file_instance.filename)
+		folder_path = settings.TEMP_DIR
+		file_path = '%s%s' % (folder_path, file_instance.filename)
 		try:
 			if not os.path.exists(folder_path):
 				os.makedirs(folder_path)
 			open(file_path, 'wb').write(file_instance.content)
-			return ServiceResponse(True, data=file_path)
+			return file_path
 		except Exception as e:
-			return ServiceResponse(False, message=e.message, data=file_path)
+			logger = LogService()
+			logger.error(Code.WRITE_TEMP_FILE_ERR, message=e.message, file_path=file_path)
+			return None
 
 	@staticmethod
 	def delete_temp_file(filename):
@@ -109,4 +114,26 @@ class CommonService():
 		:param filename: name of the file
 		:return:
 		"""
-		os.remove('static/temp/' + filename)
+		os.remove(settings.TEMP_DIR + filename)
+
+	@staticmethod
+	def convert_to_mp3(file_instance, target_format='mp3', delete_source=True):
+		"""
+		Convert audio file to mp3
+		:param file_instance: source file instance
+		:param target_format: format to convert
+		:param delete_source: flag to delete source instance after convert succeed
+		:return: File instance
+		"""
+		try:
+			audio_mp3 = File(filename=file_instance.filename.replace('.wav', '.' + target_format), path=file_instance.path.replace('.wav', '.' + target_format))
+			audio_mp3.content = AudioSegment.from_wav(file_instance.path).export(audio_mp3.path, format=target_format)
+
+			if delete_source:
+				CommonService.delete_temp_file(file_instance.filename)
+
+			return audio_mp3
+		except Exception as e:
+			logger = LogService()
+			logger.error(Code.CONVERT_TO_MP3_ERR, message=e.message)
+			return None

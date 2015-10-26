@@ -7,6 +7,26 @@ __logger = logging.getLogger('app_logger')
 class Code():
 	def __init__(self):
 		pass
+	# DBService codes
+	GET_CALL_ERR = 'DB. GET CALL ERROR'
+	UPDATE_CALL_ERR = 'DB. UPDATE CALL ERROR'
+
+	# PBXDataService
+	GET_AUDIO_ERR = 'GET AUDIO ERROR'
+
+	# CommonService
+	WRITE_TEMP_FILE_ERR = 'WRITE TEMP FILE ERROR'
+	CONVERT_TO_MP3_ERR = 'CONVERT TO MP3 ERROR'
+
+	# Disk Service
+	CREATE_FOLDER_ERR = 'DISK. CREATE FOLDER ERROR'
+	GET_UPLOAD_LINK_ERR = 'DISK. GET UPLOAD LINK ERROR'
+	UPLOAD_FILE_ERR = 'DISK. FILE UPLOAD ERROR'
+	GET_DOWNLOAD_LINK_ERR = 'DISK. GET DOWNLOAD LINK ERROR'
+	DOWNLOAD_FILE_ERR = 'DISK. FOWNLOAD FILE ERROR'
+
+	# controllers
+	GET_CALL_RECORD_ERR = 'CONTROLLER. GET CALL RECORD ERROR'
 
 	INVLOG = 'INVLOG Invalid logging data'
 
@@ -22,13 +42,6 @@ class Code():
 	UCLUNS = 'UCLUNS Unsucceed'
 
 	ECRERR = 'ECRERR Entity creation error'
-	GCLERR = 'Get call record error'
-
-	DFCRER = 'Disk. Folder creation error'
-	DGULER = 'Disk. Get upload link error'
-	DGDLER = 'Disk. Get download link error'
-	DFUPER = 'Disk. File upload error'
-	DFDPER = 'Disk. File download error'
 
 
 class LogService():

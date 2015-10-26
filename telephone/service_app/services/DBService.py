@@ -3,6 +3,7 @@ import pytz
 
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.main_app.models import Call, Callee
+from telephone.service_app.services.LogService import LogService, Code
 
 
 class DBService():
@@ -77,11 +78,25 @@ class DBService():
 	@staticmethod
 	def get_call(**kwargs):
 		"""
-		Get Call entity by prop name
+		Get Call entity by prop names
 		:param kwargs: prop names
 		:return: Call entity
 		"""
 		try:
-			return ServiceResponse(True, data=Call.objects.get(**kwargs))
+			return Call.objects.get(**kwargs)
 		except Exception as e:
-			return ServiceResponse(False, data=kwargs, message=e.message)
+			logger = LogService()
+			logger.error(Code.GET_CALL_ERR, props=kwargs, message=e.message)
+			return None
+
+	@staticmethod
+	def update_call(call, **kwargs):
+		"""
+		Update call entity
+		:param call: call db instance
+		:param kwargs: values to update
+		"""
+		for key, value in kwargs.iteritems():
+			if key in call.keys():
+				call[key] = value
+		call.save()

@@ -178,7 +178,9 @@ API_URLS = {
 	}
 }
 
-CALL_RECORDS_DISK_FOLDER = 'pbxrec'
+DISK_UPLOAD_FOLDER = 'pbxrec'
+
+TEMP_DIR = 'static/temp/'
 
 TIME_CORRECTION_SEC = 3
 TIME_CORRECTION_MIN = 1
