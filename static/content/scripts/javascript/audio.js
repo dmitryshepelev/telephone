@@ -23,7 +23,6 @@ var audio = (function () {
 
     function _play(recordId) {
         _audioElement.setAttribute('src', _url + recordId);
-        console.log(_audioElement);
         try {
             _audioElement.play()
         } catch (e) {
@@ -48,13 +47,17 @@ var audio = (function () {
     return {
         action: function (event) {
             var element = event.target;
+            if (event.target.localName == 'span') {
+                element = event.target.parentElement;
+                event.stopImmediatePropagation()
+            }
             if ($(element.children).hasClass(_playClass)) {
                 _play(_getId(element));
                 _reset_buttons();
             } else {
                 _stop()
             }
-            _update_status.apply(event.target.children)
+            _update_status.apply(element.children)
         },
         download: function (event) {
             window.location.href = _url + _getId(event.target)

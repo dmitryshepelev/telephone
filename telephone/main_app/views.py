@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from telephone.classes.ApiParams import ApiParams
-from telephone.classes.Call import CallRecord
+from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
 from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
@@ -51,7 +51,8 @@ def get_statistic(request, template):
 
 	filter_params = CallsFilterParams(request.GET)
 	calls = [CallRecord(call=call) for call in request.user.userprofile.call_set.filter(**filter_params.params).order_by('date')]
-	return render_to_response(template, {'calls': calls}, context_instance=RequestContext(request))
+	calls_stat = CallsStat(calls)
+	return render_to_response(template, {'calls': calls, 'calls_stat': calls_stat}, context_instance=RequestContext(request))
 
 
 @login_required

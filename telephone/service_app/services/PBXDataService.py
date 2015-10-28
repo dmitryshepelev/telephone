@@ -3,7 +3,6 @@ import imaplib
 import json
 
 import requests
-from pydub import AudioSegment
 
 from telephone import settings
 from telephone.classes.Call import Call, CallRecord, CallPBX
@@ -151,7 +150,7 @@ class PBXDataService():
 
 		# count of the rows need to be updated
 		row_to_update = len(merged_stat) - len(user_stat)
-		message = '{row_to_update} row(s) to be updated. '.format(row_to_update=row_to_update)
+		message = '{row_to_update} row(s) to be inserted. '.format(row_to_update=row_to_update)
 		update_errors = []
 		if row_to_update > 0:
 			for m_s in merged_stat:
@@ -203,7 +202,7 @@ class PBXDataService():
 			mailbox.logout()
 		except Exception as e:
 			logger = LogService()
-			logger.error(Code.GET_AUDIO_ERR, message=e.message, call_id=call_id, username=user.username)
+			logger.error(Code.GET_AUDIO_ERR, message=str(e), call_id=call_id, username=user.username)
 			return None
 		return call_audio
 
@@ -241,7 +240,6 @@ class PBXDataService():
 			return None
 
 		filename = call_audio_mp3.filename
-		# call_audio_mp3.clear()
 		# delete mp3 file form filesystem and save to db
 		# CommonService.delete_temp_file(filename)
 
@@ -250,7 +248,7 @@ class PBXDataService():
 			call.save()
 		except Exception as e:
 			logger = LogService()
-			logger.error(Code.UPDATE_CALL_ERR, message=e.message, call_id=call.pk, filename=filename)
+			logger.error(Code.UPDATE_CALL_ERR, message=str(e), call_id=call.pk, filename=filename)
 			return None
 
 		return filename

@@ -33,7 +33,7 @@ class DBService():
 				callee.save()
 			except Exception as e:
 				# Callee isn't created
-				return ServiceResponse(False, data=callee, message=e.message)
+				return ServiceResponse(False, data=callee, message=str(e))
 			return ServiceResponse(True, data=callee)
 
 	@staticmethod
@@ -86,5 +86,5 @@ class DBService():
 			return Call.objects.get(**kwargs)
 		except Exception as e:
 			logger = LogService()
-			logger.error(Code.GET_CALL_ERR, props=kwargs, message=e.message)
+			logger.error(Code.GET_CALL_ERR, props=kwargs, message=str(e))
 			return None

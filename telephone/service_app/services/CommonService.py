@@ -95,7 +95,7 @@ class CommonService():
 		:param file_instance: File instance
 		:return: path to the file
 		"""
-		folder_path = settings.TEMP_DIR
+		folder_path = os.path.join(settings.BASE_DIR, settings.TEMP_DIR)
 		file_path = '%s%s' % (folder_path, file_instance.filename)
 		try:
 			if not os.path.exists(folder_path):
@@ -104,7 +104,7 @@ class CommonService():
 			return file_path
 		except Exception as e:
 			logger = LogService()
-			logger.error(Code.WRITE_TEMP_FILE_ERR, message=e.message, file_path=file_path)
+			logger.error(Code.WRITE_TEMP_FILE_ERR, message=str(e), file_path=file_path)
 			return None
 
 	@staticmethod
@@ -114,7 +114,7 @@ class CommonService():
 		:param filename: name of the file
 		:return:
 		"""
-		os.remove(settings.TEMP_DIR + filename)
+		os.remove(os.path.join(settings.BASE_DIR, settings.TEMP_DIR) + filename)
 
 	@staticmethod
 	def convert_to_mp3(file_instance, target_format='mp3', delete_source=True):
@@ -127,7 +127,7 @@ class CommonService():
 		"""
 		try:
 			audio_mp3 = File(filename=file_instance.filename.replace('.wav', '.' + target_format), path=file_instance.path.replace('.wav', '.' + target_format))
-			audio_mp3.content = AudioSegment.from_wav(file_instance.path).export(audio_mp3.path, format=target_format)
+			audio_mp3.content = AudioSegment.from_wav(file_instance.path).export(audio_mp3.path, format=target_format, bitrate='16k')
 
 			if delete_source:
 				CommonService.delete_temp_file(file_instance.filename)
@@ -135,5 +135,5 @@ class CommonService():
 			return audio_mp3
 		except Exception as e:
 			logger = LogService()
-			logger.error(Code.CONVERT_TO_MP3_ERR, message=e.message)
+			logger.error(Code.CONVERT_TO_MP3_ERR, message=str(e))
 			return None

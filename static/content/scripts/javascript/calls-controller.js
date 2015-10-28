@@ -52,7 +52,6 @@ var controller = (function () {
         loader.show();
         $.get('/getCalls/{0}'.format(request_string || ''), function (data) {
             _updateContainer(data);
-            //loader.hide();
         }).fail(function () {
             services.errors().getDefaultErrorPage().success(function (result) {
                 _updateContainer(result)
@@ -73,20 +72,6 @@ var controller = (function () {
         return data;
     }
 
-    //function _getCallRecordLink(callId, onSuccess) {
-    //    if (callId) {
-    //        $.get('/getCallRecordLink?call_id={0}'.format(callId), function (data) {
-    //            services.executeCallback(onSuccess, data)
-    //        })
-    //    }
-    //}
-    //
-    //function _getCallId(e) {
-    //    var attr = 'data-call-id';
-    //    var element = $(e.target);
-    //    return element.closest('tr[{0}]'.format(attr)).attr(attr);
-    //}
-
     $(document).ready(function () {
         _setContainer();
         _initDatepicker();
@@ -104,20 +89,5 @@ var controller = (function () {
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
         }
-        //playAction: function (e) {
-        //    var callId = _getCallId(e);
-        //    console.log(callId);
-        //    _getCallRecordLink(callId, function (link) {
-        //        console.log(link);
-        //    })
-        //},
-        //downloadRecord: function (e) {
-        //    var callId = _getCallId(e);
-        //    console.log(callId);
-        //    _getCallRecordLink(callId, function (link) {
-        //        console.log(link);
-        //        window.location.href = link
-        //    })
-        //}
     };
 })();

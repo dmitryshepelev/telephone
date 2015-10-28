@@ -49,5 +49,5 @@ ALTER TABLE "main_app_call" ADD CONSTRAINT "main_app_call_callee_id_70a0e395_fk_
 
 ALTER TABLE "main_app_call" ADD COLUMN "record_filename" varchar(100) NULL;
 ALTER TABLE "main_app_callee" ALTER COLUMN "description" TYPE varchar(1000);
-
 -- --
+

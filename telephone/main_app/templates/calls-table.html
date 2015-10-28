@@ -1,3 +1,10 @@
+{% if calls %}
+	<div class="margin-bottom-10">
+		<span>Всего: <strong>{{ calls_stat.total }}</strong></span>
+		<span>Новых: <strong>{{ calls_stat.new }}</strong></span>
+		<span>Пропущенных: <strong>{{ calls_stat.missed }}</strong></span>
+	</div>
+{% endif %}
 <table class="table table-striped table-hover tablesorter" id="callsTable">
     <thead>
         <tr>
@@ -32,7 +39,7 @@
 		        <td>
 		            {% if call.is_answered %}
                         <span class="pull-right">
-		                    <button class="btn-xs-wt btn btn-default" onclick="audio.action(event)"><span class="icon-play"></span></button>
+		                    <button class="btn-xs-wt btn btn-default" onclick="audio.action(event)"><span onclick="audio.action(event)" class="icon-play"></span></button>
 		                    <button class="btn-xs-wt btn btn-default" onclick="audio.download(event)"><span class="icon-download"></span></button>
 		                </span>
 		            {% else %}

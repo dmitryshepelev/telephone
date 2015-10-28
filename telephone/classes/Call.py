@@ -107,3 +107,69 @@ class CallRecord():
 			self.__is_first_call = value
 		else:
 			raise TypeError
+
+
+class CallsStat():
+	def __init__(self, calls=None):
+		self.__total = 0
+		self.__new = 0
+		self.__upcoming = 0
+		self.__incoming = 0
+		self.__missed = 0
+
+		if calls:
+			self.calculate_stat(calls)
+
+	@property
+	def total(self):
+		"""
+		Property getter
+		:return: property value
+		"""
+		return self.__total
+
+	@property
+	def new(self):
+		"""
+		Property getter
+		:return: property value
+		"""
+		return self.__new
+
+	@property
+	def upcoming(self):
+		"""
+		Property getter
+		:return: property value
+		"""
+		return self.__upcoming
+
+	@property
+	def incoming(self):
+		"""
+		Property getter
+		:return: property value
+		"""
+		return self.__incoming
+
+	@property
+	def missed(self):
+		"""
+		Property getter
+		:return: property value
+		"""
+		return self.__missed
+
+	def calculate_stat(self, calls):
+		"""
+		Calculate calls stat
+		:param calls:
+		:return:
+		"""
+		self.__init__()
+		for call in calls:
+			self.__total += 1
+			if call.is_first_call:
+				self.__new += 1
+			if not call.is_answered:
+				self.__missed += 1
