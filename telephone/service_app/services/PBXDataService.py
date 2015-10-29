@@ -27,7 +27,7 @@ class PBXDataService():
 		:return: json type
 		"""
 		method = settings.API_URLS['api']['common_stat']
-		api_response = requests.get(params.get_request_string(method), headers={'Authorization': '%s:%s' % (user.userprofile.user_key, params.get_sign(method, user.userprofile.secret_key))})
+		api_response = requests.get(params.get_request_string(method), headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign(params, method, params.api_version, user.userprofile.secret_key))})
 		if api_response.ok:
 			return ServiceResponse(api_response.ok, [Call(s) for s in json.loads(api_response.content)['stats']])
 		return ServiceResponse(api_response.ok, status_code=api_response.status_code)
@@ -42,7 +42,7 @@ class PBXDataService():
 		"""
 		method = settings.API_URLS['api']['pbx_stat']
 
-		api_response = requests.get(params.get_request_string(method), headers={'Authorization': '%s:%s' % (user.userprofile.user_key, params.get_sign(method, user.userprofile.secret_key))})
+		api_response = requests.get(params.get_request_string(method), headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign(params, method, params.api_version, user.userprofile.secret_key))})
 		if api_response.ok:
 			return ServiceResponse(api_response.ok, [CallPBX(s) for s in json.loads(api_response.content)['stats']])
 		return ServiceResponse(api_response.ok, status_code=api_response.status_code)
@@ -308,3 +308,26 @@ class PBXDataService():
 
 		disk_service = DiskService(user.userprofile.token)
 		return disk_service.download_file(link)
+
+	@staticmethod
+	def get_pbx_account_balance(user):
+		"""
+		Get current user account balance
+		:param user: user instance
+		:return: {float} current balance
+		"""
+		host = settings.API_URLS['api']['host']
+		api_version = settings.API_URLS['api']['api_version']
+		method = settings.API_URLS['api']['balance']
+
+		url = '{host}{api_version}{method}'.format(host=host, api_version=api_version, method=method)
+
+		response = requests.get(url, headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign({}, method, api_version, user.userprofile.secret_key))})
+		content = response.content
+
+		if response.ok:
+			return json.loads(content)['balance']
+
+		logger = LogService()
+		logger.error(Code.GET_BALANCE_ERR, data=json.loads(content), status_code=response.status_code)
+		return None

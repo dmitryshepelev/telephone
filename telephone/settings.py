@@ -152,6 +152,7 @@ API_URLS = {
 		'api_version': '/v1',
 		'common_stat': '/statistics',
 		'pbx_stat': '/statistics/pbx',
+		'balance': '/v1/info/balance'
 	},
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',

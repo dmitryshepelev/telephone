@@ -6,6 +6,7 @@ import hmac
 import urllib
 
 from telephone import settings
+from telephone.service_app.services.CommonService import CommonService
 
 
 class ApiParams(object):
@@ -37,22 +38,21 @@ class ApiParams(object):
 		"""
 		return self.__params['end']
 
-	def __get_params_string(self):
+	@property
+	def params(self):
 		"""
-		Generate request string from parameters
-		:return: request string
+		Getter of __params
+		:return: params
 		"""
-		return urllib.urlencode(sorted(filter(lambda item: item[1], self.__params.items())))
+		return self.__params
 
-	def __sha_encode(self, method_name, secret_key):
+	@property
+	def api_version(self):
 		"""
-		Encode string with sha1 algorithm with secret key
-		:param method_name: api method name
-		:param secret_key: user secret key to api access
-		:return: sha1 encoded string
+		Getter of __api_version
+		:return: api_version
 		"""
-		params_string = self.__get_params_string()
-		return hmac.new(secret_key.encode(), '%s%s%s%s' % (self.__api_version, method_name, params_string, hashlib.md5(params_string).hexdigest()), hashlib.sha1).hexdigest()
+		return self.__api_version
 
 	def __get_domain_url(self, method):
 		"""
@@ -62,22 +62,12 @@ class ApiParams(object):
 		"""
 		return '%s%s%s?' % (self.__domain, self.__api_version, method)
 
-	def get_sign(self, method, secret_key):
-		"""
-		Generate authorization sigh
-		:param method: api method
-		:param secret_key: api secret key
-		:return: base64 encoded string
-		"""
-		sha_string = self.__sha_encode(method, secret_key)
-		return b64encode(sha_string)
-
 	def get_request_string(self, method):
 		"""
 		Generate full request string from parameters
 		:return: request string
 		"""
-		return '%s%s' % (self.__get_domain_url(method), self.__get_params_string())
+		return '%s%s' % (self.__get_domain_url(method), CommonService.get_params_string(self.__params))
 
 	def set_params(self, params):
 		"""

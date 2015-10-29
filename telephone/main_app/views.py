@@ -1,7 +1,7 @@
 # coding=utf-8
 
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -34,6 +34,22 @@ def calls(request, template):
 	:return: HttpResponse instance
 	"""
 	return render_to_response(template, {}, context_instance=RequestContext(request))
+
+
+@login_required
+def pay(request, template):
+	"""
+	Controller to pay
+	:param request: HTTP request
+	:param template: html template
+	:return: HttpResponse instance
+	"""
+	if request.method == 'GET':
+		return render_to_response(template, {}, context_instance=RequestContext(request))
+	elif request.method == 'POST':
+		pass
+	else:
+		return HttpResponse(status=400)
 
 
 @login_required
@@ -74,3 +90,18 @@ def get_call_record(request):
 	response['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=file_instance.filename)
 	response.content = file_instance.content
 	return response
+
+
+@login_required
+@user_passes_test(lambda user: not user.is_superuser)
+def get_balance(request):
+	"""
+	Controller to get user account balance
+	:param request: HTTP request
+	:return: JsonResult
+	"""
+	balance = PBXDataService.get_pbx_account_balance(request.user)
+	if not balance:
+		return HttpResponse(status=500)
+
+	return JsonResponse({'balance': balance, 'currency': 'руб'})

@@ -1,6 +1,10 @@
+from base64 import b64encode
+import hashlib
+import hmac
 import os
 import string
 import datetime
+import urllib
 
 from django.utils import crypto
 from pydub import AudioSegment
@@ -137,3 +141,33 @@ class CommonService():
 			logger = LogService()
 			logger.error(Code.CONVERT_TO_MP3_ERR, message=str(e))
 			return None
+
+	@staticmethod
+	def get_params_string(params):
+		"""
+		Generate request string from parameters
+		:return: request string
+		"""
+		return urllib.urlencode(sorted(filter(lambda item: item[1], params.items())))
+
+	@staticmethod
+	def sha_encode(params_string, method_name, api_version, secret_key):
+		"""
+		Encode string with sha1 algorithm with secret key
+		:param method_name: api method name
+		:param secret_key: user secret key to api access
+		:return: sha1 encoded string
+		"""
+		return hmac.new(secret_key.encode(), '%s%s%s%s' % (api_version, method_name, params_string, hashlib.md5(params_string).hexdigest()), hashlib.sha1).hexdigest()
+
+	@staticmethod
+	def get_sign(params, method, api_version, secret_key):
+		"""
+		Generate authorization sigh
+		:param method: api method
+		:param secret_key: api secret key
+		:return: base64 encoded string
+		"""
+		params_string = CommonService.get_params_string(params.params) if params else ''
+		sha_string = CommonService.sha_encode(params_string, method, api_version, secret_key)
+		return b64encode(sha_string)

@@ -318,6 +318,19 @@ table {
 	border-radius: 2px !important;
 }
 
+.payment-btn {
+	color: #333 !important;
+	background-color: #f8f8f8 !important;
+
+	&:hover, &.selected:hover {
+		background-color: #f2f2f2 !important;
+	}
+	&.selected {
+		background-color: #ffffff !important;
+		box-shadow: 0 -2px 0 @default-color inset;
+	}
+}
+
 /* END BUTTONS OVERRIDES */
 
 .text-error {
@@ -348,4 +361,27 @@ table {
 
 .margin-bottom-10 {
 	margin-bottom: 10px;
+}
+
+.stat-container {
+	margin-bottom: 10px;
+	& > span {
+		padding: 5px;
+	}
+}
+
+.balance-wt {
+	border-radius: 5px;
+	& .balance-link-wt {
+		color: #a0a0a0 !important;
+	}
+}
+
+.margin-0 {
+	margin: 0;
+}
+
+.margin-tb-5 {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
