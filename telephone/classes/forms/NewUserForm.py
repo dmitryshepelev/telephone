@@ -11,3 +11,4 @@ class NewUserForm(forms.Form):
     userEmail = forms.EmailField(max_length=30)
     userPassword = forms.CharField(max_length=30)
     userName = forms.CharField(max_length=30)
+    customerNumber = forms.CharField(max_length=10)

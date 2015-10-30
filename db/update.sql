@@ -51,3 +51,8 @@ ALTER TABLE "main_app_call" ADD COLUMN "record_filename" varchar(100) NULL;
 ALTER TABLE "main_app_callee" ALTER COLUMN "description" TYPE varchar(1000);
 -- --
 
+-- 30.10.2015 Added Customer number --
+ALTER TABLE "main_app_userprofile" ADD COLUMN "customer_number" varchar(10) DEFAULT '' NOT NULL;
+ALTER TABLE "main_app_userprofile" ALTER COLUMN "customer_number" DROP DEFAULT;
+-- --
+

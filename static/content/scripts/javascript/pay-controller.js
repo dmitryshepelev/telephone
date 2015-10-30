@@ -11,12 +11,6 @@ var controller = (function () {
         target.addClass(_paymentTypeSelectedClass);
     }
 
-    function _pay (data) {
-        var baseUrl = '/pay/';
-        console.log(data);
-        return $.post(baseUrl, data);
-    }
-
     $(document).ready(function () {
 
     });
@@ -29,16 +23,10 @@ var controller = (function () {
                 _updatePaymentUI(element);
             }
         },
-        pay: function () {
-            var paymentData = services.createInstance(PaymentData, null);
-            if (paymentData.creationErrors) {
-                paymentData.creationErrors.forEach(function (errorFieldName) {
-                    services.validate(errorFieldName);
-                });
-                message.error(paymentData.creationErrors.join('; '))
-            } else {
-                _pay(paymentData.getData())
-            }
+        onSubscrChange: function (e) {
+            var value = e.target.value;
+            var element = $('input[name="sum"][type="hidden"]')
+            element.val(value)
         }
     }
 })();

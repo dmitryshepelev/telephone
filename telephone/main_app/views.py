@@ -8,8 +8,10 @@ from django.template import RequestContext
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
+from telephone.classes.SubscriptionData import SubscriptionData
 from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
+from telephone.service_app.services.PaymentService import PaymentService
 
 
 logger = LogService()
@@ -45,9 +47,7 @@ def pay(request, template):
 	:return: HttpResponse instance
 	"""
 	if request.method == 'GET':
-		return render_to_response(template, {}, context_instance=RequestContext(request))
-	elif request.method == 'POST':
-		pass
+		return render_to_response(template, {'subscription_data': SubscriptionData()}, context_instance=RequestContext(request))
 	else:
 		return HttpResponse(status=400)
 

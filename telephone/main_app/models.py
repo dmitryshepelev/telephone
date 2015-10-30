@@ -10,6 +10,7 @@ class UserProfile(models.Model):
 	profile_password = models.CharField(max_length=30, default='')
 	uid = models.CharField(max_length=50, default='')
 	token = models.CharField(max_length=50, default='')
+	customer_number = models.CharField(max_length=10, default='')
 
 	class Meta:
 		app_label = 'main_app'

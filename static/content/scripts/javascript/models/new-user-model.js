@@ -12,7 +12,8 @@ function NewUser() {
         secretKey: null,
         userEmail: null,
         userPassword: null,
-        userName: null
+        userName: null,
+        customerNumber: null
     }
 }
 
@@ -33,7 +34,8 @@ NewUser.prototype = {
             secretKey: 'secretKey',
             userEmail: 'userEmail',
             userPassword: 'userPassword',
-            userName: 'userName'
+            userName: 'userName',
+            customerNumber: 'customerNumber'
         }
     },
 

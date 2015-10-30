@@ -3,7 +3,6 @@
 {% block resources %}
 	{% load staticfiles %}
 	<script type="application/javascript" src="{% static "pay-controller.js" %}"></script>
-	<script type="application/javascript" src="{% static "models/payment-data-model.js" %}"></script>
 {% endblock %}
 
 {% block title %}
@@ -11,12 +10,24 @@
 {% endblock %}
 
 {% block content %}
-	<form class="form-horizontal col-md-8 col-sm-offset-2">
+	<form class="form-horizontal col-md-8 col-sm-offset-2" method="post" action="https://money.yandex.ru/quickpay/confirm.xml" novalidate>
 		{% csrf_token %}
+		<input type="hidden" name="receiver" value="{{ subscription_data.receiver }}" />
+		<input type="hidden" name="formcomment" value="{{ subscription_data.form_comment }}" />
+		<input type="hidden" name="short-dest" value="{{ subscription_data.short_dest }}" />
+		<input type="hidden" name="label" value="{{ subscription_data.label }}" />
+		<input type="hidden" name="quickpay-form" value="{{ subscription_data.quickpay_form }}" />
+		<input type="hidden" name="targets" value="{{ subscription_data.targets }}" />
 		<div class="row">
 			<div class="col-sm-6">
 				<div class="form-group">
-					<input class="form-control margin-tb-5" id="sum" name="sum" type="text" placeholder="Сумма" required />
+					<input name="sum" type="hidden" value="{{ subscription_data.sum }}" />
+					<select class="form-control" onchange="controller.onSubscrChange(event)" name="sum">
+						<option value="500">1 месяц - 500 руб.</option>
+						<option value="1000">2 месяца - 1000 руб.</option>
+						<option value="1500">3 месяца - 1500 руб.</option>
+						<option value="3000">6 месяцев - 3000 руб.</option>
+					</select>
 				</div>
 			</div>
 			<div class="col-sm-4">
@@ -24,13 +35,13 @@
 					<div class="btn-group">
 						<button class="btn payment-btn margin-0 selected" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="PC"><img src="/static/content/images/yamoney.png"></button>
 						<button class="btn payment-btn margin-0" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="AC"><img src="/static/content/images/any-card.png"></button>
-						<input id="paymentType" name="paymentType" type="hidden" value="PC"/>
+						<input id="paymentType" name="paymentType" type="hidden" value="{{ subscription_data.paymentType }}"/>
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-2">
 				<div class="form-group">
-					<button type="button" onclick="controller.pay()" class="btn btn-primary margin-0">Оплатить</button>
+					<button type="submit" class="btn btn-primary margin-0">Оплатить</button>
 				</div>
 			</div>
 		</div>

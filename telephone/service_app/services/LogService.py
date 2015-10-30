@@ -29,6 +29,9 @@ class Code():
 	# controllers
 	GET_CALL_RECORD_ERR = 'CONTROLLER. GET CALL RECORD ERROR'
 
+	# Payment Service
+	PAY_ERR = 'PAYMENT ERROR'
+
 	INVLOG = 'INVLOG Invalid logging data'
 
 	PCRERR = 'PCRERR Profile creation error'
