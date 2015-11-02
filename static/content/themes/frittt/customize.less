@@ -43,6 +43,15 @@ footer {
 //	margin-bottom: 0;
 }
 
+.btn-danger-wt {
+    color: #FFF;
+    background-color: @error-color;
+
+	&:hover, &:focus {
+    	background-color: #D2322D;
+	}
+}
+
 /* END OVERRIDES */
 
 ul.navbar-nav >
@@ -384,4 +393,30 @@ table {
 .margin-tb-5 {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+select {
+	background: #fff url("/static/content/images/icon-chevron-down.png") no-repeat 96% 50%;
+    margin: 0;
+    overflow: hidden;
+	padding: 5px 8px;
+    border: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+   -moz-appearance: none;
+	appearance: none;
+}
+
+.form-control:focus {
+  border-color: @default-color !important;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(26, 187, 156, 0.60) !important;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(26, 187, 156, 0.60) !important;
+}
+
+.block-container-wt {
+	padding-top: 5%;
+	& .block-wt {
+		margin-bottom: 50px;
+	}
 }

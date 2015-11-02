@@ -192,11 +192,12 @@ class PBXDataService():
 			for msg_id in range(len(mailbox.search(None, 'ALL')[1][0].split()), 0, -1):
 				message = email.message_from_string(mailbox.fetch(msg_id, '(RFC822)')[1][0][1])
 				for part in message.get_payload():
-					header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
-					if header and len(header) > 0:
-						filename = header[0].strip(header_start)
-						call_audio = File(part.get_payload(decode=True), filename + 'wav')
-						break
+					if isinstance(part, email.message.Message):
+						header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
+						if header and len(header) > 0:
+							filename = header[0].strip(header_start)
+							call_audio = File(part.get_payload(decode=True), filename + 'wav')
+							break
 				if call_audio:
 					break
 			mailbox.logout()

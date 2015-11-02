@@ -132,3 +132,11 @@ class SubscriptionData():
 		:return: label value
 		"""
 		return self.__label
+
+	@label.setter
+	def label(self, value):
+		"""
+		Setter of __label
+		:param value: value to set
+		"""
+		self.__label = value

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from telephone import settings
 
 
 class UserProfile(models.Model):
@@ -38,6 +39,31 @@ class Call(models.Model):
 	user_profile = models.ForeignKey(UserProfile)
 	callee = models.ForeignKey(Callee)
 	record_filename = models.CharField(max_length=100, null=True, default=None)
+
+	class Meta:
+		app_label = 'main_app'
+
+
+class TransactionStatus(models.Model):
+	value = models.CharField(max_length=20)
+
+	class Meta:
+		app_label = 'main_app'
+
+
+class SubscribeTransaction(models.Model):
+	transact_id = models.CharField(max_length=40, null=False)
+	receiver = models.CharField(max_length=20, null=False, default=settings.W_NUMBER)
+	form_comments = models.CharField(max_length=50, null=True)
+	short_dest = models.CharField(max_length=50, null=True)
+	quickpay_form = models.CharField(max_length=6, default='shop', null=False)
+	targets = models.CharField(max_length=150, null=True)
+	sum = models.FloatField()
+	payment_type = models.CharField(max_length=2, null=False, default='PC')
+	duration = models.IntegerField()
+	expiration_date = models.DateTimeField(null=True)
+	user_profile = models.ForeignKey(UserProfile)
+	status = models.ForeignKey(TransactionStatus)
 
 	class Meta:
 		app_label = 'main_app'

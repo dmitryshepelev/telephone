@@ -25,8 +25,14 @@ var controller = (function () {
         },
         onSubscrChange: function (e) {
             var value = e.target.value;
-            var element = $('input[name="sum"][type="hidden"]')
-            element.val(value)
+            var element = $('input#sum[type="hidden"]');
+            element.val(value * 500)
+        },
+        subscribe: function () {
+            var subscribtionDataInstance = services.createInstance(SubscribtionData, null);
+            if (!subscribtionDataInstance.creationErrors) {
+                $.post('/pay/', subscribtionDataInstance.getData())
+            }
         }
     }
 })();

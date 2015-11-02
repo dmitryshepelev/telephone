@@ -16,8 +16,10 @@ var audio = (function () {
     function _update_status() {
         if ($(this).hasClass(_playClass)) {
             $(this).removeClass(_playClass).addClass(_stopClass);
+            $(this).parent().removeClass('btn-default').addClass('btn-danger-wt');
         } else {
             $(this).removeClass(_stopClass).addClass(_playClass);
+            $(this).parent().removeClass('btn-danger-wt').addClass('btn-default');
         }
     }
 

@@ -56,3 +56,18 @@ ALTER TABLE "main_app_userprofile" ADD COLUMN "customer_number" varchar(10) DEFA
 ALTER TABLE "main_app_userprofile" ALTER COLUMN "customer_number" DROP DEFAULT;
 -- --
 
+-- 02.10.2015 Added SubscribeTransaction, TransactionStatus tables --
+CREATE TABLE "main_app_subscribetransaction" ("id" serial NOT NULL PRIMARY KEY, "transact_id" varchar(40) NOT NULL, "receiver" varchar(20) NOT NULL, "form_comments" varchar(50) NULL, "short_dest" varchar(50) NULL, "quickpay_form" varchar(6) NOT NULL, "targets"
+varchar(150) NULL, "sum" double precision NOT NULL, "payment_type" varchar(2) NOT NULL, "duration" integer NOT NULL, "expiration_date" timestamp with time zone NULL);
+CREATE TABLE "main_app_transactionstatus" ("id" serial NOT NULL PRIMARY KEY, "value" varchar(20) NOT NULL);
+ALTER TABLE "main_app_subscribetransaction" ADD COLUMN "status_id" integer NOT NULL;
+ALTER TABLE "main_app_subscribetransaction" ALTER COLUMN "status_id" DROP DEFAULT;
+ALTER TABLE "main_app_subscribetransaction" ADD COLUMN "user_profile_id" integer NOT NULL;
+ALTER TABLE "main_app_subscribetransaction" ALTER COLUMN "user_profile_id" DROP DEFAULT;
+CREATE INDEX "main_app_subscribetransaction_dc91ed4b" ON "main_app_subscribetransaction" ("status_id");
+ALTER TABLE "main_app_subscribetransaction" ADD CONSTRAINT "main_app_su_status_id_5f99843b_fk_main_app_transactionstatus_id" FOREIGN KEY ("status_id") REFERENCES "main_app_transactionstatus" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "main_app_subscribetransaction_06037614" ON "main_app_subscribetransaction" ("user_profile_id");
+ALTER TABLE "main_app_subscribetransaction" ADD CONSTRAINT "main_app_su_user_profile_id_3b9379c6_fk_main_app_userprofile_id" FOREIGN KEY ("user_profile_id") REFERENCES "main_app_userprofile" ("id") DEFERRABLE INITIALLY DEFERRED;
+-- --
+
+

@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import pytz
 
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.main_app.models import Call, Callee
+from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -87,4 +87,34 @@ class DBService():
 		except Exception as e:
 			logger = LogService()
 			logger.error(Code.GET_CALL_ERR, props=kwargs, message=str(e))
+			return None
+
+	@staticmethod
+	def create_subscr_transaction(user, params):
+		"""
+		Creates new Subscribe transaction
+		:param user: current user
+		:param params: transaction params
+		:return: SubscribeTransaction instance
+		"""
+		try:
+			subscr = SubscribeTransaction(
+				transact_id=params['label'],
+				receiver=params['receiver'],
+				form_comments=params['form_comment'],
+				short_dest=params['short_dest'],
+				quickpay_form=params['quickpay_form'],
+				targets=params['targets'],
+				sum=params['sum'],
+				payment_type=params['paymentType'],
+				duration=params['duration'],
+				expiration_date=None,
+				user_profile=user.userprofile,
+				status=TransactionStatus.objects.get(pk=1)
+			)
+			subscr.save()
+			return subscr
+		except Exception as e:
+			logger = LogService()
+			logger.error(Code.CREATE_SUBSCR_TRANSACTION_ERR, props=params, message=str(e))
 			return None

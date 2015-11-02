@@ -1,8 +1,8 @@
 /**
  * Class represents payment data model
- * @constructor PaymentData
+ * @constructor SubscribtionData
  */
-function PaymentData() {
+function SubscribtionData() {
     this._data = {
         receiver: null,
 		form_comment: null,
@@ -11,12 +11,13 @@ function PaymentData() {
 		targets: null,
 		label: null,
         sum: null,
-        paymentType: null
+        paymentType: null,
+        duration: null
     }
 }
 
-PaymentData.prototype = {
-    constructor: PaymentData,
+SubscribtionData.prototype = {
+    constructor: SubscribtionData,
 
     /**
      * returns payment data form fields name
@@ -31,7 +32,8 @@ PaymentData.prototype = {
 		    targets: 'targets',
 		    label: 'label',
             sum: 'sum',
-            paymentType: 'paymentType'
+            paymentType: 'paymentType',
+            duration: 'duration'
         }
     },
 
