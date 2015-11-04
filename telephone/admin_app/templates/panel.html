@@ -1,0 +1,19 @@
+{% extends 'main_layout.html' %}
+
+{% block resources %}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static "jquery.tablesorter.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "admin-panel-controller.js" %}"></script>
+	<script type="text/javascript" src="{% static "transact-controller.js" %}"></script>
+{% endblock %}
+
+{% block title %}
+    Панель админовская
+{% endblock %}
+
+{% block content %}
+	<div>
+		<h3>Новые подписки</h3>
+	</div>
+	<div id="pending-transacts-container"></div>
+{% endblock %}

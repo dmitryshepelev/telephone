@@ -68,6 +68,15 @@ CREATE INDEX "main_app_subscribetransaction_dc91ed4b" ON "main_app_subscribetran
 ALTER TABLE "main_app_subscribetransaction" ADD CONSTRAINT "main_app_su_status_id_5f99843b_fk_main_app_transactionstatus_id" FOREIGN KEY ("status_id") REFERENCES "main_app_transactionstatus" ("id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "main_app_subscribetransaction_06037614" ON "main_app_subscribetransaction" ("user_profile_id");
 ALTER TABLE "main_app_subscribetransaction" ADD CONSTRAINT "main_app_su_user_profile_id_3b9379c6_fk_main_app_userprofile_id" FOREIGN KEY ("user_profile_id") REFERENCES "main_app_userprofile" ("id") DEFERRABLE INITIALLY DEFERRED;
+
+ALTER TABLE "main_app_subscribetransaction" ADD COLUMN "creation_date" timestamp with time zone DEFAULT now() NOT NULL;
+ALTER TABLE "main_app_subscribetransaction" ALTER COLUMN "creation_date" DROP DEFAULT;
+ALTER TABLE "main_app_subscribetransaction" ADD COLUMN "is_archive" boolean DEFAULT false NOT NULL;
+ALTER TABLE "main_app_subscribetransaction" ALTER COLUMN "is_archive" DROP DEFAULT;
+
+ALTER TABLE "main_app_userprofile" ADD COLUMN "date_subscribe_ended" timestamp with time zone NULL;
+ALTER TABLE "main_app_userprofile" ALTER COLUMN "date_subscribe_ended" DROP DEFAULT;
+
 -- --
 
 

@@ -52,6 +52,15 @@ footer {
 	}
 }
 
+.btn-warning-wt {
+    color: #FFF;
+    background-color: @warning-color;
+
+	&:hover, &:focus {
+    	background-color: #f09f2e;
+	}
+}
+
 /* END OVERRIDES */
 
 ul.navbar-nav >
@@ -325,6 +334,7 @@ table {
 	font-size: 12px !important;
 	line-height: 1.5 !important;
 	border-radius: 2px !important;
+	margin: 0 !important;
 }
 
 .payment-btn {
@@ -348,6 +358,10 @@ table {
 
 .text-success {
 	color: @success-color;
+}
+
+.text-warning {
+	color: @warning-color;
 }
 
 .text-bold {
@@ -379,11 +393,11 @@ table {
 	}
 }
 
-.balance-wt {
-	border-radius: 5px;
-	& .balance-link-wt {
+.profile-info-wt {
+	& a {
 		color: #a0a0a0 !important;
 	}
+	border-radius: 5px;
 }
 
 .margin-0 {

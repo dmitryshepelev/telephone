@@ -22,5 +22,5 @@ class AuthService():
 		auth_user = authenticate(username=form.data['username'], password=form.data['password'])
 		if auth_user is not None:
 			login(request, auth_user)
-			return ServiceResponse(True)
+			return ServiceResponse(True, data=auth_user)
 		return ServiceResponse(False, {'username': ['Invalidusernameorpassword'], 'password': ['Invalidusernameorpassword']})

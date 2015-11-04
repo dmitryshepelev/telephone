@@ -1,7 +1,9 @@
+import datetime
 from django.contrib.auth.models import User
 from telephone import settings
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.main_app.models import UserProfile
+from telephone.service_app.services.CommonService import CommonService
 
 
 class ProfileService():
@@ -23,3 +25,21 @@ class ProfileService():
 			return ServiceResponse(True)
 		except Exception as e:
 			return ServiceResponse(False, e.message)
+
+	@staticmethod
+	def extend_subscription(user_profile, duration):
+		"""
+		Extend profile subscription
+		:param user: User instance
+		:param duration: {int} duration in month
+		:return:
+		"""
+		user_profile = UserProfile.objects.get(pk=user_profile.pk)
+
+		if user_profile.date_subscribe_ended:
+			new_date = CommonService.add_months(user_profile.date_subscribe_ended, duration)
+		else:
+			new_date = CommonService.add_months(datetime.datetime.now(), duration)
+
+		user_profile.date_subscribe_ended = new_date
+		user_profile.save()

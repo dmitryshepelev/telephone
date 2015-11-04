@@ -57,15 +57,12 @@ var controller = (function () {
 
     function _getCalls(request_string, callback) {
         _updateContainer();
-        loader.show();
         $.get('/getCalls/{0}'.format(request_string || ''), function (data) {
             _updateContainer(data);
         }).fail(function () {
             services.errors().getDefaultErrorPage().success(function (result) {
                 _updateContainer(result)
             })
-        }).always(function () {
-            loader.hide()
         })
     }
 

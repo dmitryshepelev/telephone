@@ -27,7 +27,10 @@ def login(request, template):
 			data = [{key: LocalizeService(value[0]).get_localized_value()} for key, value in result.data.iteritems()]
 			logger.warning(Code.INVLOG, data=data, POST=request.POST, path=request.path)
 			return JsonResponse(CommonService.parse_form_errors(data), status=400)
-		return JsonResponse({redirect_property_name: request.POST.get(redirect_property_name)})
+		redirect_url = request.POST.get(redirect_property_name)
+		if result.data.is_superuser and redirect_url == '/calls/':
+			redirect_url = '/admin/panel/'
+		return JsonResponse({redirect_property_name: redirect_url})
 
 	redirect_url = request.GET.get('next') if request.GET.get('next') else '/calls/'
 	return render_to_response(template, {redirect_property_name: redirect_url}, context_instance=RequestContext(request))

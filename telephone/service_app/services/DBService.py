@@ -118,3 +118,16 @@ class DBService():
 			logger = LogService()
 			logger.error(Code.CREATE_SUBSCR_TRANSACTION_ERR, props=params, message=str(e))
 			return None
+
+	@staticmethod
+	def get_transact(transact_id):
+		"""
+		Get an existing transact by its id
+		:param transact_id: transact_id
+		:return: Transact instance
+		"""
+		try:
+			return SubscribeTransaction.objects.get(transact_id=transact_id)
+		except Exception as e:
+			logger = LogService()
+			logger.error(Code.GET_TRANSACT_ERR, transact_id=transact_id, message=str(e))

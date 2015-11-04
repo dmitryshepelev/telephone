@@ -1,9 +1,11 @@
 # coding=utf-8
+import datetime
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from telephone import settings
 
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
@@ -29,6 +31,7 @@ def main(request, template):
 
 
 @login_required
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/', redirect_field_name='')
 def calls(request, template):
 	"""
 	Controller to show calls page
@@ -58,6 +61,7 @@ def pay(request, template):
 
 
 @login_required
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/', redirect_field_name='')
 def get_statistic(request, template):
 	"""
 	Controller to get test calls file
@@ -77,6 +81,7 @@ def get_statistic(request, template):
 
 
 @login_required
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/', redirect_field_name='')
 def get_call_record(request):
 	"""
 	Controller to get test call record file
@@ -99,14 +104,33 @@ def get_call_record(request):
 
 @login_required
 @user_passes_test(lambda user: not user.is_superuser)
-def get_balance(request):
+def get_profile_info(request, template):
 	"""
 	Controller to get user account balance
 	:param request: HTTP request
-	:return: JsonResult
+	:return: HttpResponse
 	"""
 	balance = PBXDataService.get_pbx_account_balance(request.user)
 	if not balance:
 		return HttpResponse(status=500)
 
-	return JsonResponse({'balance': balance, 'currency': 'руб'})
+	# 0 - subscribed, 1 - subscription ends in (or less than) 3 days, 2 - subscription ended
+	date_subscribe_ended = request.user.userprofile.date_subscribe_ended
+	if date_subscribe_ended:
+		days_left = (date_subscribe_ended.date() - datetime.datetime.now().date()).days
+		if days_left >= 3:
+			subscription_status = 0
+		elif 0 <= days_left < 3:
+			subscription_status = 1
+		else:
+			subscription_status = 2
+		subscribe_ended_text = date_subscribe_ended.strftime(settings.DATE_CLIENT_FORMAT)
+	else:
+		subscription_status = 2
+		subscribe_ended_text = 'Подписка не оформлена'
+
+	return render_to_response(template, {
+			'balance': balance,
+			'subscribe_ended_text': subscribe_ended_text,
+			'subscription_status': subscription_status,
+		}, context_instance=RequestContext(request))

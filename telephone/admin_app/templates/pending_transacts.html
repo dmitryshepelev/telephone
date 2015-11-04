@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-sm-9">
+		<table class="table table-striped table-hover tablesorter">
+			<thead>
+				<tr>
+					<th style="min-width: 88px">Клиент</th>
+					<th style="min-width: 52px">Сумма</th>
+					<th style="min-width: 28px">Тип</th>
+					<th style="min-width: 41px">Срок</th>
+					<th style="min-width: 298px">Номер транзакции</th>
+					<th style="min-width: 144px">Дата создания</th>
+					<th style="min-width: 84px"></th>
+				</tr>
+			</thead>
+			<tbody>
+	        {% if not pending_transact %}
+		        <tr>
+			        <td colspan="7" align="center">Нет новых транзакций</td>
+		        </tr>
+	        {% else %}
+	            {% for transact in pending_transact %}
+					<tr data-transact-id="{{ transact.transact_id }}">
+						<td>{{ transact.username }}</td>
+						<td>{{ transact.sum }}</td>
+						<td>{{ transact.payment_type }}</td>
+						<td>{{ transact.duration }}</td>
+						<td>{{ transact.transact_id }}</td>
+						<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
+						<td onclick="transact.executeAction(event)">
+							<button class="btn btn-xs-wt btn-default" data-action-id="1"><span class="icon-checkmark"></span></button>
+							<button class="btn btn-xs-wt btn-danger-wt" data-action-id="2"><span class="icon-cross"></span></button>
+							<button class="btn btn-xs-wt btn-warning-wt" data-action-id="3"><span class="icon-books"></span></button>
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-6">
+
+	</div>
+</div>

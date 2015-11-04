@@ -1,10 +1,14 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_http_methods
 
 from telephone.classes.MailParameters import MailParameters
+from telephone.classes.TransactAction import TransactAction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.ApiService import ApiService
+from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LogService import LogService, Code
+from telephone.service_app.services.ProfileService import ProfileService
 
 
 logger = LogService()
@@ -58,6 +62,7 @@ def generate_password(request):
 
 @login_required
 @user_passes_test(lambda user: user.is_superuser)
+@require_http_methods(['POST'])
 def create_mail(request):
 	"""
 	Creates new email
@@ -85,3 +90,27 @@ def get_mailbox_data(request):
 	:return: JsonResponse
 	"""
 	return JsonResponse(ApiService.generate_mailbox_data().data)
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+@require_http_methods(['POST'])
+def transact_action(request):
+	"""
+	Controller to execute transact action
+	:param request: HTTP request
+	:return: JsonResponse instance
+	"""
+	transact_id = request.POST.get('transactId')
+	transact = DBService.get_transact(transact_id)
+	if not transact:
+		return HttpResponse(status=500)
+
+	action = TransactAction(request.POST.get('actionId'))
+	transact = action.execute(transact)
+	if transact:
+		if action.action_id == 1:
+			ProfileService.extend_subscription(transact.user_profile, transact.duration)
+		return JsonResponse({'transactId': transact.transact_id})
+
+	return HttpResponse(status=500)

@@ -1,4 +1,5 @@
 from base64 import b64encode
+import calendar
 import hashlib
 import hmac
 import os
@@ -11,7 +12,6 @@ from pydub import AudioSegment
 
 from telephone import settings
 from telephone.classes.File import File
-from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -171,3 +171,17 @@ class CommonService():
 		params_string = CommonService.get_params_string(params.params) if params else ''
 		sha_string = CommonService.sha_encode(params_string, method, api_version, secret_key)
 		return b64encode(sha_string)
+
+	@staticmethod
+	def add_months(source_date, months):
+		"""
+		Add the number of month to source date
+		:param source_date: date
+		:param months: number of month
+		:return: datetime
+		"""
+		month = source_date.month - 1 + months
+		year = int(source_date.year + month / 12)
+		month = month % 12 + 1
+		day = min(source_date.day, calendar.monthrange(year, month)[1])
+		return datetime.datetime(year, month, day, source_date.hour, source_date.minute, source_date.second)

@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from telephone import settings
@@ -12,6 +13,7 @@ class UserProfile(models.Model):
 	uid = models.CharField(max_length=50, default='')
 	token = models.CharField(max_length=50, default='')
 	customer_number = models.CharField(max_length=10, default='')
+	date_subscribe_ended = models.DateTimeField(null=True)
 
 	class Meta:
 		app_label = 'main_app'
@@ -62,6 +64,8 @@ class SubscribeTransaction(models.Model):
 	payment_type = models.CharField(max_length=2, null=False, default='PC')
 	duration = models.IntegerField()
 	expiration_date = models.DateTimeField(null=True)
+	creation_date = models.DateTimeField(null=False, default=datetime.datetime.now())
+	is_archive = models.BooleanField(null=False, default=False)
 	user_profile = models.ForeignKey(UserProfile)
 	status = models.ForeignKey(TransactionStatus)
 

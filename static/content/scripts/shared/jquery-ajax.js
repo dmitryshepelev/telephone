@@ -20,5 +20,9 @@ $.ajaxSetup({
             // Only send the token to relative URLs i.e. locally.
             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
         }
+        loader.show();
+    },
+    complete: function (xhr, status) {
+        loader.hide();
     }
 });
