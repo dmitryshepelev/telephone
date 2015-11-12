@@ -47,7 +47,7 @@ class TransactAction():
 		elif action_id == 3:
 			self.__action = self.__to_archive
 		elif action_id == 4:
-			self.__action = self.__to_archive
+			self.__action = self.__from_archive
 		elif action_id == 0:
 			self.__action = self.__pending
 

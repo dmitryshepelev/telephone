@@ -20,32 +20,10 @@ var controller = (function () {
         container.find('input.pseudo-hidden').attr('value', Date.getNowDate().toRightDatetimeString());
     }
 
-    function _makeSortable() {
-        var table = $('#callsTable');
-        if (table && table.children('tbody').children('tr').length > 1) {
-            table.tablesorter({sortList: [[1,1]], cssAsc: 'table-sort table-sort-asc', cssDesc: 'table-sort table-sort-desc', textExtraction: function (node) {
-                var value = node.innerHTML;
-                if (value.search(/(мин|сек)/g) != -1) {
-                    var textArr = value.split(' ');
-                    value = (textArr.length === 2 ? textArr[0] : Number(textArr[0]) * 60 + Number(textArr[2])).toString();
-                    return value
-                }
-                var re  = new RegExp(/((\d{2}\.){2}\d{4})\s((\d{2}\.){2}\d{2})/g);
-                var match = value.match(re);
-                if (match) {
-                    var arr = match[0].split(/\.|\s/);
-                    var date = new Date(arr[2], arr[1] - 1, arr[0], arr[3], arr[4], arr[5]);
-                    return date.getTime() / 1000;
-                }
-                return value
-            }});
-        }
-    }
-
     function _updateContainer(data) {
         if (data){
             _container.append(data);
-            _makeSortable();
+            services.makeSortable('#callsTable', [[1,1]]);
             mainController.initTooltips();
             _container.showElement();
         } else {

@@ -41,7 +41,7 @@ class ApiService():
 	@staticmethod
 	def generate_email_password(email_id):
 		"""
-		Generate password based on template: 'wt[day][month][year]$[login]
+		Generate password based on template: 'wt[day][month][year]sp[login]
 		:param email_id: user's login
 		:return: string password
 		"""

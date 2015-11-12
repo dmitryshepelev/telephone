@@ -77,6 +77,10 @@ ALTER TABLE "main_app_subscribetransaction" ALTER COLUMN "is_archive" DROP DEFAU
 ALTER TABLE "main_app_userprofile" ADD COLUMN "date_subscribe_ended" timestamp with time zone NULL;
 ALTER TABLE "main_app_userprofile" ALTER COLUMN "date_subscribe_ended" DROP DEFAULT;
 
+ALTER TABLE "main_app_userprofile" ADD COLUMN "profile_phone_number" varchar(20) DEFAULT '' NOT NULL;
+ALTER TABLE "main_app_userprofile" ALTER COLUMN "profile_phone_number" DROP DEFAULT;
+
+
 -- --
 
 

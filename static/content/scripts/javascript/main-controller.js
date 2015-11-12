@@ -3,8 +3,11 @@ var mainController = (function () {
         $('[tooltip]').tooltip();
     }
 
-    function _getProfileInfo () {
-        var container = $('li.profile-info-wt');
+    function _initProfileContainer() {
+        return $('li.profile-info-wt');
+    }
+
+    function _getProfileInfo (container) {
         $.get('/getProfileInfo/', function (data) {
             _updateContainer(container, data)
         })
@@ -15,7 +18,7 @@ var mainController = (function () {
     }
 
     $(document).ready(function () {
-        _getProfileInfo();
+        _getProfileInfo(_initProfileContainer());
     });
 
     return {

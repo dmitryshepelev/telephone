@@ -58,7 +58,10 @@
 							<a href="#" class="dropdown-toggle icon-user header-icon" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li class="username-dropdown">{{ user.username }}</li>
-								<li><a href="/calls/">Звонки</a></li>
+		                        {% if not user.is_superuser %}
+									<li class="username-dropdown">+{{ user.userprofile.profile_phone_number }}</li>
+			                        <li><a href="/calls/">Звонки</a></li>
+								{% endif %}
 	                            {% if user.is_superuser %}
 	                                <li><a href="/admin/">Грозная Админка</a></li>
 		                            <li><a href="/admin/newuser/">Новый пользователь</a></li>

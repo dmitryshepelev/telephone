@@ -10,6 +10,7 @@ class UserProfile(models.Model):
 	secret_key = models.CharField(max_length=50, default='')
 	profile_email = models.EmailField(max_length=30, default='')
 	profile_password = models.CharField(max_length=30, default='')
+	profile_phone_number = models.CharField(max_length=20, default='')
 	uid = models.CharField(max_length=50, default='')
 	token = models.CharField(max_length=50, default='')
 	customer_number = models.CharField(max_length=10, default='')

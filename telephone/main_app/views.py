@@ -118,13 +118,14 @@ def get_profile_info(request, template):
 	date_subscribe_ended = request.user.userprofile.date_subscribe_ended
 	if date_subscribe_ended:
 		days_left = (date_subscribe_ended.date() - datetime.datetime.now().date()).days
+		subscribe_ended_text = 'Подписка до ' + date_subscribe_ended.strftime(settings.DATE_CLIENT_FORMAT)
 		if days_left >= 3:
 			subscription_status = 0
 		elif 0 <= days_left < 3:
 			subscription_status = 1
 		else:
 			subscription_status = 2
-		subscribe_ended_text = date_subscribe_ended.strftime(settings.DATE_CLIENT_FORMAT)
+			subscribe_ended_text = 'Подписка не оформлена'
 	else:
 		subscription_status = 2
 		subscribe_ended_text = 'Подписка не оформлена'

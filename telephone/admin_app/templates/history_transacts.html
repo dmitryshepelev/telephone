@@ -1,34 +1,32 @@
 <table class="table table-striped table-hover tablesorter">
 	<thead>
 		<tr>
+			<th style="min-width: 43px">Статус</th>
+			<th style="min-width: 41px"></th>
 			<th style="min-width: 88px">Клиент</th>
 			<th style="min-width: 52px">Сумма</th>
 			<th style="min-width: 28px">Тип</th>
 			<th style="min-width: 41px">Срок</th>
 			<th style="min-width: 298px">Номер транзакции</th>
 			<th style="min-width: 144px">Дата создания</th>
-			<th style="min-width: 84px"></th>
 		</tr>
 	</thead>
 	<tbody>
-    {% if not pending_transact %}
+    {% if not transacts %}
         <tr>
-	        <td colspan="7" align="center">Нет новых транзакций</td>
+	        <td colspan="7" align="center">Нет транзакций</td>
         </tr>
     {% else %}
-        {% for transact in pending_transact %}
+        {% for transact in transacts %}
 			<tr data-transact-id="{{ transact.transact_id }}">
+				<td><span class="label label-{% if transact.status_id == 1 %}primary{% elif transact.status_id == 2 %}success{% elif transact.status_id == 3 %}danger{% else %}default{% endif %}">{{ transact.status_value }}</span></td>
+				<td>{% if transact.is_archive %}<span class="icon-books"></span>{% endif %}</td>
 				<td>{{ transact.username }}</td>
 				<td>{{ transact.sum }}</td>
 				<td>{{ transact.payment_type }}</td>
 				<td>{{ transact.duration }}</td>
 				<td allow-search>{{ transact.transact_id }}</td>
 				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
-				<td onclick="transact.executeAction(event)">
-					<button class="btn btn-xs-wt btn-default" data-action-id="1"><span class="icon-checkmark"></span></button>
-					<button class="btn btn-xs-wt btn-danger-wt" data-action-id="2"><span class="icon-cross"></span></button>
-					<button class="btn btn-xs-wt btn-warning-wt" data-action-id="3"><span class="icon-books"></span></button>
-				</td>
 			</tr>
 		{% endfor %}
 	{% endif %}

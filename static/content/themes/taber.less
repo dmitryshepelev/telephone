@@ -1,0 +1,33 @@
+@import "frittt/varaibles.less";
+
+.taber {
+	& .taber-header {
+		display: inline-block;
+		margin-bottom: 10px;
+
+		& .taber-tab {
+			display: inline;
+			padding: 10px 0;
+			margin: 0 10px;
+			cursor: pointer;
+			color: #a0a0a0;
+			font-weight: bold;
+			font-size: 18px;
+
+			&:nth-child(1) {
+				margin-left: 0 !important;
+			}
+
+			&:hover {
+				color: @default-color !important;
+			}
+
+			&.active {
+				color: @default-text-color;
+			}
+		}
+	}
+	& .taber-content {
+
+	}
+}

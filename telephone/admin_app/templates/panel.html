@@ -3,8 +3,11 @@
 {% block resources %}
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery.tablesorter.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "taber.js" %}"></script>
 	<script type="text/javascript" src="{% static "admin-panel-controller.js" %}"></script>
 	<script type="text/javascript" src="{% static "transact-controller.js" %}"></script>
+
+	<link rel="stylesheet" type="text/css" href="{% static "taber.css" %}">
 {% endblock %}
 
 {% block title %}
@@ -12,8 +15,12 @@
 {% endblock %}
 
 {% block content %}
-	<div>
-		<h3>Новые подписки</h3>
+	<div class="row">
+		<div class="col-sm-9">
+			<div id="taber"></div>
+		</div>
+		<div class="col-sm-3">
+			<input class="form-control" type="text" id="transact-id-search" placeholder="Номер транзакции" autocomplete="off" />
+		</div>
 	</div>
-	<div id="pending-transacts-container"></div>
 {% endblock %}
