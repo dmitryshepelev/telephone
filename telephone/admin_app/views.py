@@ -7,6 +7,7 @@ from telephone.classes.forms.NewUserForm import NewUserForm
 from telephone.classes.view_models.SubscribeTransaction import PendingTransactionVM, ArchiveTransactionVM, \
 	HistoryTransactionVM
 from telephone.main_app.models import SubscribeTransaction
+from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import LogService, Code
 from telephone.service_app.services.ProfileService import ProfileService
 
@@ -70,6 +71,7 @@ def get_archive_transacts(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
+	CommonService.send_mail()
 	transacts = [ArchiveTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(is_archive=True).order_by('-creation_date')]
 	return render_to_response(template, {'transacts': transacts}, context_instance=RequestContext(request))
 

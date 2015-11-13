@@ -231,6 +231,50 @@ var services = (function () {
         }
     }
 
+    /**
+     * Function to operate with table data
+     * @param selector to define table
+     * @returns {{searchRows: Function}}
+     */
+    function _filterTable (selector) {
+        var table = $(selector);
+        var colNumber = table.find('th').length;
+        var body = table.children('tbody');
+        var emptyRow = $('<tr id="emptyRow" style="display: none"><td colspan={0}>Нет совпадений</td></tr>'.format(colNumber));
+        return {
+            /**
+             * Search row in the table by target value
+             * To allow searching in the row, add {allow-search} tag to <td>
+             * @param value to search
+             * @returns the number of the founded rows
+             */
+            searchRows: function (value) {
+                $('#emptyRow').remove();
+                var re = new RegExp(value);
+                var rows = body.children('tr');
+                var rowsFound = 0;
+                $.each(rows, function (index, row) {
+                    row = $(row);
+                    var sourceCells = row.children('td[allow-search]');
+                    var targetCells = sourceCells.filter(function (index, cell) {
+                        return $(cell).text().match(re);
+                    });
+                    if (targetCells.length == 0) {
+                        row.hideElement();
+                    } else {
+                        row.showElement();
+                        rowsFound++
+                    }
+                });
+                if (rowsFound === 0) {
+                    body.append(emptyRow);
+                    emptyRow.showElement();
+                }
+                return rowsFound;
+            }
+        }
+    }
+
     return {
         collectModelData: _collectModelData,
         cleanModelData: _cleanModelData,
@@ -241,6 +285,7 @@ var services = (function () {
         validate: _validate,
         bindKey: _bindKey,
         errors: _errors,
-        makeSortable: _makeSortable
+        makeSortable: _makeSortable,
+        filterTable: _filterTable
     }
 })();
