@@ -1,6 +1,10 @@
+# coding=utf-8
+import os
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
+from telephone import settings
+from telephone.classes.MailMessage import MailMessage
 
 from telephone.classes.MailParameters import MailParameters
 from telephone.classes.TransactAction import TransactAction
@@ -111,6 +115,8 @@ def transact_action(request):
 	if transact:
 		if action.action_id == 1:
 			ProfileService.extend_subscription(transact.user_profile, transact.duration)
+			message = MailMessage(settings.INFO_EMAIL, 'Продление подписки', 'subscribe_extended.html', {'username': transact.user_profile.user.username, 'expiration_date': transact.user_profile.date_subscribe_ended}, transact.user_profile.user.email)
+			message.send()
 		return JsonResponse({'transactId': transact.transact_id})
 
 	return HttpResponse(status=500)

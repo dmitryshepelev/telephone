@@ -9,6 +9,7 @@ from smtplib import SMTP_SSL
 import string
 import datetime
 import urllib
+from django.template.loader import get_template
 
 from django.utils import crypto
 from pydub import AudioSegment
@@ -189,35 +190,3 @@ class CommonService():
 		month = month % 12 + 1
 		day = min(source_date.day, calendar.monthrange(year, month)[1])
 		return datetime.datetime(year, month, day, source_date.hour, source_date.minute, source_date.second)
-
-	@staticmethod
-	def send_mail():
-		SMTPserver = 'smtp.yandex.com'
-		sender = 'dmitry.shepelev.ydx@yandex.ru'
-		destination = ['dmitry.shepelev@live.ru'] #, 'talyan-290@ya.ru']
-
-		USERNAME = "dmitry.shepelev.ydx@yandex.ru"
-		PASSWORD = "YouKickAss50"
-
-		# typical values for text_subtype are plain, html, xml
-		text_subtype = 'html'
-
-		content = open(os.path.join(settings.BASE_DIR, 'static\\email-mess.html'), 'rb')
-		subject = "Это спам чистой воды"
-
-		try:
-			msg = MIMEText(content.read(), text_subtype)
-			content.close()
-			msg['Subject'] = subject
-			msg['From'] = sender
-
-			conn = SMTP_SSL(SMTPserver)
-			conn.set_debuglevel(False)
-			conn.login(USERNAME, PASSWORD)
-			try:
-				conn.sendmail(sender, destination, msg.as_string())
-			finally:
-				conn.close()
-
-		except Exception, exc:
-			pass

@@ -71,7 +71,6 @@ def get_archive_transacts(request, template):
 	:param template: html template
 	:return: HttpResponse instance
 	"""
-	CommonService.send_mail()
 	transacts = [ArchiveTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(is_archive=True).order_by('-creation_date')]
 	return render_to_response(template, {'transacts': transacts}, context_instance=RequestContext(request))
 

@@ -40,6 +40,8 @@ TEST_MODE = False
 
 DOMAIN = 'web-tel.ru'
 
+INFO_EMAIL = 'info@web-tel.ru'
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -127,7 +129,7 @@ STATICFILES_DIRS = (
 	'static/content/scripts/javascript',
 	'static/content/scripts/shared',
 	'static/content',
-	'static/content/images'
+	'static/content/images',
 )
 
 STATIC_URL = '/static/content/'
@@ -140,6 +142,7 @@ TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'auth_app/templates'),
 	os.path.join(BASE_DIR,  'admin_app/templates'),
 	os.path.join(BASE_DIR,  'servise_app/templates'),
+	os.path.join(BASE_DIR,  'static/email_templates'),
 )
 
 LOGIN_URL = '/auth/login/'
