@@ -115,7 +115,7 @@ def transact_action(request):
 	if transact:
 		if action.action_id == 1:
 			ProfileService.extend_subscription(transact.user_profile, transact.duration)
-			message = MailMessage(settings.INFO_EMAIL, 'Продление подписки', 'subscribe_extended.html', {'username': transact.user_profile.user.username, 'expiration_date': transact.user_profile.date_subscribe_ended}, transact.user_profile.user.email)
+			message = MailMessage(settings.INFO_EMAIL, 'Продление подписки', 'mail_tmpl_subscribe_extended.html', {'username': transact.user_profile.user.username, 'expiration_date': transact.user_profile.date_subscribe_ended}, transact.user_profile.user.email)
 			message.send()
 		return JsonResponse({'transactId': transact.transact_id})
 

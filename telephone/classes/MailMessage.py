@@ -1,9 +1,9 @@
 from email.mime.text import MIMEText
-import os
 from smtplib import SMTP_SSL
+
 from django.template import Context
 from django.template.loader import get_template
-from telephone import settings
+
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -38,7 +38,7 @@ class MailMessage():
 		Getter of __content
 		:return: content value
 		"""
-		return get_template(self.__template).render(Context(self.__template_context))
+		return get_template(self.__template).render(Context(self.__template_context)).encode('utf-8')
 
 	@property
 	def subject(self):
@@ -56,15 +56,16 @@ class MailMessage():
 		"""
 		return self.__text_subtype
 
-	def get_message(self):
+	def get_message(self, as_string=True):
 		"""
 		Returns MIMEText instance of message content
+		:param as_string: return {str} if True else MIMEType instance
 		:return: MIMEText instance
 		"""
-		msg = MIMEText(self.content.encode('UTF-8'), self.__text_subtype)
+		msg = MIMEText(self.content, self.__text_subtype)
 		msg['Subject'] = self.__subject
 		msg['From'] = self.__sender
-		return msg
+		return msg.as_string() if as_string else msg
 
 	def send(self, smtp='smtp.yandex.com', username='info@web-tel.ru', password='Info112911'):
 		"""
@@ -78,7 +79,7 @@ class MailMessage():
 			connection = SMTP_SSL(smtp)
 			connection.set_debuglevel(False)
 			connection.login(username, password)
-			connection.sendmail(self.__sender, self.__destination, self.get_message().as_string())
+			connection.sendmail(self.__sender, self.__destination, self.get_message())
 			connection.close()
 			return True
 		except Exception as e:

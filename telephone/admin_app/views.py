@@ -7,7 +7,6 @@ from telephone.classes.forms.NewUserForm import NewUserForm
 from telephone.classes.view_models.SubscribeTransaction import PendingTransactionVM, ArchiveTransactionVM, \
 	HistoryTransactionVM
 from telephone.main_app.models import SubscribeTransaction
-from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import LogService, Code
 from telephone.service_app.services.ProfileService import ProfileService
 

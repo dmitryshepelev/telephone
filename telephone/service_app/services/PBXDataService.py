@@ -92,7 +92,7 @@ class PBXDataService():
 			if not key_sip_val:
 				# init key_sip_val
 				key_sip_val = s.sip
-			if CommonService.is_dates_equals(key_date_val, s.date, True and s.sip == key_sip_val) or not group:
+			if (s.sip == key_sip_val and CommonService.is_dates_equals(key_date_val, s.date, True)) or not group:
 				# add to group if values are equals
 				group.append(s)
 			else:
