@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.main_app.models import UserProfile
+from telephone.main_app.models import UserProfile, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
 
 

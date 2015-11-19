@@ -9,6 +9,7 @@ from smtplib import SMTP_SSL
 import string
 import datetime
 import urllib
+import uuid
 from django.template.loader import get_template
 
 from django.utils import crypto
@@ -54,6 +55,14 @@ class CommonService():
 		if only_digits:
 			return crypto.get_random_string(length, string.digits)
 		return crypto.get_random_string(length)
+
+	@staticmethod
+	def get_guid():
+		"""
+		Generate GUID
+		:return: {str} GUID
+		"""
+		return str(uuid.uuid4())
 
 	@staticmethod
 	def parse_csv(csv_string):

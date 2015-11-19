@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from telephone import settings
+from telephone.admin_app.views import panel
 
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
@@ -20,14 +21,16 @@ from telephone.service_app.services.LogService import LogService, Code
 logger = LogService()
 
 
-def main(request, template):
+def main_resolver(request, templates):
 	"""
 	Controller to show main page
 	:param request: HTTP GET request
-	:param template: html template
+	:param templates: html templates
 	:return: HttpResponse instance
 	"""
-	return render_to_response(template, {}, context_instance=RequestContext(request))
+	if request.user.is_authenticated() and request.user.is_superuser:
+		return panel(request, templates[0])
+	return calls(request, templates[1])
 
 
 @login_required

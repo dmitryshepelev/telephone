@@ -84,3 +84,11 @@ ALTER TABLE "main_app_userprofile" ALTER COLUMN "profile_phone_number" DROP DEFA
 -- --
 
 
+-- 19.11.2015 PROFILE REQUEST --
+CREATE TABLE "main_app_profilerequesttransaction" ("id" serial NOT NULL PRIMARY KEY, "transact_id" varchar(40) NOT NULL, "creation_date" timestamp with time zone NOT NULL, "email" varchar(30) NOT NULL, "username" varchar(50) NULL, "status_id" integer NOT NULL);
+
+ALTER TABLE "main_app_profilerequest" DROP CONSTRAINT "main_app_pr_status_id_1cf826c1_fk_main_app_transactionstatus_id";
+ALTER TABLE "main_app_profilerequest" DROP COLUMN "status_id" CASCADE;
+
+
+-- --

@@ -65,6 +65,16 @@ def generate_password(request):
 
 
 @login_required
+def get_transact_id(request):
+	"""
+	Get transact id
+	:param request: HTTP request
+	:return: guid
+	"""
+	return JsonResponse({'id': CommonService.get_guid()})
+
+
+@login_required
 @user_passes_test(lambda user: user.is_superuser)
 @require_http_methods(['POST'])
 def create_mail(request):

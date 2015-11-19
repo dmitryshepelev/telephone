@@ -8,6 +8,7 @@
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "auth-controller.js" %}"></script>
 	<script type="text/javascript" src="{% static "models/auth-model.js" %}"></script>
+	<script type="text/javascript" src="{% static "models/new-profile-request-model.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -31,6 +32,27 @@
 						<button type="button" onclick="auth.login(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Войти</button>
 					</div>
 				</form>
+			</div>
+		</div>
+		<div id="profile-request-container">
+			<div class="auth-block">
+				<h3>или отправте нам заявку на создание профиля</h3>
+			</div>
+			<div class="auth-block">
+				<div class="auth-group">
+					<form class="form-horizontal">
+						{% csrf_token %}
+						<div class="form-group">
+							<input class="form-control input-lg" id="email" name="email" type="text" placeholder="E-mail" required>
+						</div>
+						<div class="form-group">
+							<input class="form-control input-lg" id="login" name="login" type="text" placeholder="Желаемый логин">
+						</div>
+						<div class="form-group">
+							<button type="button" onclick="auth.newProfileRequest(event)" class="btn btn-primary btn-lg pull-right auth-submit-btn">Отправить</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -59,12 +59,12 @@
 							<ul class="dropdown-menu" role="menu">
 								<li class="username-dropdown">{{ user.username }}</li>
 	                            {% if user.is_superuser %}
-		                            <li><a href="/admin/panel/">Панель</a></li>
+		                            <li><a href="/">Панель</a></li>
 	                                <li><a href="/admin/">Супервласть</a></li>
 		                            <li><a href="/admin/newuser/">Новый раб</a></li>
 	                            {% else %}
                                     <li class="username-dropdown">+{{ user.userprofile.profile_phone_number }}</li>
-			                        <li><a href="/calls/">Звонки</a></li>
+			                        <li><a href="/">Звонки</a></li>
 	                            {% endif %}
 							</ul>
 						</li>
@@ -83,7 +83,7 @@
 								<a class="balance-link-wt" href="/pay/"></a>
 							</li>
 						{% endif %}
-						<li><a href="/calls/">Звонки</a></li>
+						<li><a href="/">Звонки</a></li>
                         {% if user.is_superuser %}
                             <li><a href="/admin/">Грозная Админка</a></li>
                             <li><a href="/admin/newuser/">Новый пользователь</a></li>

@@ -28,7 +28,26 @@ var auth = (function () {
         }
     }
 
+    function _newProfileRequest () {
+        var newProfileRequestInstance = services.createInstance(NewProfileRequestModel, null);
+        if (!newProfileRequestInstance.creationErrors) {
+            $.post('/auth/newProfileRequest/', newProfileRequestInstance.getData(), function (result) {
+                var container = $('#profile-request-container');
+                container.empty();
+                container.append(result);
+            }).fail(function() {
+                message.error('Не удалось отправить заявку. Повторите попытку позже');
+            })
+        } else {
+            newProfileRequestInstance.creationErrors.forEach(function (errorFieldName) {
+                services.validate(errorFieldName);
+            });
+            message.error('Не все поля заполнены');
+        }
+    }
+
     return {
-        login: _login
+        login: _login,
+        newProfileRequest: _newProfileRequest
     }
 })();

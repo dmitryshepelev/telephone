@@ -10,6 +10,7 @@ from telephone.service_app.services.LogService import LogService, Code
 class MailMessage():
 	def __init__(self, sender, subject, template, context, *destination):
 		self.__text_subtype = 'html'
+		self.__text_encoding = 'cp1251'
 		self.__sender = sender
 		self.__destination = [d for d in destination]
 		self.__template = template
@@ -38,7 +39,7 @@ class MailMessage():
 		Getter of __content
 		:return: content value
 		"""
-		return get_template(self.__template).render(Context(self.__template_context)).encode('utf-8')
+		return get_template(self.__template).render(Context(self.__template_context)).encode(self.__text_encoding)
 
 	@property
 	def subject(self):
@@ -62,7 +63,7 @@ class MailMessage():
 		:param as_string: return {str} if True else MIMEType instance
 		:return: MIMEText instance
 		"""
-		msg = MIMEText(self.content, self.__text_subtype)
+		msg = MIMEText(self.content, self.__text_subtype, self.__text_encoding)
 		msg['Subject'] = self.__subject
 		msg['From'] = self.__sender
 		return msg.as_string() if as_string else msg

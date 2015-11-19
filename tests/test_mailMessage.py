@@ -12,7 +12,7 @@ class TestMailMessage(TestCase):
 		self.template = 'mail_tmpl_subscribe_extended.html'
 		self.context = Context({'username': 'test_user', 'expiration_date': datetime.datetime.now()})
 		self.destination = 'dmitry.shepelev.ydx@yandex.ru'  # 'talyan-290@ya.ru'
-		self.template_length = len(get_template(self.template).render(self.context).encode('UTF-8'))
+		self.template_length = len(get_template(self.template).render(self.context).encode('cp1251'))
 		self.mail_message = MailMessage(self.sender, self.subject, self.template, self.context, self.destination)
 
 	def test_sender(self):
@@ -28,7 +28,7 @@ class TestMailMessage(TestCase):
 		self.assertEqual(self.mail_message.subject, self.subject)
 
 	def test_get_message(self):
-		self.assertEqual(len(self.mail_message.get_message()), 127 + len(self.subject) + self.template_length)
+		self.assertEqual(len(self.mail_message.get_message()), 467 + len(self.subject) + self.template_length)
 
 	def test_send(self):
 		self.assertEquals(self.mail_message.send(), True)

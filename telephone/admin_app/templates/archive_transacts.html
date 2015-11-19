@@ -22,7 +22,7 @@
 				<td><span class="label label-{% if transact.status_id == 1 %}primary{% elif transact.status_id == 2 %}success{% elif transact.status_id == 3 %}danger{% else %}default{% endif %}">{{ transact.status_value }}</span></td>
 				<td>{{ transact.username }}</td>
 				<td>{{ transact.sum }}</td>
-				<td>{{ transact.payment_type }}</td>
+				<td>{% if transact.payment_type == 'AC' %}<img class="credit-card-icon" src="/static/content/images/credit_card.png">{% elif transact.payment_type == 'PC' %}<img class="yandex-icon" src="/static/content/images/yandex.png">{% else %}???{% endif %}</td>
 				<td>{{ transact.duration }}</td>
 				<td allow-search>{{ transact.transact_id }}</td>
 				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>

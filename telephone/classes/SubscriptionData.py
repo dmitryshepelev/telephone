@@ -1,5 +1,6 @@
 import uuid
 from telephone import settings
+from telephone.service_app.services.CommonService import CommonService
 
 
 class SubscriptionData():
@@ -11,7 +12,7 @@ class SubscriptionData():
 		self.__targets = 'targets'
 		self.__sum = 500
 		self.__payment_type = 'PC'
-		self.__label = str(uuid.uuid4())
+		self.__label = CommonService.get_guid()
 
 	@property
 	def receiver(self):

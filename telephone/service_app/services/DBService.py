@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import pytz
 
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus
+from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus, ProfileRequestTransaction
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -131,3 +131,24 @@ class DBService():
 		except Exception as e:
 			logger = LogService()
 			logger.error(Code.GET_TRANSACT_ERR, transact_id=transact_id, message=str(e))
+
+	@staticmethod
+	def create_profile_request_transact(profile_request):
+		"""
+		Create a new profile request transaction
+		:param profile_request: ProfileRequest instance
+		:return: created ProfileRequestTransaction instance
+		"""
+		profile_request_transact = None
+		try:
+			profile_request_transact = ProfileRequestTransaction(
+				email=profile_request.email,
+				username=profile_request.login,
+				status=TransactionStatus.objects.get(pk=1)
+			)
+			profile_request_transact.save()
+			return profile_request_transact
+		except Exception as e:
+			logger = LogService()
+			logger.error(Code.CREATE_SUBSCR_TRANSACTION_ERR, data=profile_request_transact, message=str(e))
+			return None

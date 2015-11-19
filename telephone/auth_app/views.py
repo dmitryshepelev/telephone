@@ -1,13 +1,17 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
+from django.views.decorators.http import require_http_methods
+from telephone.classes.ProfileRequest import ProfileRequest
 
 from telephone.service_app.services.AuthService import AuthService
 from telephone.service_app.services.CommonService import CommonService
+from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LocalizeService import LocalizeService
 from telephone.service_app.services.LogService import LogService, Code
+from telephone.service_app.services.ProfileService import ProfileService
 
 
 logger = LogService()
@@ -28,12 +32,25 @@ def login(request, template):
 			logger.warning(Code.INVLOG, data=data, POST=request.POST, path=request.path)
 			return JsonResponse(CommonService.parse_form_errors(data), status=400)
 		redirect_url = request.POST.get(redirect_property_name)
-		if result.data.is_superuser and redirect_url == '/calls/':
-			redirect_url = '/admin/panel/'
 		return JsonResponse({redirect_property_name: redirect_url})
 
-	redirect_url = request.GET.get('next') if request.GET.get('next') else '/calls/'
+	redirect_url = request.GET.get('next') if request.GET.get('next') else '/'
 	return render_to_response(template, {redirect_property_name: redirect_url}, context_instance=RequestContext(request))
+
+
+@require_http_methods(['POST'])
+def new_profile_request(request, template):
+	"""
+	Controller to create new profile request
+	:param request: HTTP request
+	:param template: html template
+	:return: HttpResponse
+	"""
+	profile_request_transact = DBService.create_profile_request_transact(ProfileRequest(request.POST.get('email'), request.POST.get('login')))
+	if profile_request_transact:
+		return render_to_response(template, {'email': profile_request_transact.email, 'transact_id': profile_request_transact.transact_id}, context_instance=RequestContext(request))
+
+	return HttpResponse(status=500)
 
 
 @login_required
@@ -44,4 +61,4 @@ def logout_user(request):
 	:return: redirect to the main page
 	"""
 	logout(request)
-	return redirect('/')
+	return redirect('/auth/login/')

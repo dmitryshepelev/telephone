@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from django.contrib.auth.models import User
 from django.db import models
 from telephone import settings
@@ -68,6 +69,17 @@ class SubscribeTransaction(models.Model):
 	creation_date = models.DateTimeField(null=False, default=datetime.datetime.now())
 	is_archive = models.BooleanField(null=False, default=False)
 	user_profile = models.ForeignKey(UserProfile)
+	status = models.ForeignKey(TransactionStatus)
+
+	class Meta:
+		app_label = 'main_app'
+
+
+class ProfileRequestTransaction(models.Model):
+	transact_id = models.CharField(max_length=40, null=False, default=str(uuid.uuid4()))
+	creation_date = models.DateTimeField(null=False, default=datetime.datetime.now())
+	email = models.EmailField(max_length=30, null=False)
+	username = models.EmailField(max_length=50, null=True)
 	status = models.ForeignKey(TransactionStatus)
 
 	class Meta:
