@@ -21,7 +21,18 @@ var mainController = (function () {
         _getProfileInfo(_initProfileContainer());
     });
 
+    var $routeProvider = new $RouteProvider({
+        newuser: {
+            controller: '/admin/newuser/',
+            scripts: [
+                '/static/content/scripts/javascript/new-user-controller.js'
+            ]
+        }
+    });
+
+    //console.info(window.location.href);
+
     return {
         initTooltips: _initTooltips
-    }
+    };
 })();

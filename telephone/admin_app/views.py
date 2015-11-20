@@ -85,3 +85,7 @@ def get_history_transacts(request, template):
 	"""
 	transacts = [HistoryTransactionVM(transact) for transact in SubscribeTransaction.objects.filter().order_by('-creation_date')]
 	return render_to_response(template, {'transacts': transacts}, context_instance=RequestContext(request))
+
+
+def test_routes(request):
+	return render_to_response('test_routes.html', {}, context_instance=RequestContext(request))

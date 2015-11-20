@@ -6,7 +6,8 @@ var controller = (function () {
             { name: 'История', url: '/admin/getHistoryTransacts/' }
         ], {
             afterChange: function () {
-                services.makeSortable('.tablesorter')
+                services.makeSortable('.tablesorter');
+                window.location.href += '#tab'
             }
         });
 

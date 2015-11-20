@@ -11,6 +11,9 @@
 	<script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "bootstrap.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "jquery-ajax.js" %}"></script>
+
+	<script type="text/javascript" src="{% static "framework/route-provider.js" %}"></script>
+
 	<script type="text/javascript" src="{% static "messager.js" %}"></script>
 	<script type="text/javascript" src="{% static "main-controller.js" %}"></script>
 	<script type="text/javascript" src="{% static "services.js" %}"></script>
@@ -62,6 +65,7 @@
 		                            <li><a href="/">Панель</a></li>
 	                                <li><a href="/admin/">Супервласть</a></li>
 		                            <li><a href="/admin/newuser/">Новый раб</a></li>
+		                            <li><a href="/admin/tr/">routes</a></li>
 	                            {% else %}
                                     <li class="username-dropdown">+{{ user.userprofile.profile_phone_number }}</li>
 			                        <li><a href="/">Звонки</a></li>
