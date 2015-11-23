@@ -11,12 +11,12 @@
 		</tr>
 	</thead>
 	<tbody>
-    {% if not pending_transact %}
+    {% if not transacts %}
         <tr>
 	        <td colspan="7" align="center">Нет новых транзакций</td>
         </tr>
     {% else %}
-        {% for transact in pending_transact %}
+        {% for transact in transacts %}
 			<tr data-transact-id="{{ transact.transact_id }}">
 				<td>{{ transact.username }}</td>
 				<td>{{ transact.sum }}</td>

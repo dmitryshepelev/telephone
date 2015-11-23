@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response
@@ -50,38 +51,26 @@ def panel(request, template):
 
 @login_required
 @user_passes_test(lambda user: user.is_superuser)
-def get_pending_transacts(request, template):
+def get_subscribe_transacts(request, transact_type):
 	"""
 	Controller to get pending transacts partial
 	:param request: HTTP request
-	:param template: html template
 	:return: HttpResponse instance
 	"""
-	pending_transact = [PendingTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(status_id=1, is_archive=False).order_by('-creation_date')]
-	return render_to_response(template, {'pending_transact': pending_transact}, context_instance=RequestContext(request))
+	order = '-creation_date'
+	start_pos = request.GET.get('start') or 0
+	data_length = 10
 
+	if transact_type == 'pending':
+		transacts = [PendingTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(status_id=1, is_archive=False).order_by(order)]
+		template = 'pending_transacts.html'
+	elif transact_type == 'archive':
+		transacts = [ArchiveTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(is_archive=True).order_by(order)]
+		template = 'archive_transacts.html'
+	elif transact_type == 'history':
+		transacts = [HistoryTransactionVM(transact) for transact in SubscribeTransaction.objects.filter().order_by(order)]
+		template = 'history_transacts.html'
+	else:
+		return HttpResponse(status=400)
 
-@login_required
-@user_passes_test(lambda user: user.is_superuser)
-def get_archive_transacts(request, template):
-	"""
-	Controller to get pending transacts partial
-	:param request: HTTP request
-	:param template: html template
-	:return: HttpResponse instance
-	"""
-	transacts = [ArchiveTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(is_archive=True).order_by('-creation_date')]
-	return render_to_response(template, {'transacts': transacts}, context_instance=RequestContext(request))
-
-
-@login_required
-@user_passes_test(lambda user: user.is_superuser)
-def get_history_transacts(request, template):
-	"""
-	Controller to get pending transacts partial
-	:param request: HTTP request
-	:param template: html template
-	:return: HttpResponse instance
-	"""
-	transacts = [HistoryTransactionVM(transact) for transact in SubscribeTransaction.objects.filter().order_by('-creation_date')]
-	return render_to_response(template, {'transacts': transacts}, context_instance=RequestContext(request))
+	return render_to_response(template, {'transacts': transacts[start_pos:start_pos + data_length]}, context_instance=RequestContext(request))

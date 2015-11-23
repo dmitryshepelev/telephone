@@ -1,9 +1,9 @@
 var controller = (function () {
     $(document).ready(function () {
         new Taber('#taber', [
-            { name: 'Новые подписки', url: '/admin/getPendingTransacts/' },
-            { name: 'Архив', url: '/admin/getArchiveTransacts/' },
-            { name: 'История', url: '/admin/getHistoryTransacts/' }
+            { name: 'Новые подписки', url: '/admin/getTransacts/pending/', active: true },
+            { name: 'Архив', url: '/admin/getTransacts/archive/' },
+            { name: 'История', url: '/admin/getTransacts/history/' }
         ], {
             afterChange: function () {
                 services.makeSortable('.tablesorter')
