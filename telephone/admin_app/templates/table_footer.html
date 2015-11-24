@@ -1,0 +1,19 @@
+<tfoot>
+	<tr>
+		<td colspan="0" style="text-align: right">
+			<div class="btn-group">
+				<button class="btn btn-xs-wt btn-default" onclick="tabler.loadPage(event, 1)" type="button"><span class="icon-arrow-left2"></span></button>
+				{% for page in pages %}
+					{% if forloop.first and current_page_number > 3 %}
+				        <button class="btn btn-xs-wt btn-default" onclick="tabler.loadPage(event, {{ page }})" type="button">...</button>
+					{% elif forloop.last and current_page_number <= pager_end_helper_stop %}
+						<button class="btn btn-xs-wt btn-default" onclick="tabler.loadPage(event, {{ page }})" type="button">...</button>
+					{% else %}
+						<button class="btn btn-xs-wt btn-default {% if page == current_page_number %}disabled{% endif %}" onclick="tabler.loadPage(event, {{ page }})" type="button">{{ page }}</button>
+					{% endif %}
+				{% endfor %}
+				<button class="btn btn-xs-wt btn-default" onclick="tabler.loadPage(event, {{ total_pages }})" type="button"><span class="icon-arrow-right2"></span></button>
+            </div>
+		</td>
+	</tr>
+</tfoot>

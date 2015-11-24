@@ -3,11 +3,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+import math
 
 from telephone.classes.forms.NewUserForm import NewUserForm
 from telephone.classes.view_models.SubscribeTransaction import PendingTransactionVM, ArchiveTransactionVM, \
 	HistoryTransactionVM
 from telephone.main_app.models import SubscribeTransaction
+from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import LogService, Code
 from telephone.service_app.services.ProfileService import ProfileService
 
@@ -58,8 +60,6 @@ def get_subscribe_transacts(request, transact_type):
 	:return: HttpResponse instance
 	"""
 	order = '-creation_date'
-	start_pos = request.GET.get('start') or 0
-	data_length = 10
 
 	if transact_type == 'pending':
 		transacts = [PendingTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(status_id=1, is_archive=False).order_by(order)]
@@ -73,4 +73,8 @@ def get_subscribe_transacts(request, transact_type):
 	else:
 		return HttpResponse(status=400)
 
-	return render_to_response(template, {'transacts': transacts[start_pos:start_pos + data_length]}, context_instance=RequestContext(request))
+	page_number = request.GET.get('page')
+	pager_data = CommonService.define_page(transacts, page_number, data_field_name='transacts')
+	pager_data['transact_type'] = transact_type
+
+	return render_to_response(template, pager_data, context_instance=RequestContext(request))

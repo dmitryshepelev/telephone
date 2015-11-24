@@ -1,4 +1,4 @@
-<table class="table table-striped table-hover tablesorter">
+<table class="table table-striped table-hover tablesorter" data-load-content-url="/admin/getTransacts/{{ transact_type }}/">
 	<thead>
 		<tr>
 			<th style="min-width: 88px">Клиент</th>
@@ -33,4 +33,5 @@
 		{% endfor %}
 	{% endif %}
 	</tbody>
+	{% include 'table_footer.html' %}
 </table>

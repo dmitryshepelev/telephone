@@ -13,6 +13,7 @@ import uuid
 from django.template.loader import get_template
 
 from django.utils import crypto
+import math
 from pydub import AudioSegment
 import sys
 
@@ -199,3 +200,25 @@ class CommonService():
 		month = month % 12 + 1
 		day = min(source_date.day, calendar.monthrange(year, month)[1])
 		return datetime.datetime(year, month, day, source_date.hour, source_date.minute, source_date.second)
+
+	@staticmethod
+	def define_page(data, page_number, page_data_length=5, data_field_name=None):
+		"""
+		Divide data to the pages
+		:param data: data to divide
+		:param page_number: page number
+		:param page_data_length: length of the data on the page
+		:param data_field_name: returned data field name
+		:return: dict of pager data
+		"""
+		page_number = int(page_number or 1)
+
+		total_count = len(data)
+		total_pages = int(math.ceil(float(total_count) / page_data_length))
+		return {
+			data_field_name or 'data': data[(page_number - 1) * page_data_length:page_number * page_data_length],
+			'pages': range(1 if page_number <= 4 else page_number - 3, page_number + 4 if page_number + 4 <= total_pages else total_pages + 1),
+			'total_pages': total_pages,
+			'current_page_number': page_number,
+			'pager_end_helper_stop': total_pages - 3,
+		}
