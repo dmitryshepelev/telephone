@@ -1,0 +1,32 @@
+<table class="table table-striped table-hover tablesorter" id="pr-transacts" data-load-content-url="/admin/getPRTransacts/{{ transact_type }}/">
+	<thead>
+		<tr>
+			<th style="min-width: 52px">E-mail</th>
+			<th style="min-width: 298px">Номер транзакции</th>
+			<th style="min-width: 88px">Имя</th>
+			<th style="min-width: 144px">Дата создания</th>
+			<th style="min-width: 41px"></th>
+		</tr>
+	</thead>
+	<tbody>
+    {% if not transacts %}
+        <tr>
+	        <td colspan="8" align="center">Нет новых транзакций</td>
+        </tr>
+    {% else %}
+        {% for transact in transacts %}
+			<tr data-transact-id="{{ transact.transact_id }}">
+				<td>{{ transact.email }}</td>
+				<td allow-search>{{ transact.transact_id }}</td>
+				<td>{{ transact.username }}</td>
+				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
+				<td onclick="transact.executeAction(event)">
+					<button class="btn btn-xs-wt btn-default" data-action-id="1"><span class="icon-user"></span></button>
+					<button class="btn btn-xs-wt btn-danger-wt" data-action-id="2"><span class="icon-cross"></span></button>
+				</td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+	</tbody>
+	{% include 'table_footer.html' %}
+</table>

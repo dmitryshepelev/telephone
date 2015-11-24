@@ -3,13 +3,14 @@ var Taber = (function () {
         this._element = $(selector || '#taber');
         this._params = {
             defaultActive: 0,
-            afterChange: null
+            afterChange: null,
+            minContentHeight: null
         };
 
         this.setParams(params);
         this._taber = $('<div class="taber"></div>');
         this._header = $('<div class="taber-header"></div>');
-        this._container = $('<div class="taber-content"></div>');
+        this._container = $('<div class="taber-content" ' + (this._params.minContentHeight ? ('style="min-height: ' + this._params.minContentHeight + 'px;"') : '') + '></div>');
         this._tabs = this._initTabs(tabs);
         this._init();
     }
@@ -36,14 +37,18 @@ var Taber = (function () {
 
         _updateTabContent: function (url) {
             var thus = this;
-            $.get(url, function (data) {
-                thus._container.append(data);
-                if (thus._params.afterChange) {
-                    thus._params.afterChange()
-                }
-            }).fail(function () {
-                thus._container.append('Произошла ошибка')
-            })
+            thus._container.setInvisible(200, function () {
+                $.get(url, function (data) {
+                    thus._cleanContainer();
+                    thus._container.append(data);
+                    if (thus._params.afterChange) {
+                        thus._params.afterChange()
+                    }
+                    thus._container.setVisible()
+                }).fail(function () {
+                    thus._container.append('Произошла ошибка')
+                })
+            });
         },
 
         _cleanContainer: function () {
@@ -51,7 +56,7 @@ var Taber = (function () {
         },
 
         _toggleActive: function (element) {
-            var currActive = $('.{0}.{1}'.format(this._consts.tabClass, this._consts.activeClass));
+            var currActive = this._header.children('.{0}.{1}'.format(this._consts.tabClass, this._consts.activeClass));
             currActive.removeClass(this._consts.activeClass);
             element.addClass(this._consts.activeClass);
         },
@@ -68,7 +73,6 @@ var Taber = (function () {
                 return tab.name == tabName;
             })[0];
 
-            this._cleanContainer();
             this._toggleActive(jqElement);
             this._updateTabContent(tab.url);
         },

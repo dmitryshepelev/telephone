@@ -6,9 +6,10 @@ from django.template import RequestContext
 import math
 
 from telephone.classes.forms.NewUserForm import NewUserForm
+from telephone.classes.view_models.ProfileRequestTransaction import PendingPRTransactionVM, HistoryPRTransactionVM
 from telephone.classes.view_models.SubscribeTransaction import PendingTransactionVM, ArchiveTransactionVM, \
 	HistoryTransactionVM
-from telephone.main_app.models import SubscribeTransaction
+from telephone.main_app.models import SubscribeTransaction, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import LogService, Code
 from telephone.service_app.services.ProfileService import ProfileService
@@ -55,7 +56,7 @@ def panel(request, template):
 @user_passes_test(lambda user: user.is_superuser)
 def get_subscribe_transacts(request, transact_type):
 	"""
-	Controller to get pending transacts partial
+	Controller to get subscribe transacts partial
 	:param request: HTTP request
 	:return: HttpResponse instance
 	"""
@@ -70,6 +71,32 @@ def get_subscribe_transacts(request, transact_type):
 	elif transact_type == 'history':
 		transacts = [HistoryTransactionVM(transact) for transact in SubscribeTransaction.objects.filter().order_by(order)]
 		template = 'history_transacts.html'
+	else:
+		return HttpResponse(status=400)
+
+	page_number = request.GET.get('page')
+	pager_data = CommonService.define_page(transacts, page_number, data_field_name='transacts')
+	pager_data['transact_type'] = transact_type
+
+	return render_to_response(template, pager_data, context_instance=RequestContext(request))
+
+
+@login_required
+@user_passes_test(lambda user: user.is_superuser)
+def get_pr_transacts(request, transact_type):
+	"""
+	Controller to get profile request transacts partial
+	:param request: HTTP request
+	:return: HttpResponse instance
+	"""
+	order = '-creation_date'
+
+	if transact_type == 'pending':
+		transacts = [PendingPRTransactionVM(transact) for transact in ProfileRequestTransaction.objects.filter(status_id=1).order_by(order)]
+		template = 'pending_pr_transacts.html'
+	elif transact_type == 'history':
+		transacts = [HistoryPRTransactionVM(transact) for transact in ProfileRequestTransaction.objects.filter().order_by(order)]
+		template = 'history_pr_transacts.html'
 	else:
 		return HttpResponse(status=400)
 

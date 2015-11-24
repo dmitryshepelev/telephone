@@ -40,6 +40,18 @@ $.prototype.hideElement = function (delay, onEnd) {
     this.fadeOut(delay || 200, onEnd);
 };
 
+$.prototype.setVisible = function (delay) {
+    this.animate({
+        opacity: 1
+    }, delay || 200)
+};
+
+$.prototype.setInvisible = function (delay, onEnd) {
+    this.animate({
+        opacity: 0
+    }, delay || 200, onEnd)
+};
+
 function Period(from, to, maxDate) {
     this._maxDate = maxDate || new Date(Date.now());
     this._from = from || new Date(Date.now());
