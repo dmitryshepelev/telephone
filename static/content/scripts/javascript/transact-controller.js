@@ -26,14 +26,15 @@ var transact = (function () {
             var target = e.target;
             var row = _getRow(target);
             var transactId = _getTransactId(row);
-            var actionId = $(target).attr('data-action-id');
-            if (transactId && actionId) {
-                $.post('/services/transactAction/', {transactId: transactId, actionId: actionId}, function (data) {
+            var actionName = $(target).attr('data-action-name');
+            if (transactId && actionName) {
+                var params = { transactId: transactId };
+                $.post('/services/transactAction/{0}/'.format(actionName), params, function (data) {
                     if (data.transactId && data.transactId == transactId) {
                         _deleteRow(row)
                     }
                 }).fail(function () {
-
+                    message.error('Операция завершена с ошибкой')
                 })
             }
         }

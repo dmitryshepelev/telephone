@@ -31,5 +31,7 @@
 		{% endfor %}
 	{% endif %}
 	</tbody>
-	{% include 'table_footer.html' %}
+    {% if transacts %}
+		{% include 'table_footer.html' %}
+	{% endif %}
 </table>

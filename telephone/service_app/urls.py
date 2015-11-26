@@ -9,7 +9,7 @@ urlpatterns = [
 	url(r'^generatePassword/$', generate_password),
 	url(r'^createMail/$', create_mail),
 	url(r'^getMailboxData/$', get_mailbox_data),
-	url(r'^transactAction/$', transact_action),
+	url(r'^transactAction/(?P<action>confirm|cancel|archive)/$', transact_action),
 	url(r'^getTransactId/$', get_transact_id),
 
 	url(r'e/$', default_error, {'template': 'default_error.html'})

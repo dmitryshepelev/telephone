@@ -54,6 +54,8 @@ class Code():
 
 	ECRERR = 'ECRERR Entity creation error'
 
+	SAVE_ENTITY_ERR = 'SAVE ENTITY ERROR'
+
 
 class LogService():
 	def __init__(self):

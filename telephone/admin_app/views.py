@@ -3,12 +3,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import math
 
 from telephone.classes.forms.NewUserForm import NewUserForm
-from telephone.classes.view_models.ProfileRequestTransaction import PendingPRTransactionVM, HistoryPRTransactionVM
-from telephone.classes.view_models.SubscribeTransaction import PendingTransactionVM, ArchiveTransactionVM, \
-	HistoryTransactionVM
+from telephone.classes.view_models.ProfileRequestTransaction import ProfileRequestTransactionVM
+from telephone.classes.view_models.SubscribeTransaction import SubscribeTransactionVM
 from telephone.main_app.models import SubscribeTransaction, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import LogService, Code
@@ -62,14 +60,15 @@ def get_subscribe_transacts(request, transact_type):
 	"""
 	order = '-creation_date'
 
+	# TODO: refactor
 	if transact_type == 'pending':
-		transacts = [PendingTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(status_id=1, is_archive=False).order_by(order)]
+		transacts = [SubscribeTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(status_id=1, is_archive=False).order_by(order)]
 		template = 'pending_transacts.html'
 	elif transact_type == 'archive':
-		transacts = [ArchiveTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(is_archive=True).order_by(order)]
+		transacts = [SubscribeTransactionVM(transact) for transact in SubscribeTransaction.objects.filter(is_archive=True).order_by(order)]
 		template = 'archive_transacts.html'
 	elif transact_type == 'history':
-		transacts = [HistoryTransactionVM(transact) for transact in SubscribeTransaction.objects.filter().order_by(order)]
+		transacts = [SubscribeTransactionVM(transact) for transact in SubscribeTransaction.objects.filter().order_by(order)]
 		template = 'history_transacts.html'
 	else:
 		return HttpResponse(status=400)
@@ -92,10 +91,10 @@ def get_pr_transacts(request, transact_type):
 	order = '-creation_date'
 
 	if transact_type == 'pending':
-		transacts = [PendingPRTransactionVM(transact) for transact in ProfileRequestTransaction.objects.filter(status_id=1).order_by(order)]
+		transacts = [ProfileRequestTransactionVM(transact) for transact in ProfileRequestTransaction.objects.filter(status_id=1).order_by(order)]
 		template = 'pending_pr_transacts.html'
 	elif transact_type == 'history':
-		transacts = [HistoryPRTransactionVM(transact) for transact in ProfileRequestTransaction.objects.filter().order_by(order)]
+		transacts = [ProfileRequestTransactionVM(transact) for transact in ProfileRequestTransaction.objects.filter().order_by(order)]
 		template = 'history_pr_transacts.html'
 	else:
 		return HttpResponse(status=400)

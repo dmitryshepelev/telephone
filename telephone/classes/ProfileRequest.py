@@ -1,7 +1,29 @@
+import datetime
+import uuid
+
+
 class ProfileRequest():
 	def __init__(self, email, login=None):
+		self.__transact_id = str(uuid.uuid4())
+		self.__creation_date = datetime.datetime.now()
 		self.__email = email
 		self.__login = login
+
+	@property
+	def transact_id(self):
+		"""
+		Getter of __transact_id
+		:return: transact_id value
+		"""
+		return self.__transact_id
+
+	@property
+	def creation_date(self):
+		"""
+		Getter of __creation_date
+		:return: creation_date value
+		"""
+		return self.__creation_date
 
 	@property
 	def email(self):

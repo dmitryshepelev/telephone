@@ -127,7 +127,14 @@ class DBService():
 		:return: Transact instance
 		"""
 		try:
-			return SubscribeTransaction.objects.get(transact_id=transact_id)
+			from telephone.classes.view_models.SubscribeTransaction import SubscribeTransactionVM
+			from telephone.classes.view_models.ProfileRequestTransaction import ProfileRequestTransactionVM
+
+			try:
+				return SubscribeTransactionVM(SubscribeTransaction.objects.get(transact_id=transact_id))
+			except ObjectDoesNotExist as e:
+				return ProfileRequestTransactionVM(ProfileRequestTransaction.objects.get(transact_id=transact_id))
+
 		except Exception as e:
 			logger = LogService()
 			logger.error(Code.GET_TRANSACT_ERR, transact_id=transact_id, message=str(e))
@@ -142,6 +149,8 @@ class DBService():
 		profile_request_transact = None
 		try:
 			profile_request_transact = ProfileRequestTransaction(
+				transact_id=profile_request.transact_id,
+				creation_date=profile_request.creation_date,
 				email=profile_request.email,
 				username=profile_request.login,
 				status=TransactionStatus.objects.get(pk=1)

@@ -21,8 +21,8 @@
 				<td>{{ transact.username }}</td>
 				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
 				<td onclick="transact.executeAction(event)">
-					<button class="btn btn-xs-wt btn-default" data-action-id="1"><span class="icon-user"></span></button>
-					<button class="btn btn-xs-wt btn-danger-wt" data-action-id="2"><span class="icon-cross"></span></button>
+					<button class="btn btn-xs-wt btn-default" data-action-name="confirm"><span class="icon-user"></span></button>
+					<button class="btn btn-xs-wt btn-danger-wt" data-action-name="cancel"><span class="icon-cross"></span></button>
 				</td>
 			</tr>
 		{% endfor %}

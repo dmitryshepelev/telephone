@@ -25,13 +25,15 @@
 				<td allow-search>{{ transact.transact_id }}</td>
 				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
 				<td onclick="transact.executeAction(event)">
-					<button class="btn btn-xs-wt btn-default" data-action-id="1"><span class="icon-checkmark"></span></button>
-					<button class="btn btn-xs-wt btn-danger-wt" data-action-id="2"><span class="icon-cross"></span></button>
-					<button class="btn btn-xs-wt btn-warning-wt" data-action-id="3"><span class="icon-books"></span></button>
+					<button class="btn btn-xs-wt btn-default" data-action-name="confirm"><span class="icon-checkmark"></span></button>
+					<button class="btn btn-xs-wt btn-danger-wt" data-action-name="cancel"><span class="icon-cross"></span></button>
+					<button class="btn btn-xs-wt btn-warning-wt" data-action-name="archive" data-action-params="{&quot;to_archive&quot;: &quot;True&quot;}"><span class="icon-books"></span></button>
 				</td>
 			</tr>
 		{% endfor %}
 	{% endif %}
 	</tbody>
-	{% include 'table_footer.html' %}
+    {% if transacts %}
+		{% include 'table_footer.html' %}
+	{% endif %}
 </table>
