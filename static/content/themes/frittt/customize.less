@@ -454,3 +454,72 @@ select {
 .credit-card-icon {
 	width: 15px;
 }
+
+/* SEARCH ELEMENTS */
+
+.search-form-wt {
+	margin: 0;
+	width: 290px;
+	padding: 10px 15px;
+	& > .form-group {
+		display: inline-flex !important;
+		width: 260px;
+
+		& > .input-search-wt {
+			border: none;
+			border-radius: 0;
+			background-color: #2d2d2d;
+			padding-left: 15px;
+			color: @default-text-color-inverse;
+
+			&:hover, &:focus {
+				box-shadow: none !important;
+			}
+		}
+		& > .search-button-wt {
+			background-color: #2d2d2d;
+			padding: 2px 15px 0 15px !important;
+			border: none !important;
+			border-radius: 0 !important;
+			box-shadow: none !important;
+
+			&:hover {
+				background-color: @default-color;
+			}
+		}
+	}
+}
+
+.search-result-container {
+	position: absolute;
+	z-index: 2010;
+	width: 260px;
+//	min-height: 100px;
+	background-color: #ffffff;
+//	padding: 10px 0;
+	& > .search-result-group {
+		font-size: 12px;
+		& > h4 {
+			padding: 0 10px;
+			color: #aeaeae;
+			margin: 0;
+		}
+//		& > .search-result-content {
+			& .search-result-item {
+				&.show-all {
+					font-size: 10px;
+				}
+				& > p {
+					margin: 0 !important;
+				}
+				padding: 3px 10px;
+				cursor: pointer;
+				&:hover {
+					background-color: @default-color !important;
+				}
+			}
+//		}
+	}
+}
+
+/* END OF SEARCH ELEMENTS */

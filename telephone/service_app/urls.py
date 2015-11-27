@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from telephone.service_app.controllers import get_api_urls, get_oauth_token, generate_password, create_mail, \
-	get_mailbox_data, transact_action, get_transact_id
+	get_mailbox_data, transact_action, get_transact_id, search
 from telephone.service_app.error_pages import default_error
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
 	url(r'^getMailboxData/$', get_mailbox_data),
 	url(r'^transactAction/(?P<action>confirm|cancel|archive|create_user)/$', transact_action),
 	url(r'^getTransactId/$', get_transact_id),
+	url(r'^search/$', search),
 
 	url(r'e/$', default_error, {'template': 'default_error.html'})
 ]

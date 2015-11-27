@@ -1,9 +1,16 @@
 # coding=utf-8
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
+from django.core import serializers
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 
 from telephone.classes.MailParameters import MailParameters
+from telephone.classes.search_models.ProfileRequestTransactionSM import ProfileRequestTransactionSM
+from telephone.classes.search_models.ProfileSM import ProfileSM
+from telephone.classes.search_models.SubscribeTransactionSM import SubscribeTransactionSM
+from telephone.main_app.models import SubscribeTransaction, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.ApiService import ApiService
 from telephone.service_app.services.DBService import DBService
@@ -119,5 +126,28 @@ def transact_action(request, action):
 	result = transact.__getattribute__(action)(request=request)
 	if result:
 		return JsonResponse({'transactId': transact.transact_id})
+
+	return HttpResponse(status=500)
+
+
+@login_required
+@require_http_methods(['GET'])
+def search(request):
+	"""
+	Controller to return search result
+	:param request: HTTP request
+	:return: JsonResponse
+	"""
+	query = request.GET.get('q')
+	target = request.GET.get('target')
+
+	if request.user.is_superuser and query:
+		search_result = {}
+
+		search_result['scrb_transacts'] = [SubscribeTransactionSM(transact).model for transact in SubscribeTransaction.objects.filter(transact_id__icontains=query).order_by('-creation_date')[:3]]
+		search_result['pr_transacts'] = [ProfileRequestTransactionSM(transact).model for transact in ProfileRequestTransaction.objects.filter(transact_id__icontains=query).order_by('-creation_date')[:3]]
+		search_result['profiles'] = [ProfileSM(profile).model for profile in User.objects.filter(Q(username__icontains=query) | Q(email__icontains=query))[:3]]
+
+		return JsonResponse(search_result)
 
 	return HttpResponse(status=500)
