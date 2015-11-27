@@ -1,18 +1,13 @@
 # coding=utf-8
-import os
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
-from telephone import settings
-from telephone.classes.MailMessage import MailMessage
 
 from telephone.classes.MailParameters import MailParameters
-from telephone.classes.TransactAction import TransactAction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.ApiService import ApiService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LogService import LogService, Code
-from telephone.service_app.services.ProfileService import ProfileService
 
 
 logger = LogService()
@@ -109,24 +104,20 @@ def get_mailbox_data(request):
 @login_required
 @user_passes_test(lambda user: user.is_superuser)
 @require_http_methods(['POST'])
-def transact_action(request):
+def transact_action(request, action):
 	"""
 	Controller to execute transact action
 	:param request: HTTP request
 	:return: JsonResponse instance
 	"""
 	transact_id = request.POST.get('transactId')
+
 	transact = DBService.get_transact(transact_id)
 	if not transact:
 		return HttpResponse(status=500)
 
-	action = TransactAction(request.POST.get('actionId'))
-	transact = action.execute(transact)
-	if transact:
-		if action.action_id == 1:
-			ProfileService.extend_subscription(transact.user_profile, transact.duration)
-			message = MailMessage(settings.INFO_EMAIL, 'Продление подписки', 'mail_tmpl_subscribe_extended.html', {'username': transact.user_profile.user.username, 'expiration_date': transact.user_profile.date_subscribe_ended}, transact.user_profile.user.email)
-			message.send()
+	result = transact.__getattribute__(action)(request=request)
+	if result:
 		return JsonResponse({'transactId': transact.transact_id})
 
 	return HttpResponse(status=500)

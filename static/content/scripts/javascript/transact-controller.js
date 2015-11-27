@@ -29,6 +29,10 @@ var transact = (function () {
             var actionName = $(target).attr('data-action-name');
             if (transactId && actionName) {
                 var params = { transactId: transactId };
+                if (actionName === 'newuser') {
+                    window.location.href = '/admin/' + actionName + '?transact_id=' + params.transactId;
+                    return !0;
+                }
                 $.post('/services/transactAction/{0}/'.format(actionName), params, function (data) {
                     if (data.transactId && data.transactId == transactId) {
                         _deleteRow(row)

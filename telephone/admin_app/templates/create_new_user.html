@@ -82,7 +82,10 @@
 							</div>
 						</div>
 						<div class="col-md-6">
-
+							<div class="form-group">
+								<label class="control-label" for="profilePhoneNumber">Номер телефона профиля</label>
+								<input class="form-control input-lg" id="profilePhoneNumber" name="profile_phone_number" placeholder="XXXXXXXXXXX" type="text" required autocomplete="off">
+							</div>
 						</div>
 					</div>
 				</form>
@@ -94,21 +97,17 @@
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label" for="userEmail">Адрес пользователя</label>
-								<input class="form-control input-lg" id="userEmail" name="user_email" placeholder="E-mail" type="email" required autocomplete="off">
+								<input class="form-control input-lg" id="userEmail" name="user_email" placeholder="E-mail" type="email" value="{{ email }}" required autocomplete="off">
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<div class="form-group">
-								<label class="control-label" for="profilePhoneNumber">Номер телефона профиля</label>
-								<input class="form-control input-lg" id="profilePhoneNumber" name="profile_phone_number" placeholder="XXXXXXXXXXX" type="text" required autocomplete="off">
-							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label" for="userName">Имя пользователя</label>
-								<input class="form-control input-lg" id="userName" name="user_name" required placeholder="Имя" type="text" autocomplete="off">
+								<input class="form-control input-lg" id="userName" name="user_name" required placeholder="Имя" type="text" value="{{ username }}" autocomplete="off">
 							</div>
 						</div>
 						<div class="col-sm-6">
@@ -122,6 +121,7 @@
 				</form>
 			</div>
 			<div class="col-md-9">
+				<input type="hidden" id="transactId" name="transact_id" value="{{ transact_id }}">
 				<button type="button" class="btn btn-default btn-lg pull-right" onclick="controller.createUser()">Создать профиль</button>
 			</div>
 		</div>

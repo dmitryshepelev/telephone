@@ -21,7 +21,8 @@ class ProfileRequestTransactionVM(TransactAction):
 		Execute confirm transaction
 		:return: transact
 		"""
-		pass
+		self.__transact.status_id = 2
+		return self.__save()
 
 	def archive(self, **kwargs):
 		"""

@@ -138,6 +138,7 @@ class DBService():
 		except Exception as e:
 			logger = LogService()
 			logger.error(Code.GET_TRANSACT_ERR, transact_id=transact_id, message=str(e))
+			return None
 
 	@staticmethod
 	def create_profile_request_transact(profile_request):

@@ -9,6 +9,7 @@ from telephone.classes.view_models.ProfileRequestTransaction import ProfileReque
 from telephone.classes.view_models.SubscribeTransaction import SubscribeTransactionVM
 from telephone.main_app.models import SubscribeTransaction, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
+from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LogService import LogService, Code
 from telephone.service_app.services.ProfileService import ProfileService
 
@@ -27,15 +28,33 @@ def create_new_user(request, template):
 	"""
 	if request.POST:
 		new_user_form = NewUserForm(request.POST)
+		transact_id = request.POST.get('transactId')
+		transact = DBService.get_transact(transact_id)
+
 		if new_user_form.errors:
 			return JsonResponse({'data': new_user_form.errors}, status=400)
+
 		result = ProfileService.create_profile(new_user_form.data)
+
 		if result.is_success:
+			if transact:
+				transact.confirm()
 			return HttpResponse(status=201)
+
 		logger.error(Code.PCRERR, data=result.data)
 		return HttpResponse(status=500, content=result.data)
+
 	else:
-		return render_to_response(template, {}, context_instance=RequestContext(request))
+		params = {}
+		transact_id = request.GET.get('transact_id')
+		transact = DBService.get_transact(transact_id)
+
+		if transact:
+			params['transact_id'] = transact.transact_id
+			params['username'] = transact.username
+			params['email'] = transact.email
+
+		return render_to_response(template, params, context_instance=RequestContext(request))
 
 
 @login_required

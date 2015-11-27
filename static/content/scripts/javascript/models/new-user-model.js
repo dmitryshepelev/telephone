@@ -14,7 +14,8 @@ function NewUser() {
         profilePhoneNumber: null,
         userPassword: null,
         userName: null,
-        customerNumber: null
+        customerNumber: null,
+        transactId: null
     }
 }
 
@@ -37,7 +38,8 @@ NewUser.prototype = {
             userPassword: 'userPassword',
             profilePhoneNumber: 'profilePhoneNumber',
             userName: 'userName',
-            customerNumber: 'customerNumber'
+            customerNumber: 'customerNumber',
+            transactId: 'transactId'
         }
     },
 
