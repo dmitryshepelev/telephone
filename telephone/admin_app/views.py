@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from telephone import settings
+from telephone.classes.MailMessage import MailMessage
 
 from telephone.classes.forms.NewUserForm import NewUserForm
 from telephone.classes.view_models.ProfileRequestTransaction import ProfileRequestTransactionVM
@@ -39,6 +41,12 @@ def create_new_user(request, template):
 		if result.is_success:
 			if transact:
 				transact.confirm()
+
+			message = MailMessage(settings.INFO_EMAIL, 'Данные вашего профиля', 'mail_tmpl_profile_created.html', {
+					'username': new_user_form.data['userName'],
+					'password': new_user_form.data['userPassword']
+				}, new_user_form.data['userEmail'])
+			message.send()
 			return HttpResponse(status=201)
 
 		logger.error(Code.PCRERR, data=result.data)
