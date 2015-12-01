@@ -2,8 +2,11 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
 
 from telephone.classes.MailParameters import MailParameters
@@ -15,6 +18,7 @@ from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.ApiService import ApiService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LogService import LogService, Code
+from telephone.shared_views import default_404
 
 
 logger = LogService()
@@ -132,6 +136,7 @@ def transact_action(request, action):
 
 @login_required
 @require_http_methods(['GET'])
+@user_passes_test(lambda user: user.is_superuser)
 def search(request):
 	"""
 	Controller to return search result
@@ -151,3 +156,34 @@ def search(request):
 		return JsonResponse(search_result)
 
 	return HttpResponse(status=500)
+
+
+@login_required
+@require_http_methods(['GET'])
+@user_passes_test(lambda user: user.is_superuser)
+def element(request, type, id):
+	"""
+	Controller to get element page
+	:param request: HTTP request
+	:param type: element type
+	:param id: element id
+	:return:
+	"""
+	if type == 'scrb' or type == 'pr':
+
+		transact = DBService.get_transact(id)
+
+		if not transact:
+			return default_404(request)
+
+		as_partial = bool(request.GET.get('as_partial', False))
+		return render_to_response('transact_element_partial.html' if as_partial else 'element_base.html', {'transact': transact, 'type': type}, context_instance=RequestContext(request))
+	elif type == 'profile':
+
+		try:
+			profile = User.objects.get(email=id)
+		except ObjectDoesNotExist as e:
+			return default_404(request)
+
+		return render_to_response('profile.html', {'profile': profile}, context_instance=RequestContext(request))
+	return HttpResponse(status=200)

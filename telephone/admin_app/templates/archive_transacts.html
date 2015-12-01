@@ -18,7 +18,7 @@
         </tr>
     {% else %}
         {% for transact in transacts %}
-			<tr data-transact-id="{{ transact.transact_id }}">
+			<tr data-transact-id="{{ transact.transact_id }}" class="pointer" onclick="controller.showDetails(event, 'scrb')">
 				<td><span class="label label-{% if transact.status_id == 1 %}primary{% elif transact.status_id == 2 %}success{% elif transact.status_id == 3 %}danger{% else %}default{% endif %}">{{ transact.status_value }}</span></td>
 				<td>{{ transact.username }}</td>
 				<td>{{ transact.sum }}</td>
@@ -26,7 +26,7 @@
 				<td>{{ transact.duration }}</td>
 				<td allow-search>{{ transact.transact_id }}</td>
 				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
-				<td onclick="transact.executeAction(event)">
+				<td onclick="transact.executeAction(event, mainController.deleteRow($(this).closest('tr')))">
 					<button class="btn btn-xs-wt btn-default" data-action-name="archive"><span class="icon-arrow-up"></span></button>
 				</td>
 			</tr>

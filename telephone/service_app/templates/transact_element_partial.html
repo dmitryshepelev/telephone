@@ -1,0 +1,66 @@
+{% if type == 'scrb' %}
+	<div class="element-container" >
+		<div class="panel panel-{% if transact.status_id == 1 %}default{% elif transact.status_id == 2 %}success{% elif transact.status_id == 3 %}danger{% endif %}">
+			<div class="panel-heading" align="center">
+				<h3 class="panel-title-wt">
+					<a href="/services/element/scrb/{{ transact.transact_id }}">Подписка</a>
+					<small>
+						{{ transact.status_value }}
+					</small>
+				</h3>
+			</div>
+			<div align="center" style="padding: 5px 0; margin-bottom: 15px">
+				<span class="badge-light-wt">{{ transact.transact_id }}</span>
+				{% if transact.is_archive %}
+					<span class="badge-light-wt warning">В архиве</span>
+				{% endif %}
+			</div>
+			<div class="panel-body-wt">
+				<div>
+					Дата создания: <span class="pull-right"><strong>{{ transact.creation_date|date:'d.m.y H:i:s' }}</strong></span>
+				</div>
+				<div>
+					Владелец: <span class="pull-right"><strong><a href="/services/element/profile/{{ transact.username }}">{{ transact.username }}</a></strong></span>
+				</div>
+				<br>
+				<div>
+					Срок: <span class="pull-right"><strong>{{ transact.duration }}</strong></span>
+				</div>
+				<div>
+					Сумма:
+					<span class="pull-right">
+						<strong>{{ transact.sum }}</strong>
+						{% if transact.payment_type == 'AC' %}<img class="credit-card-icon" src="/static/content/images/credit_card.png">{% elif transact.payment_type == 'PC' %}<img class="yandex-icon" src="/static/content/images/yandex.png">{% else %}???{% endif %}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+{% elif type == 'pr' %}
+		<div class="element-container" data-transact-id="{{ transact.transact_id }}">
+		<div class="panel panel-{% if transact.status_id == 1 %}default{% elif transact.status_id == 2 %}success{% elif transact.status_id == 3 %}danger{% endif %}">
+			<div class="panel-heading" align="center">
+				<h3 class="panel-title-wt">
+					<a href="/services/element/pr/{{ transact.transact_id }}">Заявка</a>
+					<small>
+						{{ transact.status_value }}
+					</small>
+				</h3>
+			</div>
+			<div align="center" style="padding: 5px 0; margin-bottom: 15px">
+				<span class="badge-light-wt">{{ transact.transact_id }}</span>
+			</div>
+			<div class="panel-body-wt">
+				<div>
+					Дата создания: <span class="pull-right"><strong>{{ transact.creation_date|date:'d.m.y H:i:s' }}</strong></span>
+				</div>
+				<div>
+					E-mail: <span class="pull-right"><strong>{{ transact.email }}</strong></span>
+				</div>
+				<div>
+					Имя: <span class="pull-right"><strong>{{ transact.username }}</strong></span>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}

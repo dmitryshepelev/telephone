@@ -60,12 +60,12 @@
 			<form class="form-horizontal" method="post" target="_blank" action="https://money.yandex.ru/eshop.xml">
 				{% csrf_token %}
 				<input type="hidden" name="scid" value="{{ payment_data.scid }}" />
-				<input type="hidden" name="shop_id" value="{{ payment_data.shop_id }}" />
-				<input type="hidden" name="customer_number" value="{{ payment_data.customer_number }}" />
+				<input type="hidden" name="ShopID" value="{{ payment_data.shop_id }}" />
+				<input type="hidden" name="CustomerNumber" value="{{ payment_data.customer_number }}" />
 				<div class="row">
 					<div class="col-sm-10">
 						<div class="">
-							<input type="text" name="sum" value="{{ payment_data.sum }}" class="form-control input-lg" required="">
+							<input type="text" name="Sum" value="{{ payment_data.sum }}" class="form-control input-lg" required="">
 						</div>
 					</div>
 					<div class="col-sm-2">

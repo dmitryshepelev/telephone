@@ -1,4 +1,3 @@
-from telephone import settings
 
 
 class ProfileRequestTransactionSM(object):
@@ -14,5 +13,4 @@ class ProfileRequestTransactionSM(object):
 		return {
 			'transact_id': self.__transact.transact_id,
 			'email': self.__transact.email,
-			'creation_date': self.__transact.creation_date.strftime(settings.DATETIME_FORMAT)
 		}

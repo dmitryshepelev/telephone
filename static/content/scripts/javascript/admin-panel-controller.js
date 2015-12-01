@@ -20,11 +20,14 @@ var controller = (function () {
             },
             minContentHeight: 265
         });
-
-        $('#transact-id-search').on('input', function (e) {
-            var element = $(e.target);
-            var value = element.val();
-            services.filterTable('table').searchRows(value);
-        })
     });
+
+    return {
+        showDetails: function (e, type) {
+            var transactId = $(e.target).closest('[data-transact-id]').attr('data-transact-id');
+            $.get('/services/element/' + type + '/' + transactId + '/?as_partial=True', function (result) {
+                $('#element-details').empty().append(result)
+            })
+        }
+    }
 })();

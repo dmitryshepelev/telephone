@@ -15,10 +15,10 @@
         </tr>
     {% else %}
         {% for transact in transacts %}
-			<tr data-transact-id="{{ transact.transact_id }}">
+			<tr data-transact-id="{{ transact.transact_id }}" class="pointer" onclick="controller.showDetails(event, 'pr')">
 				<td><span class="label label-{% if transact.status_id == 1 %}primary{% elif transact.status_id == 2 %}success{% elif transact.status_id == 3 %}danger{% else %}default{% endif %}">{{ transact.status_value }}</span></td>
 				<td>{{ transact.email }}</td>
-				<td allow-search>{{ transact.transact_id }}</td>
+				<td><a href="/services/element/pr/{{ transact.transact_id }}">{{ transact.transact_id }}</a></td>
 				<td>{{ transact.username }}</td>
 				<td>{{ transact.creation_date|date:'d.m.Y H.i.s' }}</td>
 			</tr>

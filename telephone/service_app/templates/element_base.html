@@ -1,0 +1,41 @@
+{% extends 'main_layout.html' %}
+
+{% block resources %}
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static "transact-controller.js" %}"></script>
+{% endblock %}
+
+{% block title %}
+    Транзакция
+{% endblock %}
+
+{% block content %}
+	<div>
+		{% include 'transact_element_partial.html' %}
+		<div class="row" onclick="transact.executeAction(event, function () { window.location.href = window.location.href })" data-transact-id="{{ transact.transact_id }}">
+			{% if transact.is_archive %}
+				<div class="col-sm-12">
+					<button class="btn btn-warning-wt full-width margin-t-0" data-action-name="archive"><span class="icon-books"></span> Из архива</button>
+				</div>
+			{% else %}
+				{% if transact.status_id == 1 %}
+					<div class="col-sm-4">
+						{% if type == 'scrb' %}
+							<button type="button" class="btn btn-default margin-t-0 full-width" data-action-name="confirm"><span class="icon-checkmark"></span> Подтвердить</button>
+						{% else %}
+							<button type="button" class="btn btn-default margin-t-0 full-width" data-action-name="newuser"><span class="icon-user"></span> Создать профиль</button>
+						{% endif %}
+					</div>
+					<div class="col-sm-4">
+						<button type="button" class="btn btn-danger-wt margin-t-0 full-width" data-action-name="cancel"><span class="icon-cross"></span> Отменить</button>
+					</div>
+					{% if type == 'scrb' %}
+						<div class="col-sm-4">
+							<button class="btn btn-warning-wt full-width margin-t-0" data-action-name="archive"><span class="icon-books"></span> В архив</button>
+						</div>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

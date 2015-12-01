@@ -54,10 +54,10 @@
                         {% if not user.is_superuser %}
 							<li class="profile-info-wt"></li>
                         {% else %}
-                            <form class="navbar-form navbar-left search-form-wt" role="search" >
+                            <form class="navbar-form navbar-left search-form-wt" action="/services/search/" method="get" role="search" >
                                 {% csrf_token %}
 						        <div class="form-group">
-						            <input class="form-control input-sm input-search-wt" oninput="mainController.onSearchQueryChange(event)" placeholder="Поиск" type="text" autocomplete="off">
+						            <input class="form-control input-sm input-search-wt" name="q" oninput="mainController.onSearchQueryChange(event)" placeholder="Поиск" type="text" autocomplete="off">
 							        <button type="submit" class="btn btn-sm-wt search-button-wt btn-link-empty"><span class="icon-search"></span></button>
 						        </div>
                             </form>
