@@ -6,5 +6,5 @@ urlpatterns = [
 	url(r'^getCalls/$', get_statistic, {'template': 'calls-table.html'}),
 	url(r'^getCallRecord/$', get_call_record),
 	url(r'^getProfileInfo/$', get_profile_info, {'template': 'profile_info.html'}),
-	url(r'^pay/$', pay, {'template': 'pay.html'})
+	url(r'^pay/$', pay, {'template': 'pay.html'}),
 ]

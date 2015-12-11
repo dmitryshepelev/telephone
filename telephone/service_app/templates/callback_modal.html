@@ -1,0 +1,25 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">Обратный звонок</h4>
+</div>
+<div class="modal-body">
+	<div class="callback-container-wt">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
+						<input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="{{ user.userprofile.profile_phone_number }}">
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="control-label" for="cbToNumber">Куда звоним: </label>
+					<input type="text" id="cbToNumber" class="form-control input-sm" placeholder="Номер абонента" value="{{ number }}">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default btn-sm-wt" data-dismiss="modal">Отмена</button>
+</div>

@@ -134,7 +134,7 @@ STATICFILES_DIRS = (
 
 STATIC_URL = '/static/content/'
 
-# STATIC_ROOT = 'static/r_content/'
+STATIC_ROOT = 'static/r_content/'
 
 TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'templates'),

@@ -71,6 +71,10 @@ var controller = (function () {
             var params = _collectData();
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
+        },
+        showModal: function (e) {
+            var number = $(e.target).text();
+            services.modal('callback', { number: number });
         }
     };
 })();

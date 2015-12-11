@@ -19,6 +19,7 @@ import sys
 
 from telephone import settings
 from telephone.classes.File import File
+from telephone.classes.ModalInstance import ModalInstance
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -222,3 +223,18 @@ class CommonService():
 			'current_page_number': page_number,
 			'pager_end_helper_stop': total_pages - 3,
 		}
+
+	@staticmethod
+	def modal_resolver(modal_name, params=None):
+		"""
+		Return modal params
+		:param modal_name: name of the modal
+		:param params: modal content params
+		:return: modal
+		"""
+		modal_params = {}
+
+		if modal_name == 'callback':
+			modal_params['number'] = params.get('number', '').encode()
+
+		return ModalInstance(modal_name, modal_params)

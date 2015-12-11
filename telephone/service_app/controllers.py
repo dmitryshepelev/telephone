@@ -187,3 +187,16 @@ def element(request, type, id):
 
 		return render_to_response('profile.html', {'profile': profile}, context_instance=RequestContext(request))
 	return HttpResponse(status=200)
+
+
+@login_required
+@require_http_methods(['GET'])
+def get_modal(request, modal):
+	"""
+	Get modal content partial page
+	:param request: http request
+	:param modal: modal name
+	:return:
+	"""
+	modal = CommonService.modal_resolver(modal, request.GET)
+	return render_to_response(modal.template, modal.params, context_instance=RequestContext(request))

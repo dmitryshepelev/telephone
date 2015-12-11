@@ -33,7 +33,7 @@
 	            <td>{{ forloop.revcounter }}</td>
 		        <td>{{ call.date|date:'d.m.Y H.i.s' }}</td>
 	            <td><span class="icon-{{ call.disposition|call_state_icon }}" tooltip data-toggle="tooltip" data-placement="bottom" title="{{ call.disposition|call_state_localize }}"></span></td>
-		        <td {% if call.is_first_call %}class="text-bold"{% endif %}>{{ call.sip }}</td>
+		        <td {% if call.is_first_call %}class="text-bold"{% endif %} onclick="controller.showModal(event)">{{ call.sip }}</td>
                 <td>{% if call.is_answered %}{{ call.destination }}{% else %}-{% endif %}</td>
 	            <td>{% if call.is_answered %}{{ call.bill_seconds|t_fs }}{% else %}-{% endif %}</td>
 		        <td>

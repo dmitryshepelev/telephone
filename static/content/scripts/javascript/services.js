@@ -275,6 +275,31 @@ var services = (function () {
         }
     }
 
+    /**
+     * Create and show modal instance
+     * @param template template name to fill modal content
+     * @param params
+     */
+    function _modal (template, params) {
+        var _id = 'modal';
+        var modal = $('<div id="' + _id + '" class="modal fade" tabindex="-1" role="dialog">' +
+	                    '<div class="modal-dialog">' +
+		                    '<div class="modal-content">' +
+		                    '</div>' +
+	                    '</div>' +
+                      '</div>');
+        modal.on('hidden.bs.modal', function () {
+            $('#' + _id).remove();
+        });
+        $(document.body).append(modal);
+
+        var paramsString = this.getParamsString(params);
+        $('#' + _id).modal({
+            backdrop: 'static',
+            remote: '/services/getmodal/' + template + '/?' + paramsString
+        });
+    }
+
     return {
         collectModelData: _collectModelData,
         cleanModelData: _cleanModelData,
@@ -286,6 +311,7 @@ var services = (function () {
         bindKey: _bindKey,
         errors: _errors,
         makeSortable: _makeSortable,
-        filterTable: _filterTable
+        filterTable: _filterTable,
+        modal: _modal
     }
 })();
