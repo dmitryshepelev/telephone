@@ -43,24 +43,6 @@ footer {
 //	margin-bottom: 0;
 }
 
-.btn-danger-wt {
-    color: #FFF;
-    background-color: @error-color;
-
-	&:hover, &:focus {
-    	background-color: #D2322D;
-	}
-}
-
-.btn-warning-wt {
-    color: #FFF;
-    background-color: @warning-color;
-
-	&:hover, &:focus {
-    	background-color: #f09f2e;
-	}
-}
-
 /* END OVERRIDES */
 
 ul.navbar-nav >
@@ -337,6 +319,36 @@ table {
 	margin: 0 !important;
 }
 
+.btn-danger-wt {
+    color: #FFF;
+    background-color: @error-color;
+
+	&:hover, &:focus {
+    	background-color: #D2322D;
+	}
+}
+
+.btn-warning-wt {
+    color: #FFF;
+    background-color: @warning-color;
+
+	&:hover, &:focus {
+    	background-color: #f09f2e;
+	}
+}
+
+.btn-link-wt {
+	border-color: transparent !important;
+	background-color: transparent !important;
+	box-shadow: none !important;
+	color: @default-text-color !important;
+	cursor: pointer !important;
+
+	&:hover, &:focus {
+		color: @default-color !important;
+	}
+}
+
 .payment-btn {
 	color: #333 !important;
 	background-color: #f8f8f8 !important;
@@ -580,7 +592,20 @@ select {
 	width: auto;
 }
 
+// MODAL
+
+.modal-content {
+	border-radius: 3px !important;
+
+	& > .modal-footer {
+		border: none;
+		margin-top: 0;
+	}
+}
+
 .fade.in, .fade {
 	background-color: rgba(0, 0, 0, 0.21);
 	overflow-y: auto;
 }
+
+// MODAL ENDS

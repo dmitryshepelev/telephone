@@ -8,7 +8,7 @@
 			<div class="col-sm-6">
 				<div class="form-group">
 					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
-						<input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="{{ user.userprofile.profile_phone_number }}">
+                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="{{ user.userprofile.profile_phone_number }}" autofocus autocomplete="off">
 				</div>
 			</div>
 			<div class="col-sm-6">
@@ -21,5 +21,6 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button type="button" class="btn btn-default btn-sm-wt" data-dismiss="modal">Отмена</button>
+    <button type="button" class="btn btn-default btn-sm-wt" data-dismiss="modal">Позвонить</button>
+	<button type="button" class="btn btn-link-wt btn-sm-wt" data-dismiss="modal">Отмена</button>
 </div>

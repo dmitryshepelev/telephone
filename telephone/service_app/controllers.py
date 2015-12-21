@@ -10,6 +10,7 @@ from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
 
 from telephone.classes.MailParameters import MailParameters
+from telephone.classes.Modals import Modal
 from telephone.classes.search_models.ProfileRequestTransactionSM import ProfileRequestTransactionSM
 from telephone.classes.search_models.ProfileSM import ProfileSM
 from telephone.classes.search_models.SubscribeTransactionSM import SubscribeTransactionSM
@@ -198,5 +199,5 @@ def get_modal(request, modal):
 	:param modal: modal name
 	:return:
 	"""
-	modal = CommonService.modal_resolver(modal, request.GET)
+	modal = Modal.factory(modal, request.GET)
 	return render_to_response(modal.template, modal.params, context_instance=RequestContext(request))

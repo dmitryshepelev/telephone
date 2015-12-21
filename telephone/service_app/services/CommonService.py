@@ -1,25 +1,20 @@
 # coding=utf-8
 from base64 import b64encode
 import calendar
-from email.mime.text import MIMEText
 import hashlib
 import hmac
 import os
-from smtplib import SMTP_SSL
 import string
 import datetime
 import urllib
 import uuid
-from django.template.loader import get_template
+import math
 
 from django.utils import crypto
-import math
 from pydub import AudioSegment
-import sys
 
 from telephone import settings
 from telephone.classes.File import File
-from telephone.classes.ModalInstance import ModalInstance
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -223,18 +218,3 @@ class CommonService():
 			'current_page_number': page_number,
 			'pager_end_helper_stop': total_pages - 3,
 		}
-
-	@staticmethod
-	def modal_resolver(modal_name, params=None):
-		"""
-		Return modal params
-		:param modal_name: name of the modal
-		:param params: modal content params
-		:return: modal
-		"""
-		modal_params = {}
-
-		if modal_name == 'callback':
-			modal_params['number'] = params.get('number', '').encode()
-
-		return ModalInstance(modal_name, modal_params)

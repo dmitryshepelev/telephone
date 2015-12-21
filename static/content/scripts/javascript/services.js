@@ -278,9 +278,11 @@ var services = (function () {
     /**
      * Create and show modal instance
      * @param template template name to fill modal content
-     * @param params
+     * @param params modal content params
+     * @param onShown callback is executed after modal is shown to the user
+     * @param onHidden callback is executed after modal is hidden
      */
-    function _modal (template, params) {
+    function _modal (template, params, onShown, onHidden) {
         var _id = 'modal';
         var modal = $('<div id="' + _id + '" class="modal fade" tabindex="-1" role="dialog">' +
 	                    '<div class="modal-dialog">' +
@@ -290,6 +292,11 @@ var services = (function () {
                       '</div>');
         modal.on('hidden.bs.modal', function () {
             $('#' + _id).remove();
+            services.executeCallback(onHidden, modal)
+        });
+        modal.on('shown.bs.modal', function () {
+            $('[autofocus]').focus();
+            services.executeCallback(onShown, modal)
         });
         $(document.body).append(modal);
 
