@@ -53,7 +53,7 @@
 }
 
 .error-text {
-    color: #C84442;
+    color: #C84442 !important;
 }
 
 .error-box {

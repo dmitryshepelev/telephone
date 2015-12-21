@@ -74,6 +74,7 @@
 	                            {% else %}
                                     <li class="username-dropdown">+{{ user.userprofile.profile_phone_number }}</li>
 			                        <li><a href="/">Звонки</a></li>
+		                            <li><a href="#" onclick="mainController.showCallbackModal()">Обратный звонок</a></li>
 	                            {% endif %}
 							</ul>
 						</li>

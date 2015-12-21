@@ -131,6 +131,10 @@ var mainController = (function () {
         });
     }
 
+    function _showCallbackModal () {
+        services.modal('callback');
+    }
+
     $(document).ready(function () {
         _getProfileInfo(_initProfileContainer());
     });
@@ -139,6 +143,7 @@ var mainController = (function () {
         initTooltips: _initTooltips,
         onSearchQueryChange: _onSearchQueryChange,
         toResultItem: _toResultItem,
-        deleteRow: _deleteRow
+        deleteRow: _deleteRow,
+        showCallbackModal: _showCallbackModal
     }
 })();

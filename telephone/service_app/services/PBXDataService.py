@@ -5,6 +5,7 @@ import json
 import requests
 
 from telephone import settings
+from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import Call, CallRecord, CallPBX
 from telephone.classes.File import File
 from telephone.classes.ServiceResponse import ServiceResponse
@@ -331,4 +332,52 @@ class PBXDataService():
 
 		logger = LogService()
 		logger.error(Code.GET_BALANCE_ERR, data=json.loads(content), status_code=response.status_code)
+		return None
+
+	@staticmethod
+	def get_call_cost(user, to):
+		"""
+		Get the cost of the call
+		:param to: target phone number
+		:return:
+		"""
+		method = settings.API_URLS['api']['call_cost']
+
+		# WARNING: Creates ApiParams with {start} and {end} params. Needs to be refactored
+		params = ApiParams({'number': to})
+		url = params.get_request_string(method)
+
+		response = requests.get(url, headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign(params, method, params.api_version, user.userprofile.secret_key))})
+		content = response.content
+
+		if response.ok:
+			return json.loads(content)['info']
+
+		logger = LogService()
+		logger.error(Code.GET_CALL_COST_ERR, data=json.loads(content), status_code=response.status_code)
+		return None
+
+	@staticmethod
+	def request_callback(user, from_number, to_number):
+		"""
+		Request the callback
+		:param user: user instance
+		:param form: prom number
+		:param to: to number
+		:return:
+		"""
+		method = settings.API_URLS['api']['request_callback']
+
+		# WARNING: Creates ApiParams with {start} and {end} params. Needs to be refactored
+		params = ApiParams({'from': from_number, 'to': to_number, 'predicted': True})
+		url = params.get_request_string(method)
+
+		response = requests.get(url, headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign(params, method, params.api_version, user.userprofile.secret_key))})
+		content = response.content
+
+		if response.ok:
+			return json.loads(content)
+
+		logger = LogService()
+		logger.error(Code.REQUEST_CALLBACK_ERR, data=json.loads(content), status_code=response.status_code)
 		return None

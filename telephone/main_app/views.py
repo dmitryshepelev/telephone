@@ -138,3 +138,40 @@ def get_profile_info(request, template):
 			'subscribe_ended_text': subscribe_ended_text,
 			'subscription_status': subscription_status,
 		}, context_instance=RequestContext(request))
+
+
+@login_required
+@user_passes_test(lambda user: not user.is_superuser)
+def get_call_cost(request):
+	"""
+	Request to the api to get call cost by target phone number
+	:param request: HTTP request
+	:return: HttpResponse Instance
+	"""
+	to = request.GET.get('n')
+	if not to:
+		return HttpResponse(status=400)
+
+	result = PBXDataService.get_call_cost(request.user, to)
+	if result:
+		return JsonResponse(result)
+
+	return HttpResponse(status=500)
+
+
+@login_required
+@user_passes_test(lambda user: not user.is_superuser)
+def request_callback(request):
+	"""
+	Request the callback
+	:param request: HTTP request
+	:return: HttpResponse instance
+	"""
+	from_number = request.GET.get('cbFromNumber')
+	to_number = request.GET.get('cbToNumber')
+
+	result = PBXDataService.request_callback(request.user, from_number, to_number)
+	if result:
+		return HttpResponse(status=200)
+
+	return HttpResponse(status=500)

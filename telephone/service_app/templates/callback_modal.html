@@ -7,20 +7,28 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<div class="form-group">
-					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
-                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="{{ user.userprofile.profile_phone_number }}" autofocus autocomplete="off">
+					<label class="control-label" for="cbToNumber">Куда звоним: </label>
+					<input type="text" id="cbToNumber" class="form-control input-sm" {% if number %}disabled{% endif %} placeholder="Номер абонента" value="{{ number }}">
+				</div>
+				<div id="call-info text-muted">
+					<div>Префикс: <span id="call-info-prefix"></span></div>
+					<div>Описание: <span id="call-info-description"></span></div>
+					<div>Стоимость: <strong><span id="call-info-price"></span> <span id="call-info-currency"></span></strong></div>
 				</div>
 			</div>
 			<div class="col-sm-6">
 				<div class="form-group">
-					<label class="control-label" for="cbToNumber">Куда звоним: </label>
-					<input type="text" id="cbToNumber" class="form-control input-sm" placeholder="Номер абонента" value="{{ number }}">
+					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
+                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="Введите номер" autofocus autocomplete="off">
 				</div>
 			</div>
 		</div>
+		<div id="error" class="error-text"></div>
 	</div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default btn-sm-wt" data-dismiss="modal">Позвонить</button>
+    <button type="button" id="callback-call" class="btn btn-default btn-sm-wt">Позвонить</button>
 	<button type="button" class="btn btn-link-wt btn-sm-wt" data-dismiss="modal">Отмена</button>
 </div>
+
+<script type="text/javascript" src="/static/content/scripts/javascript/callback-modal-controller.js"></script>
