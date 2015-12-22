@@ -1,16 +1,20 @@
 # coding=utf-8
+from HTMLParser import HTMLParser
 import datetime
+import json
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+import requests
 from telephone import settings
 from telephone.admin_app.views import panel
 
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
+from telephone.classes.Parsers import HTMLTableParser
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
 from telephone.service_app.services.DBService import DBService
@@ -175,3 +179,22 @@ def request_callback(request):
 		return HttpResponse(status=200)
 
 	return HttpResponse(status=500)
+
+
+@login_required
+@user_passes_test(lambda user: not user.is_superuser)
+def get_call_cost_by_country(request):
+	"""
+	Returns call costs by country
+	:param request: HTTP request
+	:return: HttpResponse instance
+	"""
+	country = request.GET.get('country', 'россия').lower()
+
+	result = requests.post('https://zadarma.com/ru/checks/call-cost/', {'number': country}, headers={'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Cookie': 'currency=RUB'})
+	data = json.loads(result.content)
+
+	if result.ok:
+		return JsonResponse(data)
+
+	return HttpResponse(status=500, content=data)

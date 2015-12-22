@@ -8,25 +8,44 @@
 			<div class="col-sm-6">
 				<div class="form-group">
 					<label class="control-label" for="cbToNumber">Куда звоним: </label>
-					<input type="text" id="cbToNumber" class="form-control input-sm" {% if number %}disabled{% endif %} placeholder="Номер абонента" value="{{ number }}">
-				</div>
-				<div id="call-info text-muted">
-					<div>Префикс: <span id="call-info-prefix"></span></div>
-					<div>Описание: <span id="call-info-description"></span></div>
-					<div>Стоимость: <strong><span id="call-info-price"></span> <span id="call-info-currency"></span></strong></div>
+					<input type="text" id="cbToNumber" class="form-control input-sm" {% if number %}disabled{% else %}autofocus{% endif %} placeholder="Номер абонента" value="{{ number }}">
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<div class="form-group">
-					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
-                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="Введите номер" autofocus autocomplete="off">
+				<div id="call-info text-muted">
+					<div>Префикс: <span id="call-to-info-prefix"></span></div>
+					<div>Описание: <span id="call-to-info-description"></span></div>
+					<div>Стоимость: <strong><span id="call-to-info-price"></span> <span id="call-to-info-currency"></span></strong></div>
 				</div>
 			</div>
 		</div>
-		<div id="error" class="error-text"></div>
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
+                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="Введите номер" {% if number %}autofocus{% endif %} autocomplete="off">
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div id="call-info text-muted">
+					<div>Префикс: <span id="call-from-info-prefix"></span></div>
+					<div>Описание: <span id="call-from-info-description"></span></div>
+					<div>Стоимость: <strong><span id="call-from-info-price"></span> <span id="call-from-info-currency"></span></strong></div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<div id="error" class="error-text"></div>
+			</div>
+			<div class="col-sm-6">
+				<div>Общая стоимость: <strong><span id="total-cost"></span></strong></div>
+			</div>
+		</div>
 	</div>
 </div>
 <div class="modal-footer">
+	<div id="call-status" style="display: none" class="pull-left">Подключение...</div>
     <button type="button" id="callback-call" class="btn btn-default btn-sm-wt">Позвонить</button>
 	<button type="button" class="btn btn-link-wt btn-sm-wt" data-dismiss="modal">Отмена</button>
 </div>

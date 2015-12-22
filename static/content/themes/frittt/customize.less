@@ -594,6 +594,10 @@ select {
 
 // MODAL
 
+.modal-dialog {
+	padding-top: 60px;
+}
+
 .modal-content {
 	border-radius: 3px !important;
 
@@ -616,5 +620,18 @@ select {
 		width: 100%;
 		text-align: center;
 		color: red;
+		padding: 0 !important;
+	}
+}
+
+.padding-0 {
+	padding: 0 !important;
+}
+
+.dropdown-menu {
+	& > .active {
+		& > a, & > a:hover, & > a:focus {
+			background-color: @default-color !important;
+		}
 	}
 }

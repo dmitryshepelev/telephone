@@ -135,6 +135,10 @@ var mainController = (function () {
         services.modal('callback');
     }
 
+    function _showCallCostByCountryModal () {
+        services.modal('callCostByCountry')
+    }
+
     $(document).ready(function () {
         _getProfileInfo(_initProfileContainer());
     });
@@ -144,6 +148,7 @@ var mainController = (function () {
         onSearchQueryChange: _onSearchQueryChange,
         toResultItem: _toResultItem,
         deleteRow: _deleteRow,
-        showCallbackModal: _showCallbackModal
+        showCallbackModal: _showCallbackModal,
+        showCallCostByCountryModal: _showCallCostByCountryModal
     }
 })();

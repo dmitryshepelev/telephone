@@ -13,7 +13,7 @@ urlpatterns = [
 	url(r'^getTransactId/$', get_transact_id),
 	url(r'^search/$', search),
 	url(r'^element/(?P<type>scrb|pr|profile)/(?P<id>.+)/$', element),
-	url(r'^getmodal/(?P<modal>callback)/$', get_modal),
+	url(r'^getmodal/(?P<modal>callback|callCostByCountry)/$', get_modal),
 
 	url(r'e/$', default_error, {'template': 'default_error.html'})
 ]
