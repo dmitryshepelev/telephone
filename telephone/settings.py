@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [
 	'*',
 ]
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 TEST_MODE = False
 
@@ -157,7 +157,8 @@ API_URLS = {
 		'pbx_stat': '/statistics/pbx',
 		'balance': '/v1/info/balance',
 		'call_cost': '/info/price/',
-		'request_callback': '/request/callback/'
+		'request_callback': '/request/callback/',
+		'sip': '/sip/'
 	},
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',

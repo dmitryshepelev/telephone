@@ -1,5 +1,4 @@
 # coding=utf-8
-from HTMLParser import HTMLParser
 import datetime
 import json
 
@@ -8,13 +7,12 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 import requests
+
 from telephone import settings
 from telephone.admin_app.views import panel
-
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
-from telephone.classes.Parsers import HTMLTableParser
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
 from telephone.service_app.services.DBService import DBService
@@ -138,7 +136,7 @@ def get_profile_info(request, template):
 		subscribe_ended_text = 'Подписка не оформлена'
 
 	return render_to_response(template, {
-			'balance': balance,
+			'balance': '%.2f' % balance,
 			'subscribe_ended_text': subscribe_ended_text,
 			'subscription_status': subscription_status,
 		}, context_instance=RequestContext(request))
@@ -191,7 +189,7 @@ def get_call_cost_by_country(request):
 	"""
 	country = request.GET.get('country', 'россия').lower()
 
-	result = requests.post('https://zadarma.com/ru/checks/call-cost/', {'number': country}, headers={'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Cookie': 'currency=RUB'})
+	result = requests.post('https://zadarma.com/ru/checks/call-cost/', {'number': country}, headers={'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Cookie': 'currency=RUB; lang=en;'})
 	data = json.loads(result.content)
 
 	if result.ok:

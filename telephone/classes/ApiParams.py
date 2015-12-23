@@ -83,3 +83,6 @@ class ApiParams(object):
 					elif key == 'end':
 						value = datetime.datetime.strptime(value, settings.DATE_CLIENT_FORMAT).strftime(settings.DATETIME_FORMAT_END)
 					self.__params[key] = value
+
+	def clean_params(self):
+		self.__params = {}

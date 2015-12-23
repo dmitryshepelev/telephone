@@ -91,3 +91,10 @@ ALTER TABLE "main_app_profilerequesttransaction" ADD CONSTRAINT "main_app_pr_sta
 
 
 -- --
+
+-- 23.12.2015 SIP --
+
+ALTER TABLE "main_app_userprofile" ADD COLUMN "sip" integer NULL;
+ALTER TABLE "main_app_userprofile" ALTER COLUMN "sip" DROP DEFAULT;
+
+-- --

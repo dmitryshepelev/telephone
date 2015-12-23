@@ -381,3 +381,28 @@ class PBXDataService():
 		logger = LogService()
 		logger.error(Code.REQUEST_CALLBACK_ERR, data=json.loads(content), status_code=response.status_code)
 		return None
+
+	@staticmethod
+	def get_pbx_sip(user):
+		"""
+		Get sip number
+		:param user: user
+		:return: sip
+		"""
+		method = settings.API_URLS['api']['sip']
+
+		# WARNING: Creates ApiParams with {start} and {end} params. Needs to be refactored
+		params = ApiParams()
+		url = params.get_request_string(method)
+
+		response = requests.get(url, headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign(params, method, params.api_version, user.userprofile.secret_key))})
+		content = response.content
+
+		if response.ok:
+			sips = json.loads(content)['sips']
+			sip = int(filter(lambda s: s['display_name'] == 'SIP', sips)[0]['id'])
+			return sip
+
+		logger = LogService()
+		logger.error(Code.SIP_GETTING_ERR, data=json.loads(content), status_code=response.status_code)
+		return None

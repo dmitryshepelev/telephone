@@ -29,7 +29,7 @@
         }
         costs[direction] = result.price;
         if (costs.to != undefined && costs.from != undefined) {
-            $('#total-cost').text((costs.to + costs.from) + ' RUB')
+            $('#total-cost').text((costs.to + costs.from).toFixed(2) + ' RUB')
         }
         $('#error.error-text').text('')
     }
@@ -67,6 +67,10 @@
 
         cbFromNumberElement.on('blur', _onElementBlur);
         cbToNumberElement.on('blur', _onElementBlur);
+
+        if (cbFromNumberElement.val() !== '') {
+            costs.from = 0
+        }
 
         var number = cbToNumberElement.val();
         _getCallCost.apply(cbToNumberElement[0], [number, _onGetCallCostSuccess]);

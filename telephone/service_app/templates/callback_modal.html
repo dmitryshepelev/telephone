@@ -8,7 +8,7 @@
 			<div class="col-sm-6">
 				<div class="form-group">
 					<label class="control-label" for="cbToNumber">Куда звоним: </label>
-					<input type="text" id="cbToNumber" class="form-control input-sm" {% if number %}disabled{% else %}autofocus{% endif %} placeholder="Номер абонента" value="{{ number }}">
+					<input type="text" id="cbToNumber" class="form-control input-sm" {% if not number %}autofocus{% endif %} placeholder="Номер абонента" value="{{ number }}">
 				</div>
 			</div>
 			<div class="col-sm-6">
@@ -23,7 +23,7 @@
 			<div class="col-sm-6">
 				<div class="form-group">
 					<label class="control-label" for="cbFromNumber">Откуда звоним: </label>
-                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="Введите номер" {% if number %}autofocus{% endif %} autocomplete="off">
+                    <input type="text" id="cbFromNumber" class="form-control input-sm" placeholder="Введите номер" {% if number %}autofocus{% endif %} value="{% if number %}{{ user.userprofile.sip }}{% endif %}" autocomplete="off">
 				</div>
 			</div>
 			<div class="col-sm-6">
@@ -36,16 +36,16 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-6">
+				<div>Стоимость звонка: <strong><span id="total-cost"></span></strong></div>
 				<div id="error" class="error-text"></div>
 			</div>
 			<div class="col-sm-6">
-				<div>Общая стоимость: <strong><span id="total-cost"></span></strong></div>
+				<div id="call-status" style="display: none" class="pull-left">Подключение...</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="modal-footer">
-	<div id="call-status" style="display: none" class="pull-left">Подключение...</div>
+<div class="modal-footer" style="text-align: center;">
     <button type="button" id="callback-call" class="btn btn-default btn-sm-wt">Позвонить</button>
 	<button type="button" class="btn btn-link-wt btn-sm-wt" data-dismiss="modal">Отмена</button>
 </div>

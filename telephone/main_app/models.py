@@ -16,6 +16,7 @@ class UserProfile(models.Model):
 	token = models.CharField(max_length=50, default='')
 	customer_number = models.CharField(max_length=10, default='')
 	date_subscribe_ended = models.DateTimeField(null=True)
+	sip = models.IntegerField(null=True)
 
 	class Meta:
 		app_label = 'main_app'

@@ -4,14 +4,13 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
-from telephone.classes.ProfileRequest import ProfileRequest
 
+from telephone.classes.ProfileRequest import ProfileRequest
 from telephone.service_app.services.AuthService import AuthService
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.LocalizeService import LocalizeService
 from telephone.service_app.services.LogService import LogService, Code
-from telephone.service_app.services.ProfileService import ProfileService
 
 
 logger = LogService()
