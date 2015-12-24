@@ -23,7 +23,7 @@ class AuthService():
 		auth_user = authenticate(username=form.data['username'], password=form.data['password'])
 		if auth_user is not None:
 
-			if not auth_user.last_login and not auth_user.is_superuser:
+			if not auth_user.is_superuser and (not auth_user.last_login or not auth_user.userprofile.sip):
 				auth_user.userprofile.sip = PBXDataService.get_pbx_sip(auth_user)
 				auth_user.userprofile.save()
 

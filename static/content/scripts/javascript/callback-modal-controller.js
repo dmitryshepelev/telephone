@@ -34,28 +34,6 @@
         $('#error.error-text').text('')
     }
 
-    function _call() {
-        var cbToNumber = $('#cbToNumber').val();
-        var cbFromNumber = $('#cbFromNumber').val();
-        if (cbToNumber == '' || !cbToNumber.match(/[0-9]{9,}/) || cbFromNumber == '' || !cbFromNumber.match(/[0-9]{9,}/)) {
-            $('#error.error-text').text('Неправильный номер телефона');
-            return false;
-        }
-        $('#call-status').attr('style', 'display: block');
-        setTimeout(function () {
-            $.get('/requestCallback/?cbFromNumber=' + cbFromNumber + '&cbToNumber=' + cbToNumber)
-                .then(function (result) {
-                    message.success('Запрос отправлен. Ожидайте звонка')
-                })
-                .fail(function (err) {
-                    message.error('Произошла ошибка. Повторите попытку');
-                }).always(function () {
-                    $('#modal').modal('toggle');
-                })
-        }, 4000)
-
-    }
-
     function _onElementBlur (e) {
         var number = $(this).val();
         _getCallCost.apply(this, [number, _onGetCallCostSuccess]);
@@ -77,7 +55,9 @@
 
         var callbackBtn = $('#callback-call');
         callbackBtn.on('click', function () {
-            _call();
+            var cbToNumber = $('#cbToNumber').val();
+            var cbFromNumber = $('#cbFromNumber').val();
+            services.call(cbToNumber, cbFromNumber);
         })
     })
 })(services);

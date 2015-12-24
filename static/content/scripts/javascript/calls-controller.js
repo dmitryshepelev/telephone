@@ -72,9 +72,29 @@ var controller = (function () {
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
         },
-        showModal: function (e) {
+        showCallPopover: function (e) {
             var number = $(e.target).text();
-            services.modal('callback', { number: number });
+            $(e.target).webuiPopover({
+                trigger: 'manual',
+                dismissible: true,
+                cache: false,
+                width: 175,
+                placement: 'right',
+                title: '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>',
+                content: function (data) {
+                    return '<span>Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></span>';
+                },
+                type: 'async',
+                url: '/getCallCost/?n=' + number
+            });
+            $(e.target).webuiPopover('show');
+            $('#' + $(e.target).attr('data-target')).find('button').on('click', function () {
+                services.call(number);
+                $(this).attr('disabled', true).text('Соединение...');
+                setTimeout(function () {
+                    $(e.target).webuiPopover('hide')
+                }, 4000)
+            });
         }
     };
 })();

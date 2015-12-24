@@ -31,7 +31,7 @@ var controller = (function () {
         subscribe: function () {
             var subscribtionDataInstance = services.createInstance(SubscribtionData, null);
             if (!subscribtionDataInstance.creationErrors) {
-                $.post('/pay/', subscribtionDataInstance.getData());
+                $.post('/pay/subfee/', subscribtionDataInstance.getData());
                 var labelElement = $('input#label[type="hidden"]');
                 $.get('/services/getTransactId/', function (data) {
                     labelElement.val(data.id)

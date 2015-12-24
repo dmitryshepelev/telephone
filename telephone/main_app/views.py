@@ -48,16 +48,16 @@ def calls(request, template):
 
 
 @login_required
-def pay(request, template):
+def pay(request, type):
 	"""
 	Controller to pay
 	:param request: HTTP request
-	:param template: html template
+	:param type: pay type
 	:return: HttpResponse instance
 	"""
 	if request.method == 'GET':
-		return render_to_response(template, {'subscription_data': SubscriptionData(), 'payment_data': PaymentData(request.user.userprofile.customer_number)}, context_instance=RequestContext(request))
-	elif request.method == 'POST':
+		return render_to_response('pay_{type}.html'.format(type=type), {'subscription_data': SubscriptionData(), 'payment_data': PaymentData(request.user.userprofile.customer_number)}, context_instance=RequestContext(request))
+	elif request.method == 'POST' and type == 'subfee':
 		if request.POST:
 			subscr = DBService.create_subscr_transaction(request.user, request.POST)
 			if subscr:
@@ -169,7 +169,7 @@ def request_callback(request):
 	:param request: HTTP request
 	:return: HttpResponse instance
 	"""
-	from_number = request.GET.get('cbFromNumber')
+	from_number = request.GET.get('cbFromNumber') or request.user.userprofile.sip
 	to_number = request.GET.get('cbToNumber')
 
 	result = PBXDataService.request_callback(request.user, from_number, to_number)

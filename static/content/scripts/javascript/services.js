@@ -307,6 +307,31 @@ var services = (function () {
         });
     }
 
+    function _call(cbToNumber, cbFromNumber) {
+        /**
+         * Call to the number
+         * @type {*|jQuery}
+         */
+        cbToNumber = cbToNumber.toString();
+        cbFromNumber = cbFromNumber ? cbFromNumber.toString() : '';
+        if (cbToNumber == '' || !cbToNumber.match(/[0-9]{9,}/)) {
+            $('#error.error-text').text('Неправильный номер телефона');
+            return false;
+        }
+        $('#call-status').attr('style', 'display: block');
+        setTimeout(function () {
+            $.get('/requestCallback/?cbFromNumber=' + cbFromNumber + '&cbToNumber=' + cbToNumber)
+                .then(function (result) {
+                    message.success('Запрос отправлен. Ожидайте звонка')
+                })
+                .fail(function (err) {
+                    message.error('Произошла ошибка. Повторите попытку');
+                }).always(function () {
+                    $('#modal').modal('toggle');
+                })
+        }, 4000)
+    }
+
     return {
         collectModelData: _collectModelData,
         cleanModelData: _cleanModelData,
@@ -319,6 +344,7 @@ var services = (function () {
         errors: _errors,
         makeSortable: _makeSortable,
         filterTable: _filterTable,
-        modal: _modal
+        modal: _modal,
+        call: _call
     }
 })();

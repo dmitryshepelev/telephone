@@ -54,6 +54,7 @@
 		            {% else %}
                         {% if not user.is_superuser %}
 							<li class="profile-info-wt"></li>
+	                        <li class="text-grey-wt"><a href="/pay/subfee/">+{{ user.userprofile.profile_phone_number }}</a></li>
                         {% else %}
                             <form class="navbar-form navbar-left search-form-wt" action="/services/search/" method="get" role="search" >
                                 {% csrf_token %}
@@ -74,8 +75,8 @@
 	                            {% else %}
                                     <li class="username-dropdown">+{{ user.userprofile.profile_phone_number }}</li>
 			                        <li><a href="/">Звонки</a></li>
-		                            <li><a href="#" onclick="mainController.showCallbackModal()">Обратный звонок</a></li>
 		                            <li><a href="#" onclick="mainController.showCallCostByCountryModal()">Узнать стоимость</a></li>
+		                            <li><a href="#" onclick="mainController.showCallbackModal()">Обратный звонок</a></li>
 	                            {% endif %}
 							</ul>
 						</li>

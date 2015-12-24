@@ -12,5 +12,5 @@ urlpatterns = [
 	url(r'^getCallCost/$', get_call_cost),
 	url(r'^getCallCostByCountry/$', get_call_cost_by_country),
 	url(r'^requestCallback/$', request_callback),
-	url(r'^pay/$', pay, {'template': 'pay.html'}),
+	url(r'^pay/(?P<type>subfee|balance)/$', pay),
 ]
