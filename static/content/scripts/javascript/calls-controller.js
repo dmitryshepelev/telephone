@@ -80,9 +80,10 @@ var controller = (function () {
                 cache: false,
                 width: 175,
                 placement: 'right',
-                title: '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>',
+                //title: '',
                 content: function (data) {
-                    return '<span>Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></span>';
+                    return '<div style="margin-bottom: 10px;">Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></div>' +
+                        '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>';
                 },
                 type: 'async',
                 url: '/getCallCost/?n=' + number

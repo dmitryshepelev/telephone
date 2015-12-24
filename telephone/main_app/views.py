@@ -36,7 +36,7 @@ def main_resolver(request, templates):
 
 
 @login_required
-@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/', redirect_field_name='')
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/subfee/', redirect_field_name='')
 def calls(request, template):
 	"""
 	Controller to show calls page
@@ -66,7 +66,7 @@ def pay(request, type):
 
 
 @login_required
-@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/', redirect_field_name='')
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/subfee/', redirect_field_name='')
 def get_statistic(request, template):
 	"""
 	Controller to get test calls file
@@ -86,7 +86,7 @@ def get_statistic(request, template):
 
 
 @login_required
-@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/', redirect_field_name='')
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/subfee/', redirect_field_name='')
 def get_call_record(request):
 	"""
 	Controller to get test call record file
