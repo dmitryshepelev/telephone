@@ -63,7 +63,9 @@ class PBXDataService():
 		# check if call wasn't answered
 		if not answ_calls:
 			# ser params with 'destination' = None
-			call.set_params(call_id=group[0].call_id, clid=group[0].clid, date=group[0].date, disposition=group[0].disposition, bill_seconds=group[0].seconds, sip=group[0].sip)
+			call.set_params(call_id=group[0].call_id, clid=group[0].clid, date=group[0].date,
+							disposition=group[0].disposition, bill_seconds=group[0].seconds,
+							sip=CommonService.reduce_number(group[0].sip))
 			call.is_answered = False
 			return call
 
@@ -72,7 +74,7 @@ class PBXDataService():
 			if c.destination == CallsConstants.INCOMING:
 				call.set_params(bill_seconds=c.seconds)
 			else:
-				call.set_params(call_id=c.call_id, clid=c.clid, date=c.date, destination=c.destination, disposition=c.disposition, sip=c.sip)
+				call.set_params(call_id=c.call_id, clid=c.clid, date=c.date, destination=c.destination, disposition=c.disposition, sip=CommonService.reduce_number(c.sip))
 		return call
 
 	@staticmethod
@@ -369,7 +371,7 @@ class PBXDataService():
 		method = settings.API_URLS['api']['request_callback']
 
 		# WARNING: Creates ApiParams with {start} and {end} params. Needs to be refactored
-		params = ApiParams({'from': from_number, 'to': to_number, 'predicted': True})
+		params = ApiParams({'from': from_number, 'to': to_number})
 		url = params.get_request_string(method)
 
 		response = requests.get(url, headers={'Authorization': '%s:%s' % (user.userprofile.user_key, CommonService.get_sign(params, method, params.api_version, user.userprofile.secret_key))})

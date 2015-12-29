@@ -639,3 +639,18 @@ select {
 		}
 	}
 }
+
+.header {
+	& .navbar-nav {
+		& > li.text-warning {
+			& > a:hover {
+				color: @warning-color  !important;
+			}
+		}
+		& > li.text-danger {
+			& > a:hover {
+				color: @error-color  !important;
+			}
+		}
+	}
+}

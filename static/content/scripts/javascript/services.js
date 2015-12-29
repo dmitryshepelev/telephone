@@ -307,29 +307,20 @@ var services = (function () {
         });
     }
 
+    /**
+     * Call to the number
+     * @param cbToNumber target number
+     * @param cbFromNumber source number
+     * @returns Promise
+     */
     function _call(cbToNumber, cbFromNumber) {
-        /**
-         * Call to the number
-         * @type {*|jQuery}
-         */
         cbToNumber = cbToNumber.toString();
         cbFromNumber = cbFromNumber ? cbFromNumber.toString() : '';
-        if (cbToNumber == '' || !cbToNumber.match(/[0-9]{9,}/)) {
+        if (cbToNumber == '') {
             $('#error.error-text').text('Неправильный номер телефона');
             return false;
         }
-        $('#call-status').attr('style', 'display: block');
-        setTimeout(function () {
-            $.get('/requestCallback/?cbFromNumber=' + cbFromNumber + '&cbToNumber=' + cbToNumber)
-                .then(function (result) {
-                    message.success('Запрос отправлен. Ожидайте звонка')
-                })
-                .fail(function (err) {
-                    message.error('Произошла ошибка. Повторите попытку');
-                }).always(function () {
-                    $('#modal').modal('toggle');
-                })
-        }, 4000)
+        return $.get('/requestCallback/?cbFromNumber=' + cbFromNumber + '&cbToNumber=' + cbToNumber);
     }
 
     return {

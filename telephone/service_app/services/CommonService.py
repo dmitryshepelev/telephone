@@ -218,3 +218,12 @@ class CommonService():
 			'current_page_number': page_number,
 			'pager_end_helper_stop': total_pages - 3,
 		}
+
+	@staticmethod
+	def reduce_number(number):
+		"""
+		Reduce + symbol of phone number
+		:param number:
+		:return: string
+		"""
+		return number[1:] if type(number) is str and len(number) == 0 and number[0] == '+' else number

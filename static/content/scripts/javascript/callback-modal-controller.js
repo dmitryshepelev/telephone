@@ -57,7 +57,20 @@
         callbackBtn.on('click', function () {
             var cbToNumber = $('#cbToNumber').val();
             var cbFromNumber = $('#cbFromNumber').val();
-            services.call(cbToNumber, cbFromNumber);
+
+            $('#call-status').attr('style', 'display: block');
+            setTimeout(function () {
+                services.call(cbToNumber, cbFromNumber)
+                    .then(function (result) {
+                        message.success('Запрос отправлен. Ожидайте звонка')
+                    })
+                    .fail(function () {
+                        message.error('Произошла ошибка. Повторите попытку');
+                    })
+                    .always(function () {
+                        $('#modal').modal('toggle');
+                    });
+            }, 2000)
         })
     })
 })(services);

@@ -8,20 +8,6 @@ var mainController = (function () {
         $('[tooltip]').tooltip();
     }
 
-    function _initProfileContainer() {
-        return $('li.profile-info-wt');
-    }
-
-    function _getProfileInfo (container) {
-        $.get('/getProfileInfo/', function (data) {
-            _updateContainer(container, data)
-        })
-    }
-
-    function _updateContainer (container, data) {
-        container.append(data)
-    }
-
     function _search (value) {
         function _wrapQuery (str, q) {
             var index = str.indexOf(q);
@@ -138,10 +124,6 @@ var mainController = (function () {
     function _showCallCostByCountryModal () {
         services.modal('callCostByCountry')
     }
-
-    $(document).ready(function () {
-        _getProfileInfo(_initProfileContainer());
-    });
 
     return {
         initTooltips: _initTooltips,

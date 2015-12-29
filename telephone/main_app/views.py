@@ -15,6 +15,7 @@ from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
+from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
@@ -109,41 +110,6 @@ def get_call_record(request):
 
 @login_required
 @user_passes_test(lambda user: not user.is_superuser)
-def get_profile_info(request, template):
-	"""
-	Controller to get user account balance
-	:param request: HTTP request
-	:return: HttpResponse
-	"""
-	balance = PBXDataService.get_pbx_account_balance(request.user)
-	if not balance:
-		return HttpResponse(status=500)
-
-	# 0 - subscribed, 1 - subscription ends in (or less than) 3 days, 2 - subscription ended
-	date_subscribe_ended = request.user.userprofile.date_subscribe_ended
-	if date_subscribe_ended:
-		days_left = (date_subscribe_ended.date() - datetime.datetime.now().date()).days
-		subscribe_ended_text = 'Подписка до ' + date_subscribe_ended.strftime(settings.DATE_CLIENT_FORMAT)
-		if days_left >= 3:
-			subscription_status = 0
-		elif 0 <= days_left < 3:
-			subscription_status = 1
-		else:
-			subscription_status = 2
-			subscribe_ended_text = 'Подписка не оформлена'
-	else:
-		subscription_status = 2
-		subscribe_ended_text = 'Подписка не оформлена'
-
-	return render_to_response(template, {
-			'balance': '%.2f' % balance,
-			'subscribe_ended_text': subscribe_ended_text,
-			'subscription_status': subscription_status,
-		}, context_instance=RequestContext(request))
-
-
-@login_required
-@user_passes_test(lambda user: not user.is_superuser)
 def get_call_cost(request):
 	"""
 	Request to the api to get call cost by target phone number
@@ -154,8 +120,9 @@ def get_call_cost(request):
 	if not to:
 		return HttpResponse(status=400)
 
-	result = PBXDataService.get_call_cost(request.user, to)
+	result = PBXDataService.get_call_cost(request.user, CommonService.reduce_number(to))
 	if result:
+		result['phone'] = to
 		return JsonResponse(result)
 
 	return HttpResponse(status=500)
@@ -169,8 +136,8 @@ def request_callback(request):
 	:param request: HTTP request
 	:return: HttpResponse instance
 	"""
-	from_number = request.GET.get('cbFromNumber') or request.user.userprofile.sip
-	to_number = request.GET.get('cbToNumber')
+	from_number = CommonService.reduce_number(request.GET.get('cbFromNumber') or request.user.userprofile.sip)
+	to_number = CommonService.reduce_number(request.GET.get('cbToNumber'))
 
 	result = PBXDataService.request_callback(request.user, from_number, to_number)
 	if result:

@@ -53,8 +53,9 @@
 			            <li><a href="/auth/login/" class="icon-enter header-icon"></a></li>
 		            {% else %}
                         {% if not user.is_superuser %}
-							<li class="profile-info-wt"></li>
-	                        <li class="text-grey-wt"><a href="/pay/subfee/">+{{ user.userprofile.profile_phone_number }}</a></li>
+	                        {% load subscr_state_tags %}
+	                        {% profile_info_phone 'text-grey-wt' '/pay/subfee/' %}
+	                        {% profile_info_cash 'text-grey-wt' '/pay/balance/' %}
                         {% else %}
                             <form class="navbar-form navbar-left search-form-wt" action="/services/search/" method="get" role="search" >
                                 {% csrf_token %}

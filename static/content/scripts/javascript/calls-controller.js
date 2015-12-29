@@ -26,10 +26,50 @@ var controller = (function () {
             services.makeSortable('#callsTable', [[1,1]]);
             mainController.initTooltips();
             _container.showElement();
+            _initPopovers()
         } else {
           _container.hideElement(200, function () {
                 _container.empty();
             });
+        }
+    }
+
+    function _initPopovers() {
+        var elements = $('[popover]');
+        for (var i = 0; i < elements.length; i++){
+            var el = $(elements[i]);
+            var number = el.text();
+            number = number[0] === '+' ? number.slice(1) : number;
+            el.webuiPopover({
+                cache: false,
+                width: 185,
+                animation: 'pop',
+                placement: 'right',
+                content: function (data) {
+                    return '<div style="margin-bottom: 10px;">Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></div>' +
+                        '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>' +
+                        '<input type="hidden" value="' + data.phone + '" />';
+                },
+                type: 'async',
+                url: '/getCallCost/?n=' + number
+            })
+                .on('shown.webui.popover', function (e, target) {
+                    target.find('button').on('click', function () {
+                        $(this).attr('disabled', true).text('Соединение...');
+                        setTimeout(function () {
+                            services.call(target.find('input[type="hidden"]').val())
+                                .then(function (result) {
+                                    message.success('Запрос отправлен. Ожидайте звонка')
+                                })
+                                .fail(function () {
+                                    message.error('Произошла ошибка. Повторите попытку');
+                                })
+                                .always(function () {
+                                    $('td[data-target="' + target.attr('id') + '"]').webuiPopover('hide')
+                                });
+                        }, 2000)
+                    })
+                });
         }
     }
 
@@ -71,31 +111,6 @@ var controller = (function () {
             var params = _collectData();
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
-        },
-        showCallPopover: function (e) {
-            var number = $(e.target).text();
-            $(e.target).webuiPopover({
-                trigger: 'manual',
-                dismissible: true,
-                cache: false,
-                width: 175,
-                placement: 'right',
-                //title: '',
-                content: function (data) {
-                    return '<div style="margin-bottom: 10px;">Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></div>' +
-                        '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>';
-                },
-                type: 'async',
-                url: '/getCallCost/?n=' + number
-            });
-            $(e.target).webuiPopover('show');
-            $('#' + $(e.target).attr('data-target')).find('button').on('click', function () {
-                services.call(number);
-                $(this).attr('disabled', true).text('Соединение...');
-                setTimeout(function () {
-                    $(e.target).webuiPopover('hide')
-                }, 4000)
-            });
         }
     };
 })();
