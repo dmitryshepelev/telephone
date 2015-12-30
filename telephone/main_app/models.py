@@ -21,6 +21,9 @@ class UserProfile(models.Model):
 	class Meta:
 		app_label = 'main_app'
 
+	def __unicode__(self):
+		return str(self.user)
+
 
 class Callee(models.Model):
 	sip = models.CharField(max_length=20, unique=True)
@@ -40,7 +43,7 @@ class Call(models.Model):
 	cost = models.FloatField(null=True)
 	bill_cost = models.FloatField(null=True)
 	currency = models.CharField(max_length=20, null=True)
-	is_answered = models.BooleanField(default=True)
+	call_type = models.CharField(max_length=40, null=True)
 	user_profile = models.ForeignKey(UserProfile)
 	callee = models.ForeignKey(Callee)
 	record_filename = models.CharField(max_length=100, null=True, default=None)
@@ -82,6 +85,14 @@ class ProfileRequestTransaction(models.Model):
 	email = models.EmailField(max_length=30, null=False)
 	username = models.EmailField(max_length=50, null=True)
 	status = models.ForeignKey(TransactionStatus)
+
+	class Meta:
+		app_label = 'main_app'
+
+
+class RedirectNumbers(models.Model):
+	number = models.CharField(max_length=20, null=False)
+	user_profile = models.ForeignKey(UserProfile)
 
 	class Meta:
 		app_label = 'main_app'

@@ -8,7 +8,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 import requests
 
-from telephone import settings
 from telephone.admin_app.views import panel
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
@@ -120,6 +119,9 @@ def get_call_cost(request):
 	if not to:
 		return HttpResponse(status=400)
 
+	if len(to) < 6:
+		return JsonResponse({'phone': to, 'notAvalible': True})
+
 	result = PBXDataService.get_call_cost(request.user, CommonService.reduce_number(to))
 	if result:
 		result['phone'] = to
@@ -141,7 +143,7 @@ def request_callback(request):
 
 	result = PBXDataService.request_callback(request.user, from_number, to_number)
 	if result:
-		return HttpResponse(status=200)
+		return HttpResponse(status=200, content=result)
 
 	return HttpResponse(status=500)
 

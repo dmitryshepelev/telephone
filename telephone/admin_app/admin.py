@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from telephone.main_app.models import UserProfile
+from telephone.main_app.models import UserProfile, RedirectNumbers
 
 
 class UserProfileAdmin(admin.ModelAdmin):
@@ -9,4 +9,9 @@ class UserProfileAdmin(admin.ModelAdmin):
 	list_filter = ('date_subscribe_ended',)
 
 
+class RedirectNumbersAdmin(admin.ModelAdmin):
+	list_display = ('number', 'user_profile',)
+
+
+admin.site.register(RedirectNumbers, RedirectNumbersAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)

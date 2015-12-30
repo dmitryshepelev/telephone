@@ -61,9 +61,9 @@ class DBService():
 				cost=call_record.cost,
 				bill_cost=call_record.bill_cost,
 				currency=call_record.currency,
-				is_answered=call_record.is_answered,
 				user_profile=userprofile,
-				callee=result.data
+				callee=result.data,
+				call_type=call_record.call_type
 			)
 			# create Call Instance
 			try:

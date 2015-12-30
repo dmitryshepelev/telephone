@@ -46,9 +46,13 @@ var controller = (function () {
                 animation: 'pop',
                 placement: 'right',
                 content: function (data) {
-                    return '<div style="margin-bottom: 10px;">Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></div>' +
-                        '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>' +
+                    var btn = '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>' +
                         '<input type="hidden" value="' + data.phone + '" />';
+                    if (data.notAvalible) {
+                        return '<div style="margin-bottom: 10px;" align="center">Не доступно</div>' + btn;
+                    }
+                    return '<div style="margin-bottom: 10px;">Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency +'</strong></div>' + btn;
+
                 },
                 type: 'async',
                 url: '/getCallCost/?n=' + number

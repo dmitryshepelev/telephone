@@ -50,3 +50,17 @@ def cal_state_icon(value):
 		return 'arrow-down' + error
 	else:
 		return 'blocked' + error
+
+
+@register.filter(name='is_call_answered')
+def is_call_answered(call, prop=None):
+	"""
+	Return '-' value if call isn't answered else value of prop
+	:param call: call
+	:param prop: prop name
+	"""
+
+	if call.disposition != 'answered':
+		return '-' if prop else False
+
+	return (call.__dict__[prop] if call.__dict__[prop] is not None else '-') if prop else True

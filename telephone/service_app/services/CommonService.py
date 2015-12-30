@@ -32,6 +32,8 @@ class CallsConstants():
 
 	ANSWERED = 'answered'
 	INCOMING = 'incoming'
+	COMING = 'coming'
+	INTERNAL = 'internal'
 
 
 class CommonService():

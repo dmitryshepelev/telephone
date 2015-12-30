@@ -158,7 +158,9 @@ API_URLS = {
 		'balance': '/v1/info/balance',
 		'call_cost': '/info/price/',
 		'request_callback': '/request/callback/',
-		'sip': '/sip/'
+		'sip': '/sip/',
+		'get_redirects': '/sip/redirection/',
+		'internal_numbers': '/pbx/internal/'
 	},
 	'base_api_url': 'https://api.zadarma.com',
 	'api_version': '/v1',

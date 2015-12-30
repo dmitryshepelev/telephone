@@ -98,3 +98,15 @@ ALTER TABLE "main_app_userprofile" ADD COLUMN "sip" integer NULL;
 ALTER TABLE "main_app_userprofile" ALTER COLUMN "sip" DROP DEFAULT;
 
 -- --
+
+-- 30.12.2015 Redirect numbers TABLE --
+
+CREATE TABLE "main_app_redirectnumbers" ("id" serial NOT NULL PRIMARY KEY, "number" varchar(20) NOT NULL, "user_profile_id" integer NOT NULL);
+ALTER TABLE "main_app_redirectnumbers" ADD CONSTRAINT "main_app_re_user_profile_id_5ef71571_fk_main_app_userprofile_id" FOREIGN KEY ("user_profile_id") REFERENCES "main_app_userprofile" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "main_app_redirectnumbers_06037614" ON "main_app_redirectnumbers" ("user_profile_id");
+
+ALTER TABLE "main_app_call" DROP COLUMN "is_answered" CASCADE;
+ALTER TABLE "main_app_call" ADD COLUMN "call_type" varchar(40) NULL;
+ALTER TABLE "main_app_call" ALTER COLUMN "call_type" DROP DEFAULT;
+
+-- --
