@@ -276,7 +276,7 @@ class PBXDataService():
 
 		if len(update_errors) > 0:
 			# Update calls list succeed with errors
-			message.format(row_to_update=total_rows_to_update)
+			message = message.format(row_to_update=total_rows_to_update)
 			message += Code.UCLSWE
 
 		return ServiceResponse(True, data=update_errors, message=message)

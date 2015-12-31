@@ -35,7 +35,7 @@
 	        <tr data-call-id="{{ call.call_id }}">
 	            <td>{{ forloop.revcounter }}</td>
 		        <td>{{ call.date|date:'d.m.Y H:i:s' }}</td>
-	            <td><span class="icon-{{ call.disposition|call_state_icon }}" title="{{ call.disposition|call_state_localize }}"></span></td>
+	            <td><span class="{{ call|call_state_icon }}" title="{{ call.disposition|call_state_localize }}"></span></td>
 		        <td tabindex="0" role="button" class="pointer{% if call.is_first_call %} text-bold{% endif %}" popover>{{ call.sip }}</td>
                 <td>{{ call.destination }}</td>
 	            <td>{% if call.disposition == 'answered' %}{{ call.bill_seconds|t_fs }}{% else %}-{% endif %}</td>

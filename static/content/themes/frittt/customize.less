@@ -654,3 +654,22 @@ select {
 		}
 	}
 }
+
+#call-type-filter {
+	margin: 8px 0 !important;
+
+	& > .call-types-switcher {
+		display: inline;
+		font-size: 16px;
+
+		& > .call-type {
+			padding: 5px !important;
+			color: rgb(221, 221, 221);
+			cursor: pointer;
+
+			&:hover, &.call-type-active {
+				color: @default-text-color;
+			}
+		}
+	}
+}

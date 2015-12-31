@@ -1,5 +1,6 @@
 var controller = (function () {
     var _container = {};
+    var _callTypeElements = null;
 
     function _setContainer() {
         _container = $('div[data-view]');
@@ -94,7 +95,7 @@ var controller = (function () {
         for (var i = 0; i < elements.length; i++) {
             var key = $(elements[i]).attr('name');
             var value = $(elements[i]).attr('value');
-            data[key] = Number(value).toString() == 'NaN' ? value : value == 0 ? 2 : value - 1;
+            data[key] = key =='status' ? (Number(value).toString() == 'NaN' ? value : value == 0 ? 2 : value - 1) : value;
         }
         return data;
     }
@@ -108,13 +109,43 @@ var controller = (function () {
         for (var i = 0; i < elements.length; i++){
             new Switcher(elements[i]);
         }
+
+        _callTypeElements = $('.call-type');
     });
+
+    function _changeCallTypeActivity(element) {
+        var className = 'call-type-active';
+        var value = element.attr('data-value');
+        element[element.hasClass(className) ? 'removeClass' : 'addClass'](className);
+
+        var input = $('input[name="call_type"]');
+        var curVal = input.val();
+
+        var newVal = curVal.search(value) >= 0 ? curVal.replace(value, '').replace('||', '|') : (curVal.length != 0 ? (curVal + '|' + value) : value);
+        if (newVal[newVal.length - 1] == '|') {
+            newVal = newVal.substr(0, newVal.length - 1)
+        }
+        if (newVal[0] == '|') {
+            newVal = newVal.substr(1, newVal.length)
+        }
+        input.val(newVal)
+
+    }
 
     return {
         applyFilters: function () {
             var params = _collectData();
             var request_string = new ApiParams(params).getRequestString();
             _getCalls(request_string);
+        },
+        setCallTypeValue: function (e) {
+            var $element = $(e.target);
+
+            if (!$element.is('span')) {
+                return false;
+            }
+
+            _changeCallTypeActivity($element)
         }
     };
 })();

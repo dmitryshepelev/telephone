@@ -1,5 +1,6 @@
 # coding=utf-8
 from django import template
+from telephone.service_app.services.CommonService import CallsConstants
 
 register = template.Library()
 
@@ -39,17 +40,13 @@ def call_state_localize(value):
 def cal_state_icon(value):
 	"""
 	Return icomoon class
-	:param value: call state value
+	:param value: call instance
 	:return: class
 	"""
-	success = ' text-success'
-	error = ' text-error'
-	if value == 'answered':
-		return 'arrow-down' + success
-	elif value == 'no answer':
-		return 'arrow-down' + error
-	else:
-		return 'blocked' + error
+	icon = 'icon-{type}'.format(type=('arrow-down' if value.call_type == CallsConstants.INCOMING else ('arrow-up' if value.call_type == CallsConstants.COMING else 'loop')))
+	status = 'text-{status}'.format(status=('success' if value.disposition == CallsConstants.ANSWERED else 'error'))
+
+	return icon + ' ' + status
 
 
 @register.filter(name='is_call_answered')

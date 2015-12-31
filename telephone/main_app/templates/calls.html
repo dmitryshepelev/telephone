@@ -43,7 +43,15 @@
             </div>
             <div class="col-sm-8">
                 <div class="col-sm-4">
-
+	                <div id="call-type-filter">
+		                Тип звонков:
+		                <div class="call-types-switcher" onclick="controller.setCallTypeValue(event)">
+                            <span class="call-type icon-arrow-up" title="Исходящие" data-value="upcoming"></span>
+		                    <span class="call-type icon-arrow-down" title="Входящие" data-value="incoming"></span>
+		                    <span class="call-type icon-loop" title="Внутренние" data-value="internal"></span>
+		                </div>
+		                <input type="hidden" class="pseudo-hidden" name="call_type" value="" autocomplete="off"/>
+	                </div>
                 </div>
                 <div class="col-sm-5">
                     <switcher name="status" titles="['Только принятые', 'Пропущенные и принятые', 'Только пропущенные']"></switcher>
