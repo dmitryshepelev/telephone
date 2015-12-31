@@ -34,8 +34,9 @@ class CallsFilterParams():
 				self.__params['disposition'] = CallsConstants.ANSWERED
 		if 'call_type' in params:
 			value = params['call_type']
-			types = value.split('|')
-			self.__call_type_query = reduce(operator.or_, (Q(call_type=t) for t in types if t is not ''))
+			types = value.split(' ')
+			types = [] if len(types) == 1 and types[0] == '' else types
+			self.__call_type_query = reduce(lambda q, x: q|Q(call_type=x), types, Q())
 
 	@property
 	def params(self):

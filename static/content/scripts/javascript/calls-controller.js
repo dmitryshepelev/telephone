@@ -114,6 +114,8 @@ var controller = (function () {
     });
 
     function _changeCallTypeActivity(element) {
+        var divider = ' ';
+
         var className = 'call-type-active';
         var value = element.attr('data-value');
         element[element.hasClass(className) ? 'removeClass' : 'addClass'](className);
@@ -121,11 +123,11 @@ var controller = (function () {
         var input = $('input[name="call_type"]');
         var curVal = input.val();
 
-        var newVal = curVal.search(value) >= 0 ? curVal.replace(value, '').replace('||', '|') : (curVal.length != 0 ? (curVal + '|' + value) : value);
-        if (newVal[newVal.length - 1] == '|') {
+        var newVal = curVal.search(/\b/ + value) >= 0 ? curVal.replace(value, '').replace(divider + divider, divider) : (curVal.length != 0 ? (curVal + divider + value) : value);
+        if (newVal[newVal.length - 1] == divider) {
             newVal = newVal.substr(0, newVal.length - 1)
         }
-        if (newVal[0] == '|') {
+        if (newVal[0] == divider) {
             newVal = newVal.substr(1, newVal.length)
         }
         input.val(newVal)
