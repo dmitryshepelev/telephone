@@ -9,6 +9,7 @@ from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import Call, CallRecord, CallPBX
 from telephone.classes.File import File
 from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.main_app.models import RedirectNumbers
 from telephone.service_app.services.CommonService import CommonService, CallsConstants
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.DiskService import DiskService
@@ -49,40 +50,6 @@ class PBXDataService():
 		return ServiceResponse(api_response.ok, status_code=api_response.status_code)
 
 	@staticmethod
-	def filter_group(group):
-		"""
-		Filter the group of the calls
-		:param group: stat_pbx group
-		:return: CallRecord
-		"""
-		call = CallRecord()
-
-		# upcoming external
-		if len(group) == 1 and 'Internal' in group[0].clid:
-			call.call_type = CallsConstants.COMING
-			call.set_params(**group[0].__dict__)
-
-		# filter answered calls form group
-		# answ_calls = [g for g in group if g.disposition == CallsConstants.ANSWERED]
-
-		# check if call wasn't answered
-		# if not answ_calls:
-			# ser params with 'destination' = None
-			# call.set_params(call_id=group[0].call_id, clid=group[0].clid, date=group[0].date,
-			# 				disposition=group[0].disposition, bill_seconds=group[0].seconds,
-			# 				sip=CommonService.reduce_number(group[0].sip))
-			# call.is_answered = False
-			# return call
-		#
-		# find incoming call
-		# for c in answ_calls:
-		# 	if c.destination == CallsConstants.INCOMING:
-		# 		call.set_params(bill_seconds=c.seconds)
-		# 	else:
-		# 		call.set_params(call_id=c.call_id, clid=c.clid, date=c.date, destination=c.destination, disposition=c.disposition, sip=CommonService.reduce_number(c.sip))
-		return call
-
-	@staticmethod
 	def group_stat_pbx(stat_pbx):
 		"""
 		Filter stat_pbx calls
@@ -113,28 +80,6 @@ class PBXDataService():
 			if s == stat_pbx[-1] and group:
 				# add last group
 				result.append(group)
-		return result
-
-
-	@staticmethod
-	def merge_calls(stat_common, stat_pbx):
-		"""
-		Merge statistic
-		:param stat_common: calls statistic
-		:param stat_pbx: PBX calls statistic
-		:return: ServiceResponse
-		"""
-		result = []
-
-		stat_pbx_filtered = [PBXDataService.filter_group(g) for g in stat_pbx]
-
-		for s in stat_pbx_filtered:
-			stat_common_filtered = filter(lambda x: abs(x.bill_seconds - s.bill_seconds) <= 1 and
-													(x.destination == s.destination if s.destination else CommonService.is_dates_equals(x.date, s.date, False) and
-													 CommonService.is_dates_equals(x.date, s.date, False)), stat_common)
-			if stat_common_filtered:
-				s.set_params(bill_cost=stat_common_filtered[0].bill_cost, cost=stat_common_filtered[0].cost, currency=stat_common_filtered[0].currency, description=stat_common_filtered[0].description)
-				result.append(s)
 		return result
 
 	@staticmethod
@@ -208,6 +153,96 @@ class PBXDataService():
 						result.append(call)
 		return result
 
+	@staticmethod
+	def get_other_calls(stat_common, stat_pbx_grouped, userprofile):
+		"""
+		Gets callback calls.
+		The callback calls might be with or without redirection
+		The calls without redirection are the three records in PBX table
+			{clid} and {sip} fields contained target phone number, {destination} field is an internal number (100, 101, ect.)
+		:param stat_common: calls stat
+		:param stat_pbx_grouped: grouped pbx stat
+		:param userprofile: user profile
+		:return: Array of CallRecord instances
+		"""
+		result_coming = []
+		result_incoming = []
+
+		for group in stat_pbx_grouped:
+			call = CallRecord()
+			call.call_type = CallsConstants.COMING
+
+			call_incoming_dest = filter(lambda x: x.destination == CallsConstants.INCOMING, group)
+			if len(call_incoming_dest) == 1:
+				call_answered_disp = filter(lambda x: x.disposition == call_incoming_dest[0].disposition and not x.destination == CallsConstants.INCOMING, group)
+				if len(call_answered_disp) == 1:
+					if len(str(call_answered_disp[0].destination)) == 3:
+						# without redirection
+						print(call_incoming_dest[0].date, 'first')
+						call_common_record = filter(lambda x: str(x.caller) == userprofile.profile_phone_number
+															and str(x.destination) == str(call_answered_disp[0].clid)
+															and CommonService.is_dates_equals(x.date, call_answered_disp[0].date, False), stat_common)
+						if len(call_common_record) == 1:
+							call.set_params(
+								call_id=call_answered_disp[0].call_id,
+								clid=call_incoming_dest[0].clid,
+								sip=call_answered_disp[0].destination,
+								date=call_answered_disp[0].date,
+								destination=call_common_record[0].destination,
+								disposition=call_incoming_dest[0].disposition,
+								description=call_common_record[0].description,
+								bill_seconds=call_incoming_dest[0].seconds,
+								cost=call_common_record[0].cost,
+								bill_cost=call_common_record[0].bill_cost,
+								currency=call_common_record[0].currency
+							)
+							result_coming.append(call)
+
+					elif str(call_answered_disp[0].destination) in [rn.number for rn in RedirectNumbers.objects.filter(user_profile_id=userprofile.pk)]:
+						# with redirection
+						print(call_incoming_dest[0].date, 'second')
+						call_common_record_1 = filter(lambda x: str(x.caller) == str(call_answered_disp[0].clid)
+									and str(x.destination) == str(call_answered_disp[0].destination)
+									and CommonService.is_dates_equals(x.date, call_answered_disp[0].date, False), stat_common)
+
+						call_common_record_2 = filter(lambda x: str(x.caller) == userprofile.profile_phone_number
+									and str(x.destination) == str(call_answered_disp[0].clid)
+									and CommonService.is_dates_equals(x.date, call_answered_disp[0].date, False), stat_common)
+
+						is_coming = True
+						if len(call_common_record_2) == 0:
+							call.call_type = CallsConstants.INCOMING
+							is_coming = False
+
+						if len(call_common_record_1) == 1:
+							call.set_params(
+								call_id=call_answered_disp[0].call_id,
+								clid=call_incoming_dest[0].clid,
+								sip=(call_common_record_1[0].destination if is_coming else call_common_record_1[0].caller),
+								date=call_answered_disp[0].date,
+								destination=(call_common_record_1[0].caller if is_coming else call_common_record_1[0].destination),
+								disposition=call_incoming_dest[0].disposition,
+								description=call_common_record_1[0].description,
+								bill_seconds=call_incoming_dest[0].seconds,
+								cost=call_common_record_1[0].cost,
+								bill_cost=call_common_record_1[0].bill_cost,
+								currency=call_common_record_1[0].currency
+							)
+							if is_coming:
+								result_coming.append(call)
+							else:
+								result_incoming.append(call)
+
+					else:
+						print(call_incoming_dest[0].date, 'third')
+					# call.call_type = CallsConstants.CALLBACK
+					# call.set_params(call_id=group[0].call_id, sip=group[0].sip, clid=group[0].clid, date=group[0].date,
+					# 				destination=stat_common_record[0].destination, disposition=stat_common_record[0].disposition,
+					# 				description=stat_common_record[0].description, bill_cost=stat_common_record[0].bill_cost,
+					# 				bill_seconds=stat_common_record[0].bill_seconds, cost=stat_common_record[0].cost,
+					# 				currency=stat_common_record[0].currency)
+					# result.append(call)
+		return [result_coming, result_incoming]
 
 	@staticmethod
 	def update_calls_list(params, user):
@@ -232,14 +267,13 @@ class PBXDataService():
 
 		coming_calls = PBXDataService.get_coming_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)
 		internal_calls = PBXDataService.get_internal_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)
-
-		###### merged_stat = PBXDataService.merge_calls(stat_common_res.data, stat_pbx_grouped)
+		other_calls = PBXDataService.get_other_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)
 
 		# Get existing calls stat
 		user_stat = user.userprofile.call_set.filter(date__gte=params.start, date__lte=params.end)
 
 		# update calls table and return
-		return PBXDataService.update_calls_list_by_type(user.userprofile, user_stat, coming_calls, internal_calls)
+		return PBXDataService.update_calls_list_by_type(user.userprofile, user_stat, coming_calls, internal_calls, other_calls[0], other_calls[1])
 
 	@staticmethod
 	def update_calls_list_by_type(userprofile, stat, *args):
@@ -259,7 +293,7 @@ class PBXDataService():
 				call_type = arg[0].call_type
 				user_stat = stat.filter(call_type=call_type)
 
-				row_to_update = len(arg) - len(stat)
+				row_to_update = len(arg) - len(user_stat)
 				if row_to_update > 0:
 					total_rows_to_update += row_to_update
 
@@ -280,7 +314,6 @@ class PBXDataService():
 			message += Code.UCLSWE
 
 		return ServiceResponse(True, data=update_errors, message=message)
-
 
 	@staticmethod
 	def get_audio(call_id, user):

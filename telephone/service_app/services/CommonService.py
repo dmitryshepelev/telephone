@@ -34,6 +34,7 @@ class CallsConstants():
 	INCOMING = 'incoming'
 	COMING = 'coming'
 	INTERNAL = 'internal'
+	CALLBACK = 'callback'
 
 
 class CommonService():

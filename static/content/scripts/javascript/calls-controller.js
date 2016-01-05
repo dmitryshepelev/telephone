@@ -27,7 +27,7 @@ var controller = (function () {
             services.makeSortable('#callsTable', [[1,1]]);
             mainController.initTooltips();
             _container.showElement();
-            _initPopovers()
+            _initPopovers();
         } else {
           _container.hideElement(200, function () {
                 _container.empty();
@@ -114,8 +114,6 @@ var controller = (function () {
     });
 
     function _changeCallTypeActivity(element) {
-        var divider = ' ';
-
         var className = 'call-type-active';
         var value = element.attr('data-value');
         element[element.hasClass(className) ? 'removeClass' : 'addClass'](className);
@@ -123,15 +121,21 @@ var controller = (function () {
         var input = $('input[name="call_type"]');
         var curVal = input.val();
 
-        var newVal = curVal.search(/\b/ + value) >= 0 ? curVal.replace(value, '').replace(divider + divider, divider) : (curVal.length != 0 ? (curVal + divider + value) : value);
-        if (newVal[newVal.length - 1] == divider) {
-            newVal = newVal.substr(0, newVal.length - 1)
-        }
-        if (newVal[0] == divider) {
-            newVal = newVal.substr(1, newVal.length)
-        }
-        input.val(newVal)
+        var newVal = [];
+        if (curVal) {
+            var curValArr = curVal.split(' ');
 
+            var idx = curValArr.indexOf(value);
+            if (idx >= 0) {
+                curValArr.splice(idx, 1);
+            } else {
+                curValArr.push(value);
+            }
+            newVal = curValArr;
+        } else {
+            newVal.push(value);
+        }
+        input.val(newVal.join(' '))
     }
 
     return {
