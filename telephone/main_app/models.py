@@ -96,3 +96,14 @@ class RedirectNumbers(models.Model):
 
 	class Meta:
 		app_label = 'main_app'
+
+
+class RegisteredCallback(models.Model):
+	date = models.DateTimeField(null=False, default=datetime.datetime.now())
+	caller = models.CharField(null=False, default='', max_length=20)
+	destination = models.CharField(null=False, default='', max_length=20)
+	is_pending = models.BooleanField(null=False, default=True)
+	user_profile = models.ForeignKey(UserProfile)
+
+	class Meta:
+		app_label = 'main_app'

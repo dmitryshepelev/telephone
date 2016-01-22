@@ -2,7 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 import pytz
 
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus, ProfileRequestTransaction
+from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus, ProfileRequestTransaction, \
+	RegisteredCallback
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -162,3 +163,22 @@ class DBService():
 			logger = LogService()
 			logger.error(Code.CREATE_SUBSCR_TRANSACTION_ERR, data=profile_request_transact, message=str(e))
 			return None
+
+	@staticmethod
+	def register_callback(user_profile, caller, destination):
+		"""
+		Register callback in database
+		:param user_profile: user's profile instance
+		:param caller: callback caller
+		:param destination: callback destination
+		:return:
+		"""
+		callback = None
+		try:
+			callback = RegisteredCallback(caller=caller, destination=destination, user_profile=user_profile)
+			callback.save()
+			return callback
+		except Exception as e:
+			logger = LogService()
+			logger.error(Code.REGISTER_CALLBACK_ERR, data=callback, message=str(e))
+		return None

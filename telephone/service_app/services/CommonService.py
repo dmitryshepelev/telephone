@@ -132,7 +132,11 @@ class CommonService():
 		:param filename: name of the file
 		:return:
 		"""
-		os.remove(os.path.join(settings.BASE_DIR, settings.TEMP_DIR) + filename)
+		try:
+			os.remove(os.path.join(settings.BASE_DIR, settings.TEMP_DIR) + filename)
+		except Exception as e:
+			logger = LogService()
+			logger.warning(Code.WRITE_TEMP_FILE_ERR, message=str(e), file_path=filename)
 
 	@staticmethod
 	def convert_to_mp3(file_instance, target_format='mp3', delete_source=True):
