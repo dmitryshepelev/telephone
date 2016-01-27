@@ -1,3 +1,4 @@
+# coding=utf-8
 import email
 import imaplib
 import json
@@ -323,6 +324,39 @@ class PBXDataService():
 		return result
 
 	@staticmethod
+	def is_number_known(number, userprofile):
+		number = str(number)
+		return len(userprofile.redirectnumbers_set.filter(number=number)) > 0 or 'Internal' in number
+
+	@staticmethod
+	def parse_calls(stat_common, stat_pbx_grouped, userprofile):
+		coming = []
+		incoming = []
+		internal = []
+
+		for stat_pbx_group in stat_pbx_grouped:
+
+			# pbx_incoming = filter(lambda x: x.destination == CallsConstants.INCOMING, stat_pbx_group)
+			# pbx_incoming_call = pbx_incoming[0]
+
+			# pbx_incoming_call_same_disp = filter(lambda x: x.disposition == pbx_incoming_call.disposition, stat_pbx_group)[0]
+
+			if PBXDataService.is_number_known(stat_pbx_group[0].clid, userprofile):
+				# звонок исходящий либо внутренний
+
+				if PBXDataService.is_number_known(stat_pbx_group[0].destination, userprofile):
+					# номер известный - звонок внутренний
+					internal.append(stat_pbx_group)
+				else:
+					# звонок исходящий
+					coming.append(stat_pbx_group)
+			else:
+				# звонок входящий
+				incoming.append(stat_pbx_group)
+
+		return [coming, incoming, internal]
+
+	@staticmethod
 	def update_calls_list(params, user):
 		"""
 		Update db table Calls
@@ -343,6 +377,7 @@ class PBXDataService():
 		# group pbx stat
 		stat_pbx_grouped = PBXDataService.group_stat_pbx(stat_pbx_res.data)
 
+		parseed_calls = PBXDataService.parse_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)
 		coming_calls = PBXDataService.get_coming_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)
 		internal_calls = PBXDataService.get_internal_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)
 		other_calls = PBXDataService.get_other_calls(stat_common_res.data, stat_pbx_grouped, user.userprofile)

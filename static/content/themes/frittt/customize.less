@@ -614,9 +614,35 @@ select {
 .fade.in, .fade {
 	background-color: rgba(0, 0, 0, 0.21);
 	overflow-y: auto;
+
+	&.popover {
+		background-color: #ffffff !important;
+	}
 }
 
 // MODAL ENDS
+
+.popover {
+	border-radius: 2px !important;
+	& > .arrow, & > .arrow::after {
+		position: absolute;
+		display: block;
+		width: 0;
+		height: 0;
+		border: solid transparent;
+	}
+	&.right {
+		& > .arrow {
+			&::after {
+				content: " ";
+				left: 1px;
+				bottom: -10px;
+				border-left-width: 0;
+				border-right-color: #ffffff;
+			}
+		}
+	}
+}
 
 #error {
     &.error-text {
