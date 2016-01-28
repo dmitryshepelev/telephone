@@ -18,6 +18,8 @@ class Call():
 		self.bill_cost = data['billcost']
 		self.currency = data['currency']
 
+		self.merged = False
+
 
 class CallPBX():
 	def __init__(self, data):
@@ -47,6 +49,7 @@ class CallRecord():
 		self.currency = None
 
 		self.call_type = None
+		self.is_callback = False
 
 		self.__is_first_call = False
 
