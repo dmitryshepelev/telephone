@@ -336,23 +336,49 @@ class PBXDataService():
 
 		for stat_pbx_group in stat_pbx_grouped:
 
-			# pbx_incoming = filter(lambda x: x.destination == CallsConstants.INCOMING, stat_pbx_group)
-			# pbx_incoming_call = pbx_incoming[0]
+			call = CallRecord()
+			pbx_incoming = filter(lambda x: x.destination == CallsConstants.INCOMING, stat_pbx_group)
+			if len(pbx_incoming) is not 0:
+				pbx_incoming_call = pbx_incoming[0]
+				pbx_call_same_disp = filter(lambda x: x.disposition == pbx_incoming_call.disposition and not x.destination == CallsConstants.INCOMING, stat_pbx_group)[0]
 
-			# pbx_incoming_call_same_disp = filter(lambda x: x.disposition == pbx_incoming_call.disposition, stat_pbx_group)[0]
+				call.set_params(
+					call_id=pbx_call_same_disp.call_id,
+					clid=pbx_call_same_disp.clid,
+					sip=pbx_call_same_disp.sip,
+					date=pbx_call_same_disp.date,
+					destination=pbx_call_same_disp.destination,
+					disposition=pbx_incoming_call.disposition,
+					bill_seconds=pbx_incoming_call.seconds
+				)
+
+			else:
+				pbx_call = stat_pbx_group[0]
+				call.set_params(
+					call_id=pbx_call.call_id,
+					clid=pbx_call.clid,
+					sip=pbx_call.sip,
+					date=pbx_call.date,
+					destination=pbx_call.destination,
+					disposition=pbx_call.disposition,
+					bill_seconds=pbx_call.seconds
+				)
 
 			if PBXDataService.is_number_known(stat_pbx_group[0].clid, userprofile):
 				# звонок исходящий либо внутренний
 
 				if PBXDataService.is_number_known(stat_pbx_group[0].destination, userprofile):
 					# номер известный - звонок внутренний
-					internal.append(stat_pbx_group)
+					call.call_type = CallsConstants.INTERNAL
+					internal.append(call)
 				else:
 					# звонок исходящий
-					coming.append(stat_pbx_group)
+					call.call_type = CallsConstants.COMING
+					coming.append(call)
 			else:
 				# звонок входящий
-				incoming.append(stat_pbx_group)
+				call.call_type = CallsConstants.INCOMING
+				incoming.append(call)
 
 		return [coming, incoming, internal]
 

@@ -112,8 +112,9 @@ ALTER TABLE "main_app_call" ALTER COLUMN "call_type" DROP DEFAULT;
 -- --
 
 -- 13.01.16 registered callback table --
--- applying on
+-- applying on:
 --  work
+--  host
 
 CREATE TABLE "main_app_registeredcallback" ("id" serial NOT NULL PRIMARY KEY, "date" timestamp with time zone NOT NULL, "caller" varchar(20) NOT NULL, "destination" varchar(20) NOT NULL, "is_pending" boolean NOT NULL, "user_profile_id" integer NOT NULL);
 ALTER TABLE "main_app_registeredcallback" ADD CONSTRAINT "main_app_re_user_profile_id_546c731d_fk_main_app_userprofile_id" FOREIGN KEY ("user_profile_id") REFERENCES "main_app_userprofile" ("id") DEFERRABLE INITIALLY DEFERRED;
