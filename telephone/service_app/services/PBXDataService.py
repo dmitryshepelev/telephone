@@ -168,14 +168,14 @@ class PBXDataService():
 		return coming + incoming + internal
 
 	@staticmethod
-	def find_in_pbx_typed(common_call, pbx_typed):
+	def find_in_pbx_typed(common_call, pbx_typed, with_seconds=True):
 		"""
 		Find suitable call in pbx_typed by date
 		:param common_call:
 		:param pbx_typed:
 		:return:
 		"""
-		calls = filter(lambda x: CommonService.is_dates_equals(x.date, common_call.date, True), pbx_typed)
+		calls = filter(lambda x: CommonService.is_dates_equals(x.date, common_call.date, with_seconds), pbx_typed)
 		if len(calls) == 1:
 			return calls[0]
 
@@ -187,67 +187,14 @@ class PBXDataService():
 		merged = []
 
 		# Находим строку вида АТС - Номер А
-		pbx_caller_calls = filter(lambda x: str(x.caller) == userprofile.profile_phone_number, stat_common)
+		pbx_caller_calls = filter(lambda x: str(x.caller) == userprofile.profile_phone_number
+		                                    and not PBXDataService.is_number_known(x.destination, userprofile), stat_common)
 		# начинаем проверку не является ли она калбеком
 		for pcc in pbx_caller_calls:
 
 			call = CallRecord()
 
-			pbx_call = PBXDataService.find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'coming', stat_pbx_typed))
-			if pbx_call:
-				# Если соответствие есть - и это исходящий, значит это не калбек, а обычный исходящий звонок.
-				call.call_type = CallsConstants.COMING
-				call = pbx_call
-				call.set_params(
-					description=pcc.description,
-					bill_seconds=pcc.bill_seconds,
-					cost=pcc.cost,
-					bill_cost=pcc.bill_cost,
-					currency=pcc.currency
-				)
-				merged.append(call)
-				pcc.merged = True
-				pbx_call.merged = True
-				continue
-
-			pbx_call = PBXDataService.find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed))
-			if pbx_call:
-				# Если соответствие есть, это входящий. значит однострочный калбек.
-				call.call_type = CallsConstants.COMING
-				call = pbx_call
-				call.set_params(
-					description=pcc.description,
-					bill_seconds=pcc.bill_seconds,
-					cost=pcc.cost,
-					bill_cost=pcc.bill_cost,
-					currency=pcc.currency
-				)
-				call.is_callback = True
-				merged.append(call)
-				pcc.merged = True
-				pbx_call.merged = True
-				continue
-
-			pbx_call = PBXDataService.find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'internal', stat_pbx_typed))
-			if pbx_call:
-				# запись во второй таблице определена как внутренний звонок, значит калбек имеет статус внутренний
-				call.call_type = CallsConstants.INTERNAL
-				call = pbx_call
-				call.set_params(
-					description=pcc.description,
-					bill_seconds=pcc.bill_seconds,
-					cost=pcc.cost,
-					bill_cost=pcc.bill_cost,
-					currency=pcc.currency
-				)
-				call.is_callback = True
-				merged.append(call)
-				pcc.merged = True
-				pbx_call.merged = True
-				continue
-
 			# Если ей нет соответствия во второй таблице, значит двустрочный калбек
-
 			# Второй вид двустрочного калбека, это у которого вторая строка имеет вид Номер А - Номер Б
 			second_row = filter(lambda x: str(x.caller) == str(pcc.destination) and CommonService.is_dates_equals(x.date, pcc.date, False), stat_common)
 
@@ -255,18 +202,20 @@ class PBXDataService():
 				# страка может иметь соответствующий входящий во второй таблице, может не иметь.
 				# Если имеет, то записи должны упоминатся номера  А и Б
 				second_row = second_row[0]
-				pbx_call = PBXDataService.find_in_pbx_typed(second_row, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed))
+				pbx_call = PBXDataService.find_in_pbx_typed(second_row, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed), False)
 				if pbx_call:
 					call = pbx_call
 					call.set_params(
-						clid=second_row.caller,
-						destination=second_row.destination,
+						clid=second_row.destination,
+						destination=pbx_call.clid,
 						description=pcc.description,
 						bill_seconds=pcc.bill_seconds,
-						cost=pcc.cost,
-						bill_cost=pcc.bill_cost,
-						currency=pcc.currency
+						cost=pcc.cost + second_row.cost,
+						bill_cost=pcc.bill_cost + second_row.bill_cost,
+						currency=pcc.currency,
+						sip=second_row.destination
 					)
+					pbx_call.merged = True
 				else:
 					call.set_params(
 						call_id=pcc.call_id,
@@ -278,36 +227,38 @@ class PBXDataService():
 
 						description=pcc.description,
 						bill_seconds=pcc.bill_seconds,
-						cost=pcc.cost,
-						bill_cost=pcc.bill_cost,
+						cost=pcc.cost + second_row.cost,
+						bill_cost=pcc.bill_cost + second_row.bill_cost,
 						currency=pcc.currency
 					)
 				call.call_type = CallsConstants.COMING
 				call.is_callback = True
 				pcc.merged = True
-				pbx_call.merged = True
 				second_row.merged = True
 				merged.append(call)
 				continue
 
 			# При первом варианте: двустрочный калбек. Он бывает двух видов в котором вторая строка(фактически она первая)
 			# имеет вид АТС - Номер Б, находим её.
-			second_row = filter(lambda x: str(x.caller) == str(userprofile.profile_phone_number) and CommonService.is_dates_equals(x.date, pcc.date, False), stat_common)
+			second_row = filter(lambda x: str(x.caller) == str(userprofile.profile_phone_number)
+			                              and CommonService.is_dates_equals(x.date, pcc.date, False)
+			                              and not str(x.destination) == str(pcc.destination), stat_common)
 
 			if len(second_row) == 1:
 				# Ей должна соответствовать запись о входящем звонке в которой содержится номер А.
 				# Если это так - значит всё это колбек(исходящий)
 				second_row = second_row[0]
-				pbx_call = PBXDataService.find_in_pbx_typed(second_row, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed))
+				pbx_call = PBXDataService.find_in_pbx_typed(second_row, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed), False)
 				if pbx_call:
-					call.call_type = CallsConstants.COMING
 					call = pbx_call
+					call.call_type = CallsConstants.COMING
 					call.set_params(
-						destination=second_row.destination,
+						sip=second_row.destination,
+						destination=pcc.destination,
 						description=pcc.description,
 						bill_seconds=pcc.bill_seconds,
-						cost=pcc.cost,
-						bill_cost=pcc.bill_cost,
+						cost=pcc.cost + second_row.cost,
+						bill_cost=pcc.bill_cost + second_row.bill_cost,
 						currency=pcc.currency
 					)
 					call.is_callback = True
@@ -315,6 +266,45 @@ class PBXDataService():
 					pcc.merged = True
 					pbx_call.merged = True
 					continue
+
+			# искаем однострочный
+			pbx_call = PBXDataService.find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'coming', stat_pbx_typed))
+			if pbx_call:
+				# Если соответствие есть - и это исходящий, значит это не калбек, а обычный исходящий звонок.
+				call = pbx_call
+				call.call_type = CallsConstants.COMING
+				call.set_params(
+					description=pcc.description,
+					bill_seconds=pcc.bill_seconds,
+					cost=pcc.cost,
+					bill_cost=pcc.bill_cost,
+					currency=pcc.currency
+				)
+				merged.append(call)
+				pcc.merged = True
+				pbx_call.merged = True
+				continue
+
+			pbx_call = PBXDataService.find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed), False)
+			if pbx_call:
+				# Если соответствие есть, это входящий. значит однострочный калбек.
+				call = pbx_call
+				call.call_type = CallsConstants.COMING
+				call.set_params(
+					destination=pcc.destination,
+					sip=pbx_call.destination,
+					clid=pbx_call.destination,
+					description=pcc.description,
+					bill_seconds=pcc.bill_seconds,
+					cost=pcc.cost,
+					bill_cost=pcc.bill_cost,
+					currency=pcc.currency
+				)
+				call.is_callback = True
+				merged.append(call)
+				pcc.merged = True
+				pbx_call.merged = True
+				continue
 
 		return merged
 
