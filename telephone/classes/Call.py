@@ -53,6 +53,8 @@ class CallRecord():
 
 		self.__is_first_call = False
 
+		self.merged = False
+
 		if call:
 			self.__init_with_instance(call)
 

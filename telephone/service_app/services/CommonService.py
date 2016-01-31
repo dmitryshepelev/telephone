@@ -36,6 +36,8 @@ class CallsConstants():
 	INTERNAL = 'internal'
 	CALLBACK = 'callback'
 
+	FAIL_TYPES = ['busy', 'cancel', 'no answer', 'failed', 'no money', 'unallocated number', 'no limit', 'no day limit', 'line limit', 'no money, no limit']
+
 
 class CommonService():
 	def __init__(self):

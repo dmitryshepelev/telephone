@@ -52,6 +52,10 @@ class DBService():
 		)
 		# create Callee entity or ensure it exist
 		result = DBService.create_callee(callee)
+
+		if (isinstance(call_record.destination, str) or isinstance(call_record.destination, unicode)) and 'w00e' in call_record.destination:
+			call_record.destination = call_record.destination[4:]
+
 		if result.is_success:
 			call = Call(
 				call_id=call_record.call_id,
