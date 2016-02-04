@@ -213,7 +213,8 @@ class PBXDataService():
 						cost=pcc.cost + second_row.cost,
 						bill_cost=pcc.bill_cost + second_row.bill_cost,
 						currency=pcc.currency,
-						sip=second_row.destination
+						sip=second_row.destination,
+						disposition=pcc.disposition
 					)
 					pbx_call.merged = True
 				else:
@@ -259,7 +260,8 @@ class PBXDataService():
 						bill_seconds=pcc.bill_seconds,
 						cost=pcc.cost + second_row.cost,
 						bill_cost=pcc.bill_cost + second_row.bill_cost,
-						currency=pcc.currency
+						currency=pcc.currency,
+						disposition=pcc.disposition
 					)
 					call.is_callback = True
 					merged.append(call)
@@ -274,6 +276,7 @@ class PBXDataService():
 				call = pbx_call
 				call.call_type = CallsConstants.COMING
 				call.set_params(
+					disposition=pcc.disposition,
 					description=pcc.description,
 					bill_seconds=pcc.bill_seconds,
 					cost=pcc.cost,
@@ -291,6 +294,7 @@ class PBXDataService():
 				call = pbx_call
 				call.call_type = CallsConstants.COMING
 				call.set_params(
+					disposition=pcc.disposition,
 					destination=pcc.destination,
 					sip=pbx_call.destination,
 					clid=pbx_call.destination,
