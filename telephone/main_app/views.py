@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 import requests
 
 from telephone.admin_app.views import panel
@@ -165,3 +167,33 @@ def get_call_cost_by_country(request):
 		return JsonResponse(data)
 
 	return HttpResponse(status=500, content=data)
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def incoming_detect(request):
+	"""
+	Incoming calls information
+	https://github.com/zadarma/user-api-v1/blob/master/examples/callinfo_callback.php
+	:param request: HTTP request
+	:return:
+	"""
+	if 'zd_echo' in request.GET.keys() and (request.GET.get('zd_echo') and not request.GET.get('zd_echo') == ''):
+		print('ECHO PASSED', request.GET.get('zd_echo'))
+		logger.info('ECHO PASSED', zd_echo=request.GET.get('zd_echo'))
+		return HttpResponse(status=200, content=request.GET.get('zd_echo'))
+
+	caller_id = request.POST.get('caller_id')
+	called_did = request.POST.get('called_did')
+	call_start = request.POST.get('call_start')
+
+	print('IC PARMS', (caller_id, called_did, call_start,))
+	logger.info('IC PARMS', params=(caller_id, called_did, call_start,))
+
+	headers = request.META
+
+	if 'Signature' in headers.keys():
+		print('IC Signature', headers.get('Signature'))
+		logger.info('IC HEDRS', signature=headers.get('Signature'))
+
+	return HttpResponse(status=200)
