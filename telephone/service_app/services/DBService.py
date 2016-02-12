@@ -1,9 +1,11 @@
+import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Max
 import pytz
 
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus, ProfileRequestTransaction, \
-	RegisteredCallback
+	RegisteredCallback, IncomingInfo
 from telephone.service_app.services.LogService import LogService, Code
 
 
@@ -188,4 +190,43 @@ class DBService():
 		except Exception as e:
 			logger = LogService()
 			logger.error(Code.REGISTER_CALLBACK_ERR, data=callback, message=str(e))
+		return None
+
+	@staticmethod
+	def create_incoming_info(caller_id, called_did, call_start, script_guid):
+		"""
+		Creates incoming info
+		:param caller_id:
+		:param called_did:
+		:param call_start:
+		:param script_guid:
+		:return:
+		"""
+		incoming_info = None
+		try:
+			expiration_date = call_start + datetime.timedelta(minutes=5)
+			incoming_info = IncomingInfo(caller_id=caller_id, call_start=call_start, called_did=called_did, expiration_date=expiration_date, script_id=script_guid)
+			incoming_info.save()
+			return incoming_info
+		except Exception as e:
+			logger = LogService()
+			logger.error(Code.INCOMING_INFO_ERR, data=incoming_info, message=str(e))
+		return None
+
+	@staticmethod
+	def get_incoming_info(script_guid):
+		"""
+		Get incoming info
+		:param script_guid:
+		:return:
+		"""
+		incoming_info = IncomingInfo.objects.filter(script_id=script_guid, is_taken=False).annotate(max_call_start=Max('call_start')).first()
+		now = datetime.datetime.now()
+		if not incoming_info:
+			return None
+
+		delta = (incoming_info.expiration_date.replace(tzinfo=pytz.utc).replace(tzinfo=None) - datetime.datetime.now())
+		if delta.days == -1 and delta.seconds < 300:
+			return incoming_info
+
 		return None

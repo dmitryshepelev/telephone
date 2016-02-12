@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import requests
+from telephone import settings
 
 from telephone.admin_app.views import panel
 from telephone.classes.ApiParams import ApiParams
@@ -16,6 +17,7 @@ from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
+from telephone.main_app.models import UserProfile, WidgetScript, IncomingInfo
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.PBXDataService import PBXDataService
@@ -170,8 +172,8 @@ def get_call_cost_by_country(request):
 
 
 @csrf_exempt
-@require_http_methods(['POST'])
-def incoming_detect(request):
+@require_http_methods(['POST', 'GET'])
+def incoming_detect(request, user_key):
 	"""
 	Incoming calls information
 	https://github.com/zadarma/user-api-v1/blob/master/examples/callinfo_callback.php
@@ -179,21 +181,45 @@ def incoming_detect(request):
 	:return:
 	"""
 	if 'zd_echo' in request.GET.keys() and (request.GET.get('zd_echo') and not request.GET.get('zd_echo') == ''):
-		print('ECHO PASSED', request.GET.get('zd_echo'))
 		logger.info('ECHO PASSED', zd_echo=request.GET.get('zd_echo'))
-		return HttpResponse(status=200, content=request.GET.get('zd_echo'))
+		return HttpResponse(str(request.GET.get('zd_echo')))
 
 	caller_id = request.POST.get('caller_id')
 	called_did = request.POST.get('called_did')
 	call_start = request.POST.get('call_start')
 
-	print('IC PARMS', (caller_id, called_did, call_start,))
 	logger.info('IC PARMS', params=(caller_id, called_did, call_start,))
 
-	headers = request.META
+	if not caller_id or not called_did or not call_start:
+		return HttpResponse(status=400)
 
-	if 'Signature' in headers.keys():
-		print('IC Signature', headers.get('Signature'))
-		logger.info('IC HEDRS', signature=headers.get('Signature'))
+	# TODO: check signature
+	# headers = request.META
+	#
+	# if 'Signature' in headers.keys():
+	# 	print('IC Signature', headers.get('Signature'))
+	# 	logger.info('IC HEDRS', signature=headers.get('Signature'))
+
+	user_profile = UserProfile.objects.get(user_key=user_key)
+	script = WidgetScript.objects.filter(user_profile_id=user_profile.pk).first()
+
+	incoming_info = DBService.create_incoming_info(caller_id, called_did, datetime.datetime.strptime(call_start, settings.DATETIME_FORMAT_ALTER), script.guid)
 
 	return HttpResponse(status=200)
+
+
+@require_http_methods(['GET'])
+def check_incoming_info(request, guid):
+	"""
+	Chech incoming call info
+	:param request:
+	:param guid:
+	:return:
+	"""
+	script = WidgetScript.objects.get(guid=guid)
+	incoming_info = DBService.get_incoming_info(script.guid)
+
+	if not incoming_info:
+		return HttpResponse(status=204)
+
+	return  HttpResponse(status=200)

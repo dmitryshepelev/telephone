@@ -1,4 +1,6 @@
 import datetime
+import hashlib
+import random
 import uuid
 from django.contrib.auth.models import User
 from django.db import models
@@ -104,6 +106,40 @@ class RegisteredCallback(models.Model):
 	destination = models.CharField(null=False, default='', max_length=20)
 	is_pending = models.BooleanField(null=False, default=True)
 	user_profile = models.ForeignKey(UserProfile)
+
+	class Meta:
+		app_label = 'main_app'
+
+
+class WidgetScript(models.Model):
+	guid = models.CharField(null=False, max_length=40, unique=True)
+	user_profile = models.ForeignKey(UserProfile)
+
+	class Meta:
+		app_label = 'main_app'
+
+	def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+		"""
+		Overrides base save method
+		:param force_insert:
+		:param force_update:
+		:param using:
+		:param update_fields:
+		:return:
+		"""
+		if not self.guid:
+			self.guid = hashlib.sha1(str(random.random())).hexdigest()
+
+		super(WidgetScript, self).save(force_insert, force_update, using, update_fields)
+
+
+class IncomingInfo(models.Model):
+	is_taken = models.BooleanField(null=False, default=False)
+	caller_id = models.CharField(null=False, max_length=30)
+	called_did = models.CharField(null=False, max_length=30)
+	call_start = models.DateTimeField(null=False)
+	expiration_date = models.DateTimeField(null=False)
+	script = models.ForeignKey(WidgetScript, to_field='guid')
 
 	class Meta:
 		app_label = 'main_app'

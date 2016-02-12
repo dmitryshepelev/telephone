@@ -1,6 +1,7 @@
 # coding=utf-8
 import time
 import datetime
+from telephone import settings
 from telephone.service_app.services.CommonService import CallsConstants
 
 
@@ -8,7 +9,7 @@ class Call():
 	def __init__(self, data):
 		self.call_id = data['id']
 		self.sip = data['sip']
-		self.date = datetime.datetime.strptime(data['callstart'], '%Y-%m-%d %H:%M:%S')
+		self.date = datetime.datetime.strptime(data['callstart'], settings.DATETIME_FORMAT_ALTER)
 		self.caller = data['from']
 		self.destination = data['to']
 		self.description = data['description']
@@ -25,7 +26,7 @@ class CallPBX():
 	def __init__(self, data):
 		self.call_id = data['call_id']
 		self.sip = data['sip']
-		self.date = datetime.datetime.strptime(data['callstart'], '%Y-%m-%d %H:%M:%S')
+		self.date = datetime.datetime.strptime(data['callstart'], settings.DATETIME_FORMAT_ALTER)
 		self.destination = data['destination']
 		self.disposition = data['disposition']
 		self.seconds = data['seconds']
