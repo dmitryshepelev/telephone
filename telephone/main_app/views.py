@@ -184,9 +184,14 @@ def incoming_detect(request, user_key):
 		logger.info('ECHO PASSED', zd_echo=request.GET.get('zd_echo'))
 		return HttpResponse(str(request.GET.get('zd_echo')))
 
-	caller_id = request.POST.get('caller_id')
-	called_did = request.POST.get('called_did')
-	call_start = request.POST.get('call_start')
+	if settings.DEBUG:
+		caller_id = request.body.split('\n')[0].split(': ')[1]
+		called_did = request.body.split('\n')[1].split(': ')[1]
+		call_start = request.body.split('\n')[2].split(': ')[1]
+	else:
+		caller_id = request.POST.get('caller_id')
+		called_did = request.POST.get('called_did')
+		call_start = request.POST.get('call_start')
 
 	logger.info('IC PARMS', params=(caller_id, called_did, call_start,))
 
@@ -201,7 +206,7 @@ def incoming_detect(request, user_key):
 	# 	logger.info('IC HEDRS', signature=headers.get('Signature'))
 
 	user_profile = UserProfile.objects.get(user_key=user_key)
-	script = WidgetScript.objects.filter(user_profile_id=user_profile.pk).first()
+	script = user_profile.widgetscript
 
 	incoming_info = DBService.create_incoming_info(caller_id, called_did, datetime.datetime.strptime(call_start, settings.DATETIME_FORMAT_ALTER), script.guid)
 

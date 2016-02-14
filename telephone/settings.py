@@ -128,6 +128,7 @@ STATICFILES_DIRS = (
 	# 'static/content/scripts/coffee',
 	'static/content/scripts/javascript',
 	'static/content/scripts/shared',
+	'static/content/scripts/common',
 	'static/content',
 	'static/content/images',
 )

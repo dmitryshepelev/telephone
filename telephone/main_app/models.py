@@ -113,7 +113,7 @@ class RegisteredCallback(models.Model):
 
 class WidgetScript(models.Model):
 	guid = models.CharField(null=False, max_length=40, unique=True)
-	user_profile = models.ForeignKey(UserProfile)
+	user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
 
 	class Meta:
 		app_label = 'main_app'
@@ -130,7 +130,7 @@ class WidgetScript(models.Model):
 		if not self.guid:
 			self.guid = hashlib.sha1(str(random.random())).hexdigest()
 
-		super(WidgetScript, self).save(force_insert, force_update, using, update_fields)
+		return super(WidgetScript, self).save(force_insert, force_update, using, update_fields)
 
 
 class IncomingInfo(models.Model):

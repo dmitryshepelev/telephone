@@ -220,13 +220,13 @@ class DBService():
 		:param script_guid:
 		:return:
 		"""
-		incoming_info = IncomingInfo.objects.filter(script_id=script_guid, is_taken=False).annotate(max_call_start=Max('call_start')).first()
-		now = datetime.datetime.now()
+		incoming_info = IncomingInfo.objects.filter(script_id=script_guid, is_taken=False).order_by('-call_start').first()
+
 		if not incoming_info:
 			return None
 
-		delta = (incoming_info.expiration_date.replace(tzinfo=pytz.utc).replace(tzinfo=None) - datetime.datetime.now())
-		if delta.days == -1 and delta.seconds < 300:
+		delta = (incoming_info.expiration_date.replace(tzinfo=pytz.utc).replace(tzinfo=None) - datetime.datetime.now(tz=pytz.timezone(pytz.country_timezones['RU'][1])).replace(tzinfo=None))
+		if delta.days == 0 and delta.seconds < 300:
 			return incoming_info
 
 		return None
