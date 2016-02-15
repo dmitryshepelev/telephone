@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 
 from telephone.classes.ServiceResponse import ServiceResponse
-from telephone.main_app.models import UserProfile, ProfileRequestTransaction
+from telephone.main_app.models import UserProfile, WidgetScript
 from telephone.service_app.services.CommonService import CommonService
 
 
@@ -23,6 +23,8 @@ class ProfileService():
 			user.save()
 			user_profile = UserProfile.objects.create(profile_email=data['login'], profile_password=data['password'], uid=data['uid'], token=data['token'], user_key=data['userKey'], secret_key=data['secretKey'], user_id=user.id, customer_number=data['customerNumber'], profile_phone_number=data['profilePhoneNumber'])
 			user_profile.save()
+			widget = WidgetScript(user_profile=user_profile)
+			widget.save()
 			return ServiceResponse(True, data=user)
 		except Exception as e:
 			return ServiceResponse(False, e.message)

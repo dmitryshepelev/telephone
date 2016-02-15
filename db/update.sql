@@ -125,6 +125,7 @@ CREATE INDEX "main_app_registeredcallback_06037614" ON "main_app_registeredcallb
 --- INCOMING INFO TABLE , SCRIPT WIDGET TABLE--
 -- applying on
 -- work
+-- home
 
 CREATE TABLE "main_app_incominginfo" ("id" serial NOT NULL PRIMARY KEY, "is_taken" boolean NOT NULL, "caller_id" varchar(30) NOT NULL, "called_did" varchar(30) NOT NULL, "call_start" timestamp with time zone NOT NULL, "expiration_date" timestamp with time zone
 NOT NULL);
@@ -136,6 +137,11 @@ CREATE INDEX "main_app_widgetscript_06037614" ON "main_app_widgetscript" ("user_
 CREATE INDEX "main_app_widgetscript_guid_5aa53910_like" ON "main_app_widgetscript" ("guid" varchar_pattern_ops);
 CREATE INDEX "main_app_incominginfo_a19ff0c0" ON "main_app_incominginfo" ("script_id");
 ALTER TABLE "main_app_incominginfo" ADD CONSTRAINT "main_app_incom_script_id_26c86eea_fk_main_app_widgetscript_guid" FOREIGN KEY ("script_id") REFERENCES "main_app_widgetscript" ("guid") DEFERRABLE INITIALLY DEFERRED;
+
+
+ALTER TABLE "main_app_widgetscript" DROP CONSTRAINT "main_app_wid_user_profile_id_913316b_fk_main_app_userprofile_id";
+ALTER TABLE "main_app_widgetscript" ADD CONSTRAINT "main_app_widgetscript_user_profile_id_913316b_uniq" UNIQUE ("user_profile_id");
+ALTER TABLE "main_app_widgetscript" ADD CONSTRAINT "main_app_wid_user_profile_id_913316b_fk_main_app_userprofile_id" FOREIGN KEY ("user_profile_id") REFERENCES "main_app_userprofile" ("id") DEFERRABLE INITIALLY DEFERRED;
 
 
 -- --

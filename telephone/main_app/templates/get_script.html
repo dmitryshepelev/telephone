@@ -1,0 +1,26 @@
+{% extends 'main_layout.html' %}
+
+{% block resources %}
+	{% load staticfiles %}
+	<script type="application/javascript" src="{% static "get_script_controller.js" %}"></script>
+{% endblock %}
+
+{% block title %}
+    telephone
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+		<div class="col-md-5 col-md-offset-3">
+			<form class="form-horizontal">
+				<div class="form-group">
+					<label class="">Введите номер счетчика</label>
+					<input type="text" required class="form-control input-lg" name="counterNumber" placeholder="Номер счетчика" autocomplete="off" />
+				</div>
+				<div class="form-group">
+					<button type="button" class="btn btn-default" onclick="ctrl.getScript()">Получить мой скрипт</button>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
