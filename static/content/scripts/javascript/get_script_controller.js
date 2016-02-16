@@ -11,9 +11,9 @@ var ctrl = (function ($) {
             }
 
             $.post('/getscript/', {counterNumber: value}, function (result) {
-                console.log();
+                $('#code').empty().append(result);
             }).error(function () {
-                console.log('error');
+                message.error('Произошла ошибка');
             })
 
         }

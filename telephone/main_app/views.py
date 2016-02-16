@@ -242,7 +242,6 @@ def check_incoming_info(request, guid):
 	incoming_info.save()
 
 	response.status_code = 200
-	response.content = {'status': 1}
 	return response
 
 
@@ -257,20 +256,9 @@ def get_widget_script(request):
 	if request.method == 'GET':
 		return render_to_response('get_script.html', {}, context_instance=RequestContext(request))
 
-	widget = request.user.userprofile.widgetscript
-	#
-	source_file = os.path.join(settings.BASE_DIR, 'static/content/scripts/common/widget.js')
-	temp_path = os.path.join(settings.BASE_DIR, settings.TEMP_DIR)
-	filename = request.user.username + '_' + widget.guid + '.js'
+	counter_number = request.POST.get('counterNumber', None)
 
-	CommonService.delete_temp_file(filename)
+	if not counter_number:
+		return HttpResponse(status=400)
 
-	with open(temp_path + request.user.username + '_' + widget.guid + '.min.js', 'w+') as temp_file:
-		with open(source_file, 'r') as s_f:
-			for line in s_f:
-				temp_file.write(line.replace('{{widget_guid}}', widget.guid))
-
-	response = HttpResponse(content_type='application/x-javascript')
-	response['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=filename)
-	response.content = open(temp_path + request.user.username + '_' + widget.guid + '.min.js', 'r').read()
-	return response
+	return render_to_response('script_code.html', {'counter_number': counter_number, 'widget_guid': request.user.userprofile.widgetscript.guid}, context_instance=RequestContext(request))

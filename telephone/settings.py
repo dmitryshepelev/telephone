@@ -132,6 +132,7 @@ STATICFILES_DIRS = (
 	'static/content',
 	'static/content/images',
 	'static',
+	'static/content/res',
 )
 
 STATIC_URL = '/static/content/'
