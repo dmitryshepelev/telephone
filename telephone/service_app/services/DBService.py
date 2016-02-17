@@ -204,7 +204,7 @@ class DBService():
 		"""
 		incoming_info = None
 		try:
-			expiration_date = call_start + datetime.timedelta(minutes=5)
+			expiration_date = call_start + datetime.timedelta(minutes=2)
 			incoming_info = IncomingInfo(caller_id=caller_id, call_start=call_start, called_did=called_did, expiration_date=expiration_date, script_id=script_guid)
 			incoming_info.save()
 			return incoming_info

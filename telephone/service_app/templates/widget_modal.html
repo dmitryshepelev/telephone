@@ -46,9 +46,8 @@
 .modal-content {
     position: relative;
     background-color: #fff;
-    border: 1px solid #999;
-    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 6px;
+	padding: 15px 0;
     -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
     box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
     -webkit-background-clip: padding-box;
@@ -127,8 +126,8 @@
 
 @media (min-width:768px) {
     .modal-dialog {
-        width: 600px;
-        margin: 30px auto
+        width: 400px;
+        margin: 90px auto
     }
     .modal-content {
         -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -235,6 +234,18 @@
     -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
     box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
 }
+
+.wt-copy {
+	font-size: 12px;
+	color: #ababab;
+	font-family: 'Roboto', Arial, sans-serif;
+	position: relative;
+	padding: 10px;
+}
+
+.wt-copy > a {
+	color: #ababab;
+}
 </style>
 
 <div class="modal fade" id="webtelWidget" role="dialog">
@@ -243,9 +254,10 @@
             <div class="modal-header-wt">
                 <p style="font-size: 20px;">Вы нам звонили/звоните?</p>
             </div>
-            <div class="modal-footer-wt">
+            <div class="modal-footer-wt" style="padding: 0">
                 <button id="wt_yes" type="button" class="btn-wt btn-default btn-default" data-dismiss="modal">ДА</button>
                 <button id="wt_no" type="button" class="btn-wt btn-default btn-default" data-dismiss="modal">НЕТ</button>
+	            <div class="wt-copy">Предоставленно <a target="_blank" href="http://web-tel.ru">web-tel.ru</a></div>
             </div>
         </div>
     </div>
