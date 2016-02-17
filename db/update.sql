@@ -145,3 +145,8 @@ ALTER TABLE "main_app_widgetscript" ADD CONSTRAINT "main_app_wid_user_profile_id
 
 
 -- --
+
+
+ALTER TABLE "main_app_incominginfo" DROP COLUMN "is_taken" CASCADE;
+ALTER TABLE "main_app_incominginfo" ADD COLUMN "guid" varchar(40) DEFAULT '' NOT NULL UNIQUE;
+ALTER TABLE "main_app_incominginfo" ALTER COLUMN "guid" DROP DEFAULT;

@@ -134,7 +134,7 @@ class WidgetScript(models.Model):
 
 
 class IncomingInfo(models.Model):
-	is_taken = models.BooleanField(null=False, default=False)
+	guid = models.CharField(null=False, max_length=40, unique=True)
 	caller_id = models.CharField(null=False, max_length=30)
 	called_did = models.CharField(null=False, max_length=30)
 	call_start = models.DateTimeField(null=False)
@@ -143,3 +143,17 @@ class IncomingInfo(models.Model):
 
 	class Meta:
 		app_label = 'main_app'
+
+	def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+		"""
+		Overrides base save method
+		:param force_insert:
+		:param force_update:
+		:param using:
+		:param update_fields:
+		:return:
+		"""
+		if not self.guid:
+			self.guid = hashlib.sha1(str(random.random())).hexdigest()
+
+		return super(IncomingInfo, self).save(force_insert, force_update, using, update_fields)

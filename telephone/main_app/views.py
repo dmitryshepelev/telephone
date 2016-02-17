@@ -242,6 +242,7 @@ def check_incoming_info(request, guid):
 	incoming_info.save()
 
 	response.status_code = 200
+	response.content = incoming_info.guid
 	return response
 
 

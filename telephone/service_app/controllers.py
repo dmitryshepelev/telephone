@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.template import RequestContext, loader
 from django.views.decorators.http import require_http_methods
 
 from telephone.classes.MailParameters import MailParameters
@@ -200,3 +200,21 @@ def get_modal(request, modal):
 	"""
 	modal = Modal.factory(modal, request.GET)
 	return render_to_response(modal.template, modal.params, context_instance=RequestContext(request))
+
+
+@require_http_methods(['GET'])
+def get_widget_modal(request):
+	"""
+	returns widget modal template
+	:param request:
+	:return:
+	"""
+	modal = Modal.factory('widget', {})
+
+	content = loader.render_to_string(modal.template, modal.params)
+	response = HttpResponse(status=200)
+	response['Access-Control-Allow-Origin'] = '*'
+	response.content = content
+
+	return response
+

@@ -58,6 +58,8 @@ class Modal(object):
 			return CallbackModal(name, params)
 		if name == 'callCostByCountry':
 			return CallCostByCountryModal(name, params)
+		if name == 'widget':
+			return WidgetModal(name, params)
 		else:
 			return None
 
@@ -99,3 +101,12 @@ class CallCostByCountryModal(Modal):
 
 	def __init__(self, name, params):
 		super(CallCostByCountryModal, self).__init__(name, params)
+
+
+class WidgetModal(Modal):
+	"""
+	Concrete Modal instance class
+	"""
+
+	def __init__(self, name, params):
+		super(WidgetModal, self).__init__(name, params)

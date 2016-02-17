@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from telephone.service_app.controllers import get_api_urls, get_oauth_token, generate_password, create_mail, \
-	get_mailbox_data, transact_action, get_transact_id, search, element, get_modal
+	get_mailbox_data, transact_action, get_transact_id, search, element, get_modal, get_widget_modal
 from telephone.service_app.error_pages import default_error
 
 urlpatterns = [
@@ -14,6 +14,8 @@ urlpatterns = [
 	url(r'^search/$', search),
 	url(r'^element/(?P<type>scrb|pr|profile)/(?P<id>.+)/$', element),
 	url(r'^getmodal/(?P<modal>callback|callCostByCountry)/$', get_modal),
+
+	url(r'^wmt/$', get_widget_modal),
 
 	url(r'e/$', default_error, {'template': 'default_error.html'})
 ]
