@@ -20,7 +20,7 @@ from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
-from telephone.main_app.models import UserProfile, WidgetScript
+from telephone.main_app.models import UserProfile, WidgetScript, Callee
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.PBXDataService import PBXDataService
@@ -211,7 +211,9 @@ def incoming_detect(request, user_key):
 	user_profile = UserProfile.objects.get(user_key=user_key)
 	script = user_profile.widgetscript
 
-	incoming_info = DBService.create_incoming_info(caller_id, called_did, datetime.datetime.strptime(call_start, settings.DATETIME_FORMAT_ALTER), script.guid)
+	callee = Callee.objects.filter(user_profile_id=script.user_profile.pk, sip=caller_id)
+	if len(callee) == 0:
+		incoming_info = DBService.create_incoming_info(caller_id, called_did, datetime.datetime.strptime(call_start, settings.DATETIME_FORMAT_ALTER), script.guid)
 
 	return HttpResponse(status=200)
 
@@ -231,15 +233,14 @@ def check_incoming_info(request, guid):
 
 	incoming_info = DBService.get_incoming_info(script.guid)
 
+	# logger.warning('CHK_INC_INFO', incoming_info=incoming_info.guid)
+
 	response = HttpResponse()
 	response['Access-Control-Allow-Origin'] = '*'
 
 	if not incoming_info:
 		response.status_code = 204
 		return response
-
-	incoming_info.is_taken = True
-	incoming_info.save()
 
 	response.status_code = 200
 	response.content = incoming_info.guid

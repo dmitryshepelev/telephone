@@ -28,9 +28,10 @@ class UserProfile(models.Model):
 
 
 class Callee(models.Model):
-	sip = models.CharField(max_length=20, unique=True)
+	sip = models.CharField(max_length=201)
 	description = models.CharField(max_length=1000, null=True)
 	first_call_date = models.DateTimeField(null=True)
+	user_profile = models.ForeignKey(UserProfile)
 
 	class Meta:
 		app_label = 'main_app'

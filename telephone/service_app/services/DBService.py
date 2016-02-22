@@ -22,7 +22,7 @@ class DBService():
 		"""
 		try:
 			# Get existing callee entity by its phone number
-			exs_callee = Callee.objects.get(sip=callee.sip)
+			exs_callee = Callee.objects.get(user_profile_id=callee.user_profile_id, sip=callee.sip)
 			# check if existing callee first call date over current callee first call date
 			# If true that means current call of callee was before existing and existing needs to be updated with new date
 			if exs_callee.first_call_date.replace(tzinfo=pytz.utc).replace(tzinfo=None) > callee.first_call_date:
@@ -56,7 +56,8 @@ class DBService():
 		callee = Callee(
 			sip=call_record.sip,
 			description=call_record.description,
-			first_call_date=call_record.date
+			first_call_date=call_record.date,
+			user_profile_id=userprofile.pk
 		)
 		# create Callee entity or ensure it exist
 		result = DBService.create_callee(callee)

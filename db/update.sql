@@ -150,3 +150,10 @@ ALTER TABLE "main_app_widgetscript" ADD CONSTRAINT "main_app_wid_user_profile_id
 ALTER TABLE "main_app_incominginfo" DROP COLUMN "is_taken" CASCADE;
 ALTER TABLE "main_app_incominginfo" ADD COLUMN "guid" varchar(40) DEFAULT '' NOT NULL UNIQUE;
 ALTER TABLE "main_app_incominginfo" ALTER COLUMN "guid" DROP DEFAULT;
+
+
+ALTER TABLE "main_app_callee" ADD COLUMN "user_profile_id" integer NOT NULL;
+ALTER TABLE "main_app_callee" ALTER COLUMN "user_profile_id" DROP DEFAULT;
+ALTER TABLE "main_app_callee" DROP CONSTRAINT "main_app_callee_sip_key";
+CREATE INDEX "main_app_callee_06037614" ON "main_app_callee" ("user_profile_id");
+ALTER TABLE "main_app_callee" ADD CONSTRAINT "main_app_ca_user_profile_id_7306109e_fk_main_app_userprofile_id" FOREIGN KEY ("user_profile_id") REFERENCES "main_app_userprofile" ("id") DEFERRABLE INITIALLY DEFERRED;

@@ -5,6 +5,7 @@
     var maxRequest = 480;
     var requestTimeout = 30000;
     var host = 'http://my.web-tel.ru/';
+    var modalSelector = '#webtelWidget';
 
     function onReady() {
         g = wt_w ? wt_w.wg : null;
@@ -44,14 +45,21 @@
     }
 
     function showModal () {
-        var modal = $('#webtelWidget');
+        var modal = $(modalSelector);
+        if (isModalShown()) {
+            return 0;
+        }
         modal.modal({
             backdrop: 'static',
             keyboard: false
         });
         modal.on('hidden.bs.modal', function () {
-            checkCall(reqInx = 0);
+            reqInx = 0;
         });
+    }
+
+    function isModalShown () {
+        return $(modalSelector).css('display') !== 'none';
     }
 
     function sendRequest () {
@@ -62,16 +70,15 @@
             crossDomain: true
         }).done(function (response, statusText, jqXHR) {
             if (jqXHR.status == 200) {
-                var item = sessionStorage.getItem(itemName)
+                var item = sessionStorage.getItem(itemName);
                 if (!item) {
                     sessionStorage.setItem(itemName, response);
-                    reqInx = maxRequest;
                     showModal();
                 } else {
                     var arr = item.split(';');
-                    if (arr.indexOf(response) === -1) {
-                        sessionStorage.setItem(itemName, arr.push(response).join(';'))
-                        reqInx = maxRequest;
+                    if (arr.indexOf(response) === -1 && !isModalShown()) {
+                        arr.push(response);
+                        sessionStorage.setItem(itemName, arr.join(';'));
                         showModal();
                     }
                 }
