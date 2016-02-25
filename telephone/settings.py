@@ -56,6 +56,7 @@ INSTALLED_APPS = (
 	'telephone.auth_app',
 	'telephone.service_app',
 	'telephone.admin_app',
+	'celery',
 )
 
 MIDDLEWARE_CLASSES = (

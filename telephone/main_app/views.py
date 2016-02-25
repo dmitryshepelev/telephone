@@ -25,6 +25,7 @@ from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
+from telephone.tasks import add
 
 
 logger = LogService()
@@ -82,7 +83,7 @@ def get_statistic(request, template):
 	:return: json format
 	"""
 	params = ApiParams(request.GET or None)
-
+	add.apply_async((5, 7), countdown=60)
 	update_res = PBXDataService.update_calls_list(params, request.user)
 	logger.info(Code.UCLEXE, is_success=update_res.is_success, status_code=update_res.status_code, message=update_res.message, data=update_res.data)
 
@@ -232,8 +233,6 @@ def check_incoming_info(request, guid):
 		return HttpResponse(status=400)
 
 	incoming_info = DBService.get_incoming_info(script.guid)
-
-	# logger.warning('CHK_INC_INFO', incoming_info=incoming_info.guid)
 
 	response = HttpResponse()
 	response['Access-Control-Allow-Origin'] = '*'

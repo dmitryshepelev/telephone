@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+import pytz
 
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.main_app.models import UserProfile, WidgetScript
@@ -39,7 +40,7 @@ class ProfileService():
 		"""
 		user_profile = UserProfile.objects.get(pk=user_profile.pk)
 
-		if user_profile.date_subscribe_ended:
+		if user_profile.date_subscribe_ended and user_profile.date_subscribe_ended.replace(tzinfo=pytz.utc).replace(tzinfo=None) > datetime.datetime.now(tz=pytz.timezone(pytz.country_timezones['RU'][1])).replace(tzinfo=None):
 			new_date = CommonService.add_months(user_profile.date_subscribe_ended, duration)
 		else:
 			new_date = CommonService.add_months(datetime.datetime.now(), duration)
