@@ -18,6 +18,7 @@ from telephone.admin_app.views import panel
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
+from telephone.classes.MailMessage import MailMessage
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
 from telephone.main_app.models import UserProfile, WidgetScript, Callee
@@ -25,7 +26,7 @@ from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
-from telephone.tasks import add
+from telephone.tasks import add, send_mail
 
 
 logger = LogService()
@@ -83,13 +84,16 @@ def get_statistic(request, template):
 	:return: json format
 	"""
 	params = ApiParams(request.GET or None)
-	add.apply_async((5, 7), countdown=60)
+
 	update_res = PBXDataService.update_calls_list(params, request.user)
 	logger.info(Code.UCLEXE, is_success=update_res.is_success, status_code=update_res.status_code, message=update_res.message, data=update_res.data)
 
 	filter_params = CallsFilterParams(request.GET)
 	calls = [CallRecord(call=call) for call in request.user.userprofile.call_set.filter(**filter_params.params).exclude(**filter_params.exclude_params).filter(filter_params.call_type_query).order_by('date')]
 	calls_stat = CallsStat(calls)
+
+	# send_mail.apply_async((MailMessage(settings.INFO_EMAIL, 'Попытка обновления статы', 'mail_stat_updated.html', {'username': request.user.username}, request.user.email),), countdown=60)
+
 	return render_to_response(template, {'calls': calls, 'calls_stat': calls_stat}, context_instance=RequestContext(request))
 
 

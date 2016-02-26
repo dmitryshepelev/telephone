@@ -6,6 +6,9 @@
     var requestTimeout = 30000;
     var host = 'http://my.web-tel.ru/';
     var modalSelector = '#webtelWidget';
+    var counterName = null;
+    var modal = null;
+    var defaultMidalText = 'Вы нам звонили/звоните?';
 
     function onReady() {
         g = wt_w ? wt_w.wg : null;
@@ -14,23 +17,43 @@
             throw new ReferenceError('Can\'t get _WT_WIDGET')
         }
 
+        counterName = 'yaCounter' + cn;
+
         getModal()
             .success(function (response) {
-                var template = response;
-                $('body').append(template);
+                $('body').append(response);
+                modal = $(modalSelector);
                 $('#wt_no').on('click', function (e) {
-                    var counterName = 'yaCounter' + cn;
                     window[counterName].reachGoal('wt_no');
-                })
-                $('#wt_yes').on('click', function (e) {
-                    var counterName = 'yaCounter' + cn;
-                    window[counterName].reachGoal('wt_yes');
+                    toggleActionButtons(true);
+                    changeModalText('Извините, ошибочка вышла!) Надеюсь в следующий раз мы с Вами не прогадаем');
+                    setTimeout(function () {
+                        modal.modal('hide');
+                    }, 3000)
+                });
+                $('#wt_call').on('click', function (e) {
+                    window[counterName].reachGoal('wt_call');
+                    toggleActionButtons(true);
+                    changeModalText('Спасибо за звонок!');
+                    setTimeout(function () {
+                        modal.modal('hide');
+                    }, 3000)
                 });
                 checkCall(reqInx);
             })
             .fail(function () {
                 throw new Error('WT_WIDGET: Can\'t get modal template');
             });
+    }
+
+    function changeModalText (text) {
+        $('#wt_content').text(text);
+    }
+
+    function toggleActionButtons (hide) {
+        var value = hide ? 'none' : 'inline-block';
+        $('#wt_no').css('display', value);
+        $('#wt_call').css('display', value);
     }
 
     function getModal () {
@@ -45,10 +68,12 @@
     }
 
     function showModal () {
-        var modal = $(modalSelector);
         if (isModalShown()) {
             return 0;
         }
+        window[counterName].reachGoal('wt_rough');
+        changeModalText(defaultMidalText);
+        toggleActionButtons(false);
         modal.modal({
             backdrop: 'static',
             keyboard: false

@@ -2,6 +2,7 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 import pytz
+from telephone import settings
 
 from telephone.classes.ServiceResponse import ServiceResponse
 from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus, ProfileRequestTransaction, \
@@ -225,6 +226,9 @@ class DBService():
 
 		if not incoming_info:
 			return None
+
+		if settings.DEBUG:
+			return incoming_info
 
 		delta = (incoming_info.expiration_date.replace(tzinfo=pytz.utc).replace(tzinfo=None) - datetime.datetime.now(tz=pytz.timezone(pytz.country_timezones['RU'][1])).replace(tzinfo=None))
 		if delta.days == 0 and delta.seconds < 180:
