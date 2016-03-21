@@ -456,7 +456,7 @@ class PBXDataService():
 						header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
 						if header and len(header) > 0:
 							filename = header[0].strip(header_start)
-							call_audio = File(part.get_payload(decode=True), filename + 'wav')
+							call_audio = File(part.get_payload(decode=True), filename)
 							break
 				if call_audio:
 					break
@@ -479,20 +479,21 @@ class PBXDataService():
 		call_audio = PBXDataService.get_audio(call.call_id, user)
 		if not call_audio:
 			return None
-
-		# convert audio
-		# write temp file
-		path = CommonService.write_temp_file(call_audio)
-		if not path:
-			return None
-
-		call_audio.path = path
-
-		# convert wav to mp3
-
-		call_audio_mp3 = CommonService.convert_to_mp3(call_audio)
-		if not call_audio_mp3:
-			return None
+		#
+		# # convert audio
+		# # write temp file
+		# path = CommonService.write_temp_file(call_audio)
+		# if not path:
+		# 	return None
+		#
+		# call_audio.path = path
+		#
+		# # convert wav to mp3
+		#
+		# call_audio_mp3 = CommonService.convert_to_mp3(call_audio)
+		# if not call_audio_mp3:
+		# 	return None
+		call_audio_mp3 = call_audio
 
 		# upload new file to Disk
 		disk_service = DiskService(user.userprofile.token)

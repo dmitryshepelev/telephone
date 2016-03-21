@@ -133,7 +133,7 @@ class DiskService():
 		"""
 		response = requests.get(download_link)
 		if response.ok:
-			return File(response.content, filename=response.headers['content-disposition'].split('attachment; filename*=UTF-8')[1][2:])
+			return File(response.content, filename=response.headers['content-disposition'].split('attachment; filename=')[1])
 
 		logger.error(Code.DOWNLOAD_FILE_ERR, data=json.loads(response.content), status_code=response.status_code)
 		return None

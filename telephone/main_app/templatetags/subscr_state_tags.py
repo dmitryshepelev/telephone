@@ -19,10 +19,15 @@ def profile_info_phone(context, cls, url):
 	text_type = ''
 
 	date_ended = user.userprofile.date_subscribe_ended
-	date_now = datetime.datetime.now()
-	days_remains = (date_ended.date() - date_now.date()).days
 
-	if days_remains > 7:
+	date_now = datetime.datetime.now()
+	days_remains = (date_ended.date() - date_now.date()).days if date_ended else None
+
+	if not days_remains:
+		title = 'Подписка не оформлена'
+		icon_cls += '-warning'
+		text_type += ' text-warning'
+	elif days_remains > 7:
 		title = 'Оплачено до {date}'.format(date=date_ended.strftime(settings.DATE_CLIENT_FORMAT))
 		icon_cls += '-checkmark text-success'
 		text_type = 'text-success'
