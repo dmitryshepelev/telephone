@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    {% load staticfiles %}
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/bootstrap.css" %}" />
+	<link rel="stylesheet" type="text/css" href="{% static "ng-frittt/site.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/customize.css" %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/varaibles.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/icons.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'loader.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'messager.css' %}" />
+
+	<link rel="icon" type="image/png" href="{% static 'images/favicon.ico' %}">
+
+	<!-- Yandex.Metrika counter -->
+	<script type="text/javascript">
+	(function (d, w, c) {
+	    (w[c] = w[c] || []).push(function() {
+	        try {
+	            w.yaCounter35424910 = new Ya.Metrika({id:35424910,
+	                    webvisor:true,
+	                    clickmap:true,
+	                    trackLinks:true,
+	                    accurateTrackBounce:true});
+	        } catch(e) { }
+	    });
+
+	    var n = d.getElementsByTagName("script")[0],
+	        s = d.createElement("script"),
+	        f = function () { n.parentNode.insertBefore(s, n); };
+	    s.type = "text/javascript";
+	    s.async = true;
+	    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+	    if (w.opera == "[object Opera]") {
+	        d.addEventListener("DOMContentLoaded", f, false);
+	    } else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+	</script>
+	<noscript><div><img src="//mc.yandex.ru/watch/35424910" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+	<!-- /Yandex.Metrika counter -->
+
+	{% block resources %}
+
+	{% endblock %}
+</head>
+
+<body>
+<div class="page-container">
+	<div class="sidebar-menu">
+		<header>
+			<div class="logo">
+				<a href="/"><img width="40" src="/static/content/images/logo-new.png"></a>
+			</div>
+		</header>
+		<section>
+			Здравствуйте, {{ user.username }}
+		</section>
+
+	</div>
+	<div class="main-content">
+		<nav class="navbar user-info-navbar fixed" role="navigation">
+			{% load subscr_state_tags %}
+			<ul class="user-info-menu right-links list-inline list-unstyled nav navbar-nav">
+				{% profile_info_phone 'text-grey-wt' '/pay/subfee/' %}
+				{% profile_info_cash 'text-grey-wt' '/pay/balance/' %}
+				<li class="text-grey-wt"><a href="/auth/logout/">Выход</a></li>
+			</ul>
+		</nav>
+	</div>
+</div>
+
+
+
+{#<header class="header">#}
+{#	<nav class="navbar navbar-default navbar-fixed-top">#}
+{#		<div class="loader-container">#}
+{#			<div class="loader"></div>#}
+{#		</div>#}
+{#	    <div class="container">#}
+{#	        <div class="navbar-header">#}
+{#		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar" aria-expanded="true" aria-controls="bs-navbar">#}
+{#                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>#}
+{#                </button>#}
+{#	            <a href="/" class="navbar-brand"><img class="logo-image" src="/static/content/images/logo.png"></a>#}
+{#	        </div>#}
+{##}
+{#	        <div class="navbar-collapse collapse hidden-xs" id="navbar-main">#}
+{#	            <ul class="nav navbar-nav">#}
+{#	            </ul>#}
+{#	            <ul class="nav navbar-nav navbar-right">#}
+{#		            {% if not user.is_authenticated %}#}
+{#			            <li><a href="/auth/login/" class="icon-enter header-icon"></a></li>#}
+{#		            {% else %}#}
+{#                        {% if not user.is_superuser %}#}
+{#	                        {% load subscr_state_tags %}#}
+{#	                        {% profile_info_phone 'text-grey-wt' '/pay/subfee/' %}#}
+{#	                        {% profile_info_cash 'text-grey-wt' '/pay/balance/' %}#}
+{#                        {% else %}#}
+{#                            <form class="navbar-form navbar-left search-form-wt" action="/services/search/" method="get" role="search" >#}
+{#                                {% csrf_token %}#}
+{#						        <div class="form-group">#}
+{#						            <input class="form-control input-sm input-search-wt" name="q" oninput="mainController.onSearchQueryChange(event)" placeholder="Поиск" type="text" autocomplete="off">#}
+{#							        <button type="submit" class="btn btn-sm-wt search-button-wt btn-link-empty"><span class="icon-search"></span></button>#}
+{#						        </div>#}
+{#                            </form>#}
+{#						{% endif %}#}
+{#						<li class="dropdown">#}
+{#							<a href="#" class="dropdown-toggle icon-user header-icon" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>#}
+{#							<ul class="dropdown-menu" role="menu">#}
+{#								<li class="username-dropdown">{{ user.username }}</li>#}
+{#	                            {% if user.is_superuser %}#}
+{#		                            <li><a href="/">Панель</a></li>#}
+{#	                                <li><a href="/admin/">Супервласть</a></li>#}
+{#		                            <li><a href="/admin/newuser/">Новый раб</a></li>#}
+{#	                            {% else %}#}
+{#			                        <li><a href="/">Звонки</a></li>#}
+{#		                            <li><a href="#" onclick="mainController.showCallCostByCountryModal()">Узнать стоимость</a></li>#}
+{#		                            <li><a href="#" onclick="mainController.showCallbackModal()">Обратный звонок</a></li>#}
+{#		                            <li class="divider"></li>#}
+{#		                            <li><a href="/getscript/" >Получить скрипт</a></li>#}
+{#	                            {% endif %}#}
+{#							</ul>#}
+{#						</li>#}
+{#			            <li><a href="/auth/logout/" class="icon-exit header-icon"></a></li>#}
+{#		            {% endif %}#}
+{#	            </ul>#}
+{#	        </div>#}
+{#	    </div>#}
+{#	</nav>#}
+{#</header>#}
+{#<div class="container body-content">#}
+{#    {% block content %}#}
+{##}
+{#    {% endblock %}#}
+{#</div>#}
+{##}
+{#{% block footer %}#}
+{#<footer class="footer">#}
+{#    <div class="container">#}
+{#        <span>{% now 'Y' %} - Все права защищены | <a href="/">Главная</a></span>#}
+{#    </div>#}
+{#</footer>#}
+{#{% endblock %}#}
+
+</body>
+</html>
