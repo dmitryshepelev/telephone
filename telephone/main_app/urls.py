@@ -22,6 +22,6 @@ urlpatterns = [
 	url(r'^st/$', st_page),
 	url(r'^cst/$', check_cost_page),
 	url(r'^clb/$', callback_page),
-	url(r'^sf/$', balance_page),
-	url(r'^blc/$', subfee_page)
+	url(r'^sf/$', subfee_page),
+	url(r'^blc/$', balance_page)
 ]

@@ -67,7 +67,7 @@ def balance_page(request):
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'subfee_page.html', {})
+	return render(request, 'balance_page.html', {})
 
 
 @login_required
@@ -78,4 +78,4 @@ def subfee_page(request):
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'balance_page.html', {})
+	return render(request, 'subfee_page.html', {})

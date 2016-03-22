@@ -1,1 +1,43 @@
-subbfee
+<div class="col-md-8 col-sm-offset-2 block-container-wt">
+	<div class="block-wt">
+		<div>
+			<h2>Оформить подписку</h2>
+		</div>
+		<form class="form-horizontal" target="_blank" method="post" onsubmit="controller.subscribe()" action="https://money.yandex.ru/quickpay/confirm.xml" novalidate>
+			{% csrf_token %}
+			<input type="hidden" id="receiver" name="receiver" value="{{ subscription_data.receiver }}" />
+			<input type="hidden" id="formcomment" name="formcomment" value="{{ subscription_data.form_comment }}" />
+			<input type="hidden" id="short-dest" name="short-dest" value="{{ subscription_data.short_dest }}" />
+			<input type="hidden" id="label" name="label" value="{{ subscription_data.label }}" required />
+			<input type="hidden" id="quickpay-form" name="quickpay-form" value="{{ subscription_data.quickpay_form }}" />
+			<input type="hidden" id="targets" name="targets" value="{{ subscription_data.targets }}" />
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="">
+						<input name="sum" id="sum" type="hidden" value="{{ subscription_data.sum }}" />
+						<select class="form-control input-lg" onchange="controller.onSubscrChange(event)" id="duration" name="duration">
+							<option value="1">1 месяц - 500 руб.</option>
+							<option value="2">2 месяца - 1000 руб.</option>
+							<option value="3">3 месяца - 1500 руб.</option>
+							<option value="6">6 месяцев - 3000 руб.</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group margin-0">
+						<div class="btn-group">
+							<button class="btn payment-btn margin-0 selected" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="PC"><img src="/static/content/images/yamoney.png"></button>
+							<button class="btn payment-btn margin-0" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="AC"><img src="/static/content/images/any-card.png"></button>
+							<input id="paymentType" name="paymentType" type="hidden" value="{{ subscription_data.payment_type }}"/>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="">
+						<button type="submit" class="btn btn-primary margin-0">Оплатить</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
