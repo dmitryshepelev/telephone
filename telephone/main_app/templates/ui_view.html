@@ -1,0 +1,46 @@
+<div class="page-container" ng-controller="SidebarCtrl">
+	<div class="sidebar-menu" ng-class="{'tight': sidebar.isCollapsed}">
+		<header>
+			<div class="logo">
+				<a href="/"><img width="40" src="/static/content/images/logo-new.png"></a>
+			</div>
+		</header>
+		<section>
+			<span ng-if="sidebar.isCollapsed" class="icon-user"></span>
+			<span ng-if="!sidebar.isCollapsed">Здравствуйте, {{ user.username }}</span>
+		</section>
+		<sidebar-menu>
+			<ul class="main-menu">
+				<li>
+					<a ui-sref="[[ sidebar.menuItems[0].state ]]" ng-class="{'active': sidebar.menuItems[0].isActive }"><i class="icon-stats-bars"></i><span ng-if="!sidebar.isCollapsed">Статистика</span></a>
+				</li>
+				<li>
+					<a ui-sref="[[ sidebar.menuItems[1].state ]]" ng-class="{'active': sidebar.menuItems[1].isActive }"><i class="icon-coin-dollar"></i><span ng-if="!sidebar.isCollapsed">Узнать стоимость</span></a>
+				</li>
+				<li>
+					<a ui-sref="[[ sidebar.menuItems[2].state ]]" ng-class="{'active': sidebar.menuItems[2].isActive }"><i class="icon-phone"></i><span ng-if="!sidebar.isCollapsed">Обратный звонок</span></a>
+				</li>
+			</ul>
+		</sidebar-menu>
+	</div>
+	<div class="main-content">
+		<nav class="navbar user-info-navbar fixed" role="navigation">
+			<ul class="user-info-menu left-links list-inline list-unstyled nav navbar-nav">
+				<li class="text-grey-wt">
+					<a href="" ng-click="sidebar.toggle()">
+						<i class="icon-list2"></i>
+					</a>
+				</li>
+			</ul>
+			{% load subscr_state_tags %}
+			<ul class="user-info-menu right-links list-inline list-unstyled nav navbar-nav">
+				{% profile_info_phone 'text-grey-wt' '/#/sf/' 'my.sf' %}
+				{% profile_info_cash 'text-grey-wt' '/#/blc/' 'my.blc' %}
+				<li class="text-grey-wt"><a href="/auth/logout/">Выход</a></li>
+			</ul>
+		</nav>
+		<div class="main-content-view" ui-view>
+
+		</div>
+	</div>
+</div>

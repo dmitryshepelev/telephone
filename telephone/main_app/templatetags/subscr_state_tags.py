@@ -13,7 +13,7 @@ def ending_resolver(value):
 
 
 @register.inclusion_tag('profile_info_phone.html', takes_context=True)
-def profile_info_phone(context, cls, url):
+def profile_info_phone(context, cls, url, state=None):
 	user = context['user']
 	icon_cls = 'icon'
 	text_type = ''
@@ -56,12 +56,13 @@ def profile_info_phone(context, cls, url):
 			'url': url,
 			'icon': icon_cls,
 			'value': user.userprofile.profile_phone_number,
+			'state': state
 		}
 	}
 
 
 @register.inclusion_tag('profile_info_cash.html', takes_context=True)
-def profile_info_cash(context, cls, url):
+def profile_info_cash(context, cls, url, state=None):
 	user = context['user']
 
 	balance = PBXDataService.get_pbx_account_balance(user)
@@ -74,5 +75,6 @@ def profile_info_cash(context, cls, url):
 			'url': url,
 			'icon': 'icon-credit-card',
 			'value':  '%.2f руб.' % balance if balance else 'Баланс временно недоступен',
+			'state': state
 		}
 	}

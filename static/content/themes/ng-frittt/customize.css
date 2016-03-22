@@ -607,10 +607,25 @@ code {
 .sidebar-menu {
   display: table-cell;
   position: relative;
-  width: 340px;
+  width: 300px;
   background: rgba(0, 0, 0, 0.7);
   z-index: 1;
   color: #e1e1e1;
+}
+.sidebar-menu.tight {
+  width: 70px;
+}
+.sidebar-menu.tight header {
+  padding: 15px;
+}
+.sidebar-menu.tight section {
+  padding: 30px 20px;
+  text-align: center;
+}
+.sidebar-menu.tight .main-menu {
+  padding-left: 18px;
+  padding-right: 18px;
+  text-align: center;
 }
 .sidebar-menu header {
   background-color: rgba(0, 0, 0, 0.84);
@@ -654,6 +669,9 @@ code {
 .user-info-navbar .user-info-menu.right-links {
   float: right;
 }
+.user-info-navbar .user-info-menu.left-links {
+  float: left;
+}
 .list-inline {
   padding-left: 0;
   list-style: none;
@@ -662,4 +680,31 @@ code {
 .list-unstyled {
   padding-left: 0;
   list-style: none;
+}
+sidebar-menu .main-menu {
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  list-style: none;
+}
+sidebar-menu .main-menu a {
+  color: #979898;
+  text-decoration: none;
+  display: block;
+  padding: 13px 10px;
+}
+sidebar-menu .main-menu a:hover,
+sidebar-menu .main-menu a.active:hover {
+  color: #1abb9c;
+}
+sidebar-menu .main-menu a.active {
+  color: #e1e1e1;
+}
+sidebar-menu .main-menu a i {
+  display: inline-block;
+  margin-right: 10px;
+}
+sidebar-menu .main-menu a i + span {
+  padding-right: 10px;
 }

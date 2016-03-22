@@ -1,3 +1,3 @@
 <li class="{{ phone.cls }} {{ phone.text_type }}" title="{{ phone.title }}">
-	<a href="{{ phone.url }}"><span class="{{ phone.icon }} {{ phone.text_type }}"></span> +{{ phone.value }}</a>
+	<a href="{{ phone.url }}" {% if phone.state %}ui-sref="{{ phone.state }}"{% endif %}><span class="{{ phone.icon }} {{ phone.text_type }}"></span> +{{ phone.value }}</a>
 </li>

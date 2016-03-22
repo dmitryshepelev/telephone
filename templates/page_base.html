@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="mainApp">
 <head lang="en">
     <meta charset="UTF-8">
-    <title>
+    <title ng-controller="TitleCtrl" ng-bind="title()">
         {% block title %}
 
         {% endblock %}
     </title>
     {% load staticfiles %}
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+	<script type="text/javascript" src="{% static "scripts/shared/angular-ui-router-0.2.15.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/module.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/services/title-service.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/title-controller.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/sidebar-controller.js" %}"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/bootstrap.css" %}" />
 	<link rel="stylesheet" type="text/css" href="{% static "ng-frittt/site.css" %}" />
@@ -53,30 +58,7 @@
 	{% endblock %}
 </head>
 
-<body>
-<div class="page-container">
-	<div class="sidebar-menu">
-		<header>
-			<div class="logo">
-				<a href="/"><img width="40" src="/static/content/images/logo-new.png"></a>
-			</div>
-		</header>
-		<section>
-			Здравствуйте, {{ user.username }}
-		</section>
-
-	</div>
-	<div class="main-content">
-		<nav class="navbar user-info-navbar fixed" role="navigation">
-			{% load subscr_state_tags %}
-			<ul class="user-info-menu right-links list-inline list-unstyled nav navbar-nav">
-				{% profile_info_phone 'text-grey-wt' '/pay/subfee/' %}
-				{% profile_info_cash 'text-grey-wt' '/pay/balance/' %}
-				<li class="text-grey-wt"><a href="/auth/logout/">Выход</a></li>
-			</ul>
-		</nav>
-	</div>
-</div>
+<body ui-view>
 
 
 
