@@ -1,6 +1,6 @@
 (function (ng) {
 
-    function _sidedarCtrl($scope, $state, $titleSrv) {
+    function _uiViewCtrl($scope, $state, $titleSrv) {
 
         $scope.sidebar = {
             isCollapsed: false,
@@ -40,9 +40,9 @@
         setActiveState();
     }
 
-    _sidedarCtrl.$inject = ['$scope', '$state', '$titleSrv'];
+    _uiViewCtrl.$inject = ['$scope', '$state', '$titleSrv'];
 
     ng.module('mainApp')
-        .controller('SidebarCtrl', _sidedarCtrl)
+        .controller('UiViewCtrl', _uiViewCtrl)
 
 })(angular);

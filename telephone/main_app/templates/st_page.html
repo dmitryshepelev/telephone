@@ -1,1 +1,8 @@
-<h1>st</h1>
+<div>
+	<div ui-grid="gridOptions" class="grid" ui-grid-auto-resize ng-style="getTableHeight()" ui-grid-pagination></div>
+	<div class="btn-group pull-right margin-t-20">
+		<button class="btn btn-sm-wt btn-default" ng-click="gridApi2.pagination.previousPage()" type="button"><span class="icon-arrow-left2"></span></button>
+        <button class="btn btn-sm-wt btn-default" ng-disabled="gridApi2.pagination.getPage() == $index + 1" ng-click="gridApi2.pagination.seek($index + 1)" ng-repeat="i in getPagesArr(gridApi2.pagination.getTotalPages()) track by $index" type="button">[[$index + 1]]</button>
+		<button class="btn btn-sm-wt btn-default" ng-click="gridApi2.pagination.nextPage()" type="button"><span class="icon-arrow-right2"></span></button>
+    </div>
+</div>

@@ -273,6 +273,10 @@ table th:hover {
 .btn-warning-wt:focus {
   background-color: #f09f2e;
 }
+.btn-default:active,
+.btn-default:focus {
+  background-color: #1abb9c;
+}
 .btn-link-wt {
   border-color: transparent !important;
   background-color: transparent !important;
@@ -347,6 +351,16 @@ table th:hover {
 }
 .margin-t-0 {
   margin-top: 0;
+}
+.margin-t-20 {
+  margin-top: 20px;
+}
+.margin-tb-10 {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+.margin-r-5 {
+  margin-right: 5px !important;
 }
 .margin-tb-5 {
   margin-top: 5px;
@@ -707,4 +721,84 @@ sidebar-menu .main-menu a i {
 }
 sidebar-menu .main-menu a i + span {
   padding-right: 10px;
+}
+.ui-grid {
+  border: none !important;
+}
+.ui-grid-cell {
+  border: none !important;
+}
+.ui-grid-cell > .ui-grid-cell-contents {
+  padding: 10px 5px;
+}
+.ui-grid-row:hover div {
+  background-color: #f6f6f6 !important;
+}
+.ui-grid-header-cell {
+  border: none !important;
+  padding: 5px 10px;
+}
+.ui-grid-header-cell:hover {
+  background-color: #f6f6f6 !important;
+}
+.ui-grid-row:nth-child(2n) .ui-grid-cell {
+  background-color: #ffffff !important;
+}
+.ui-grid-row:nth-child(2n+1) .ui-grid-cell {
+  background-color: #f9f9f9 !important;
+}
+.ui-grid-header {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+.ui-grid-header > .ui-grid-top-panel {
+  background: #FFFFFF !important;
+}
+.ui-grid-canvas {
+  text-align: center;
+  padding-top: 0 !important;
+}
+.ui-grid-viewport {
+  height: auto !important;
+}
+.ui-grid-pager-panel {
+  bottom: -40px !important;
+}
+.ui-grid-pager-panel .ui-grid-pager-control {
+  margin: 0;
+}
+.ui-grid-pager-panel .ui-grid-pager-control button {
+  padding: 1px 5px !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: #222222 !important;
+  cursor: pointer !important;
+}
+.ui-grid-pager-panel .ui-grid-pager-control button:hover,
+.ui-grid-pager-panel .ui-grid-pager-control button:focus {
+  color: #1abb9c !important;
+}
+.ui-grid-pager-container {
+  float: right !important;
+}
+.ui-grid-pager-container > .ui-grid-pager-row-count-label {
+  display: none;
+}
+.ui-grid-pager-count-container {
+  display: none;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0 !important;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
 }

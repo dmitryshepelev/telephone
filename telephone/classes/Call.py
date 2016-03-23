@@ -59,6 +59,27 @@ class CallRecord():
 		if call:
 			self.__init_with_instance(call)
 
+	def vm(self):
+		"""
+		Returns serializable object
+		:return: {}
+		"""
+		return dict(call_id=self.call_id,
+					clid=self.clid,
+					sip=self.sip,
+					date=self.date,
+					destination=self.destination,
+					disposition=self.disposition,
+					description=self.description,
+					bill_seconds=self.bill_seconds,
+					cost=self.cost,
+					bill_cost=self.bill_cost,
+					currency=self.currency,
+					call_type=self.call_type,
+					is_callback=self.is_callback,
+					is_first_call=self.__is_first_call
+		)
+
 	def __init_with_instance(self, call):
 		"""
 		Init class with database instance
@@ -162,6 +183,13 @@ class CallsStat():
 		:return: internal value
 		"""
 		return self.__internal
+
+	def vm(self):
+		"""
+		Returns serializable object
+		:return: {}
+		"""
+		return dict(total=self.__total, new=self.__new, coming=self.__coming, incoming=self.__incoming, missed=self.__missed, internal=self.__internal)
 
 	def calculate_stat(self, calls):
 		"""

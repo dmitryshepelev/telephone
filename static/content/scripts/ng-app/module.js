@@ -1,6 +1,9 @@
 (function (ng) {
-    function _config($stateProvider, $urlRouterProvider, $interpolateProvider, $httpProvider) {
+    function _config($stateProvider, $urlRouterProvider, $interpolateProvider, $httpProvider, cfpLoadingBarProvider) {
         var _baseUrl = '';
+
+        cfpLoadingBarProvider.includeSpinner = false;
+        cfpLoadingBarProvider.includeBar = true;
 
         $interpolateProvider.startSymbol('[[');
         $interpolateProvider.endSymbol(']]');
@@ -19,7 +22,7 @@
             .state('my.st', {
                 url: '/st',
                 templateUrl: _baseUrl + '/st/',
-                controller: '',
+                controller: 'StCtrl',
                 data: {
                     title: 'Статистика'
                 }
@@ -58,10 +61,10 @@
             });
 }
 
-    ng.module('mainApp', ['ui.router']);
+    ng.module('mainApp', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'angular-loading-bar', 'ngAnimate']);
 
     ng.module('mainApp')
-        .config(['$stateProvider', '$urlRouterProvider', '$interpolateProvider', '$httpProvider', _config]);
+        .config(['$stateProvider', '$urlRouterProvider', '$interpolateProvider', '$httpProvider', 'cfpLoadingBarProvider', _config]);
 
 
 })(angular);

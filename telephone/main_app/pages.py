@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
@@ -6,13 +7,14 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(['GET'])
 @login_required
-def base(request):
+@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/subfee/', redirect_field_name='')
+def base(request, template):
 	"""
 	Base of sett module
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'page_base.html', {})
+	return render(request, template, {})
 
 
 @require_http_methods(['GET'])

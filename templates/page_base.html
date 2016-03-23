@@ -8,20 +8,28 @@
         {% endblock %}
     </title>
     {% load staticfiles %}
+	<script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+	<script type="text/javascript" src="{% static "scripts/shared/angular-animate.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/shared/angular-ui-router-0.2.15.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/shared/angular-loading-bar.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/ng-app/module.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/ng-app/services/title-service.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/services/api-service.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/title-controller.js" %}"></script>
-	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/sidebar-controller.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/uiview-controller.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/statistic-controller.js" %}"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/bootstrap.css" %}" />
 	<link rel="stylesheet" type="text/css" href="{% static "ng-frittt/site.css" %}" />
     <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/customize.css" %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/varaibles.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/icons.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/angular-loading-bar.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'loader.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'messager.css' %}" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css" />
 
 	<link rel="icon" type="image/png" href="{% static 'images/favicon.ico' %}">
 

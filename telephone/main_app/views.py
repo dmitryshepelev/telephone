@@ -22,6 +22,7 @@ from telephone.classes.MailMessage import MailMessage
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
 from telephone.main_app.models import UserProfile, WidgetScript, Callee
+from telephone.main_app.pages import base
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.PBXDataService import PBXDataService
@@ -41,7 +42,7 @@ def main_resolver(request, templates):
 	"""
 	if request.user.is_authenticated() and request.user.is_superuser:
 		return panel(request, templates[0])
-	return calls(request, templates[1])
+	return base(request, templates[1])
 
 
 @login_required
