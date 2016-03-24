@@ -4,7 +4,7 @@ var Switcher = (function () {
         this._params = {
             name: '',
             value: 0,
-            titles: []
+            titles: [],
         };
 
         var _hiddenElementTemplate = '<input type="hidden" class="pseudo-hidden" name="{0}" value="{1}" />';

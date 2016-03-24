@@ -4,8 +4,8 @@
         var baseUrl = '/api/';
 
         return {
-            getStat: function () {
-                var url = baseUrl + 'getstat/';
+            getStat: function (q) {
+                var url = baseUrl + 'getstat/' + q || '';
                 return $http.get(url);
             }
         }

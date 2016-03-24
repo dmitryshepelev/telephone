@@ -1,4 +1,35 @@
 <div>
+	<div class="row margin-0 main-content-container">
+        <div class="col-sm-4">
+            <div class="period-container">
+                <span>Период с </span>
+                <div class="input-daterange input-group" id="datepicker">
+	                <input type="text" class="input-sm pseudo-hidden pointer datepicker-input" autocomplete="off" name="start" value="" ng-model="stat.period.start"/>
+                    <span class="datepicker-input-group-addon">по</span>
+                    <input type="text" class="input-sm pseudo-hidden pointer datepicker-input" autocomplete="off" name="end" value="" ng-model="stat.period.end" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="col-sm-4">
+                <div id="call-type-filter">
+	                Тип звонков:
+	                <div class="call-types-switcher">
+                        <span class="call-type icon-arrow-up" ng-click="changeStatType('coming')" ng-class="{'call-type-active': stat.types.indexOf('coming') !== -1}" title="Исходящие"></span>
+	                    <span class="call-type icon-arrow-down" ng-click="changeStatType('incoming')" ng-class="{'call-type-active': stat.types.indexOf('incoming') !== -1}" title="Входящие"></span>
+	                    <span class="call-type icon-loop" ng-click="changeStatType('internal')" ng-class="{'call-type-active': stat.types.indexOf('internal') !== -1}" title="Внутренние"></span>
+	                </div>
+	                <input type="hidden" class="pseudo-hidden" name="call_type" value="" ng-model="stat.types" autocomplete="off"/>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <switcher name="status" titles="['Только принятые', 'Все звонки', 'Только пропущенные']"></switcher>
+            </div>
+            <div class="col-sm-3 period-container">
+                <button type="button" ng-click="loadStat()" class="pull-right btn btn-default btn-sm-wt"><span class="icon-filter"></span> Загрузить</button>
+            </div>
+        </div>
+    </div>
 	<div ui-grid="gridOptions" class="grid" ui-grid-auto-resize ng-style="getTableHeight()" ui-grid-pagination></div>
 	<div class="btn-group pull-right margin-t-20">
 		<button class="btn btn-sm-wt btn-default" ng-click="gridApi2.pagination.previousPage()" type="button"><span class="icon-arrow-left2"></span></button>
@@ -6,3 +37,25 @@
 		<button class="btn btn-sm-wt btn-default" ng-click="gridApi2.pagination.nextPage()" type="button"><span class="icon-arrow-right2"></span></button>
     </div>
 </div>
+
+<script>
+	$(document).ready(function () {
+        var elements = $('switcher');
+        for (var i = 0; i < elements.length; i++){
+            new Switcher(elements[i]);
+        }
+
+        var container = $('#datepicker');
+        container.datepicker({
+            endDate: Date.getNowDate().toRightDatetimeString(),
+            todayBtn: 'linked',
+            language: 'ru',
+            keyboardNavigation: false,
+            todayHighlight: true,
+            autoclose: true
+        }).on('changeDate', function (event) {
+            $(event.target).attr('value', event.date.toRightDatetimeString());
+        });
+        container.find('input.pseudo-hidden').attr('value', Date.getNowDate().toRightDatetimeString());
+    })
+</script>

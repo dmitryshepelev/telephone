@@ -43,7 +43,7 @@ var audio = (function () {
 
     function _getId(element) {
         var attr = 'data-call-id';
-        return $(element).closest('tr[{0}]'.format(attr)).attr(attr);
+        return $(element).closest('div[{0}]'.format(attr)).attr(attr);
     }
 
     return {

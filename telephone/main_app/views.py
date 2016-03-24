@@ -111,11 +111,12 @@ def get_call_record(request):
 		return HttpResponse(status=400)
 
 	file_instance = PBXDataService.get_call_record_file(call_id, request.user)
+	file_instance.filename = call_id
 	if not file_instance:
 		return HttpResponse(status=500)
 
 	response = HttpResponse(content_type='audio/mp3')
-	response['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=file_instance.filename)
+	response['Content-Disposition'] = 'attachment; filename=record-{username}-{filename}'.format(username=request.user.username, filename=file_instance.filename)
 	response.content = file_instance.content
 	return response
 

@@ -9,8 +9,11 @@
     </title>
     {% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "main.js" %}"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
-	<script type="text/javascript" src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+	<script type="text/javascript" src="{% static "scripts/shared/angular-ui-grid.3.1.1.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap-datepicker.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "bootstrap-datepicker.ru.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/shared/angular-animate.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/shared/angular-ui-router-0.2.15.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/shared/angular-loading-bar.js" %}"></script>
@@ -20,6 +23,9 @@
 	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/title-controller.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/uiview-controller.js" %}"></script>
 	<script type="text/javascript" src="{% static "scripts/ng-app/controllers/statistic-controller.js" %}"></script>
+    <script type="text/javascript" src="{% static "switcher.js" %}"></script>
+	<script type="text/javascript" src="{% static "audio.js" %}"></script>
+	<script type="text/javascript" src="{% static "jquery-webui-popover.js" %}"></script>
 
     <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/bootstrap.css" %}" />
 	<link rel="stylesheet" type="text/css" href="{% static "ng-frittt/site.css" %}" />
@@ -29,7 +35,10 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/angular-loading-bar.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'loader.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'messager.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/switcher.css" %}">
 	<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css" />
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap-datepicker3.standalone.min.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "frittt/webui-popover.css" %}">
 
 	<link rel="icon" type="image/png" href="{% static 'images/favicon.ico' %}">
 
@@ -67,79 +76,6 @@
 </head>
 
 <body ui-view>
-
-
-
-{#<header class="header">#}
-{#	<nav class="navbar navbar-default navbar-fixed-top">#}
-{#		<div class="loader-container">#}
-{#			<div class="loader"></div>#}
-{#		</div>#}
-{#	    <div class="container">#}
-{#	        <div class="navbar-header">#}
-{#		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-navbar" aria-expanded="true" aria-controls="bs-navbar">#}
-{#                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>#}
-{#                </button>#}
-{#	            <a href="/" class="navbar-brand"><img class="logo-image" src="/static/content/images/logo.png"></a>#}
-{#	        </div>#}
-{##}
-{#	        <div class="navbar-collapse collapse hidden-xs" id="navbar-main">#}
-{#	            <ul class="nav navbar-nav">#}
-{#	            </ul>#}
-{#	            <ul class="nav navbar-nav navbar-right">#}
-{#		            {% if not user.is_authenticated %}#}
-{#			            <li><a href="/auth/login/" class="icon-enter header-icon"></a></li>#}
-{#		            {% else %}#}
-{#                        {% if not user.is_superuser %}#}
-{#	                        {% load subscr_state_tags %}#}
-{#	                        {% profile_info_phone 'text-grey-wt' '/pay/subfee/' %}#}
-{#	                        {% profile_info_cash 'text-grey-wt' '/pay/balance/' %}#}
-{#                        {% else %}#}
-{#                            <form class="navbar-form navbar-left search-form-wt" action="/services/search/" method="get" role="search" >#}
-{#                                {% csrf_token %}#}
-{#						        <div class="form-group">#}
-{#						            <input class="form-control input-sm input-search-wt" name="q" oninput="mainController.onSearchQueryChange(event)" placeholder="Поиск" type="text" autocomplete="off">#}
-{#							        <button type="submit" class="btn btn-sm-wt search-button-wt btn-link-empty"><span class="icon-search"></span></button>#}
-{#						        </div>#}
-{#                            </form>#}
-{#						{% endif %}#}
-{#						<li class="dropdown">#}
-{#							<a href="#" class="dropdown-toggle icon-user header-icon" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>#}
-{#							<ul class="dropdown-menu" role="menu">#}
-{#								<li class="username-dropdown">{{ user.username }}</li>#}
-{#	                            {% if user.is_superuser %}#}
-{#		                            <li><a href="/">Панель</a></li>#}
-{#	                                <li><a href="/admin/">Супервласть</a></li>#}
-{#		                            <li><a href="/admin/newuser/">Новый раб</a></li>#}
-{#	                            {% else %}#}
-{#			                        <li><a href="/">Звонки</a></li>#}
-{#		                            <li><a href="#" onclick="mainController.showCallCostByCountryModal()">Узнать стоимость</a></li>#}
-{#		                            <li><a href="#" onclick="mainController.showCallbackModal()">Обратный звонок</a></li>#}
-{#		                            <li class="divider"></li>#}
-{#		                            <li><a href="/getscript/" >Получить скрипт</a></li>#}
-{#	                            {% endif %}#}
-{#							</ul>#}
-{#						</li>#}
-{#			            <li><a href="/auth/logout/" class="icon-exit header-icon"></a></li>#}
-{#		            {% endif %}#}
-{#	            </ul>#}
-{#	        </div>#}
-{#	    </div>#}
-{#	</nav>#}
-{#</header>#}
-{#<div class="container body-content">#}
-{#    {% block content %}#}
-{##}
-{#    {% endblock %}#}
-{#</div>#}
-{##}
-{#{% block footer %}#}
-{#<footer class="footer">#}
-{#    <div class="container">#}
-{#        <span>{% now 'Y' %} - Все права защищены | <a href="/">Главная</a></span>#}
-{#    </div>#}
-{#</footer>#}
-{#{% endblock %}#}
 
 </body>
 </html>
