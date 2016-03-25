@@ -1069,3 +1069,60 @@ sidebar-menu {
 [uib-popover-template-popup].popover {
   display: block !important;
 }
+
+.webui-popover.cb-wt {
+	border: none !important;
+	border-radius: 0 !important;
+	bottom: 0 !important;
+	right: 0 !important;
+	margin: 20px !important;
+	padding-top: 5px !important;
+	padding-bottom: 5px !important;
+	min-width: 260px;
+	text-align: center;
+	width: auto;
+
+	& .webui-popover-content {
+		overflow: hidden !important;
+	}
+
+	& .cb-wt-info {
+		border: 1px solid rgb(26, 187, 156);
+		background-color: rgba(26, 187, 156, 0.25);
+		padding: 5px;
+	}
+}
+
+.animate {
+	&.width {
+		-webkit-transition: width 0.8s;
+		-moz-transition: width 0.8s;
+		transition: width 0.8s;
+	}
+
+	&.hide-show {
+		opacity: 1;
+		&.ng-hide {
+			opacity: 0;
+		}
+		&.ng-hide-add, &.ng-hide-remove {
+			transition: all linear 0.2s;
+		}
+	}
+}
+
+#toast-container > div {
+	border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2) !important;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2) !important;
+	padding: 15px 15px 15px 25px !important;
+	background-image: none;
+	margin: 0 0 12px !important;
+	width: 350px !important;
+
+	& .toast-title {
+		margin-bottom: 5px;
+	}
+}

@@ -61,7 +61,7 @@
             });
 }
 
-    ng.module('mainApp', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'angular-loading-bar', 'ngAnimate']);
+    ng.module('mainApp', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'angular-loading-bar', 'ngAnimate', 'ui.bootstrap.position', 'toastr']);
 
     ng.module('mainApp')
         .config(['$stateProvider', '$urlRouterProvider', '$interpolateProvider', '$httpProvider', 'cfpLoadingBarProvider', _config]);

@@ -1,6 +1,6 @@
 (function (ng) {
 
-    function _stCtrl($scope, $apiSrv, uiGridConstants) {
+    function _stCtrl($scope, $apiSrv, toastr, $timeout) {
 
         $scope.stat = {
             period: {
@@ -11,6 +11,46 @@
             calls: [],
             stat: {}
         };
+
+        $scope.cbPopover = {
+            el: document.querySelector('#cb-popover'),
+            isShown: false,
+            isCalling: false,
+            data: {
+                price: '',
+                number: '',
+                description: '',
+                prefix: ''
+            },
+            call: function () {
+                var self = this;
+                self.isCalling = true;
+                var toastTitle = 'Обратный звонок';
+                $timeout(function () {
+                    $apiSrv.cbCall(self.data.number)
+                        .then(function (response) {
+                            self.hide();
+                            toastr.success('Запрос звонка на номер <strong>' + self.data.number + '</strong> успешно отправлен', toastTitle);
+                        })
+                        .catch(function () {
+                            toastr.error('Произошла ошибка. Повторите попытку позже', toastTitle);
+                        })
+                        .then(function () {
+                            self.isCalling = false;
+                        })
+                }, 3000)
+            },
+            show: function () {
+                this.isShown = true;
+            },
+            hide: function () {
+                this.isShown = false;
+            },
+            toggle: function () {
+                this.isShown = !this.isShown;
+            }
+        };
+
         $scope.gridOptions = {
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
@@ -18,11 +58,12 @@
             paginationPageSizes: [20],
             paginationPageSize: 20,
             rowHeight: 40,
+            data: [],
             columnDefs: [
                 { name: 'num', maxWidth: 20, displayName: '', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.renderContainers.body.visibleRowCache.indexOf(row) + 1 ]]</div>' },
                 { name: 'date', displayName: 'Дата', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.date|date:"dd.MM.yyyy HH:mm:ss":"+0000" ]]</div>' },
                 { name: 'call_type', maxWidth: 20, displayName: '', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents"><span class="[[ grid.appScope.formatType(grid, row) ]]" title="[[ grid.appScope.formatTypeLoclze(grid, row) ]]"></span></div>' },
-                { name: 'sip', minWidth: 200, displayName: 'Номер звонящего', enableColumnMenu: false, cellTemplate: '<div popover ng-click="grid.appScope.cbPopover($event, row)" class="pointer ui-grid-cell-contents" ng-class="{\'text-bold\': row.entity.is_first_call}">[[ row.entity.sip ]]</div>' },
+                { name: 'sip', minWidth: 200, displayName: 'Номер звонящего', enableColumnMenu: false, cellTemplate: '<div popover ng-click="grid.appScope.onSipCellClick($event, row)" class="pointer ui-grid-cell-contents" ng-class="{\'text-bold\': row.entity.is_first_call}">[[ row.entity.sip ]]</div>' },
                 { name: 'destination', displayName: 'Номер ответа', enableColumnMenu: false },
                 { name: 'bill_seconds', displayName: 'Время разговора', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatSec(grid, row) ]]</div>' },
                 { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<div data-call-id="[[ row.entity.call_id ]]">' +
@@ -38,8 +79,23 @@
             }
         };
 
-        $scope.cbPopover = function ($event, row) {
-            _initPopover();
+        $scope.onSipCellClick = function ($event, row) {
+            var el = $($event.target);
+            var sip = row.entity.sip;
+            $apiSrv.getCallCost(sip)
+                .success(function (response) {
+                    $scope.cbPopover.data.price = response.info.price + ' ' + response.info.currency;
+                    $scope.cbPopover.data.description = response.info.description;
+                    $scope.cbPopover.data.number = sip;
+                    $scope.cbPopover.data.prefix = response.info.prefix;
+
+                    if (!$scope.cbPopover.isShown) {
+                        $scope.cbPopover.show();
+                    }
+                })
+                .error(function () {
+                    console.log(arguments)
+                });
         };
 
         $scope.changeStatType = function (type) {
@@ -113,13 +169,12 @@
         };
 
         function onGetStatSuccess(response) {
-            $scope.gridOptions.data = [];
             $scope.stat.calls = response.calls || [];
             $scope.gridOptions = { data: $scope.stat.calls };
         }
 
         function onGetStatError() {
-
+            toastr.error('Произошла ошибка. Повторите попытку позже', 'Статистика звонков');
         }
 
         function loadStat() {
@@ -140,54 +195,9 @@
         loadStat();
     }
 
-    _stCtrl.$inject = ['$scope', '$apiSrv', 'uiGridConstants'];
+    _stCtrl.$inject = ['$scope', '$apiSrv', 'toastr', '$timeout'];
 
     ng.module('mainApp')
         .controller('StCtrl', _stCtrl)
 
 })(angular);
-
-
-function _initPopover() {
-    $('[id^=webuiPopover]').remove();
-    var elements = $('[popover]');
-    for (var i = 0; i < elements.length; i++) {
-        var el = $(elements[i]);
-        var number = el.text();
-        number = number[0] === '+' ? number.slice(1) : number;
-        el.webuiPopover({
-            cache: false,
-            width: 185,
-            animation: 'pop',
-            placement: 'right',
-            content: function (data) {
-                var btn = '<button class="btn btn-sm-wt btn-default" type="button" style="width: 100%">Позвонить</button>' +
-                    '<input type="hidden" value="' + data.phone + '" />';
-                if (data.notAvalible) {
-                    return '<div style="margin-bottom: 10px;" align="center">Не доступно</div>' + btn;
-                }
-                return '<div style="margin-bottom: 10px;">Стоимость: <strong>' + data.price.toFixed(2) + ' ' + data.currency + '</strong></div>' + btn;
-
-            },
-            type: 'async',
-            url: '/getCallCost/?n=' + number
-        })
-            .on('shown.webui.popover', function (e, target) {
-                target.find('button').on('click', function () {
-                    $(this).attr('disabled', true).text('Соединение...');
-                    setTimeout(function () {
-                        services.call(target.find('input[type="hidden"]').val())
-                            .then(function (result) {
-                                message.success('Запрос отправлен. Ожидайте звонка')
-                            })
-                            .fail(function () {
-                                message.error('Произошла ошибка. Повторите попытку');
-                            })
-                            .always(function () {
-                                $('td[data-target="' + target.attr('id') + '"]').webuiPopover('hide')
-                            });
-                    }, 2000)
-                })
-            });
-    }
-}
