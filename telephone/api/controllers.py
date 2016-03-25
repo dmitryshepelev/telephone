@@ -1,3 +1,6 @@
+# coding=utf-8
+import json
+import requests
 from telephone.classes.ServerResponse import ServerResponse
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
@@ -73,9 +76,28 @@ def cb_call(request):
 
 	to_number = CommonService.reduce_number(to_number)
 
-	# result = PBXDataService.request_callback(request.user, from_number, to_number)
-	result = {'status': 'ok'}
+	result = PBXDataService.request_callback(request.user, from_number, to_number)
 	if result:
 		return ServerResponse.ok(data={'info': result})
 
 	return ServerResponse.internal_server_error()
+
+
+def get_call_cost_by_country(request):
+	"""
+	Returns call costs by country
+	:param request: HTTP request
+	:return: HttpResponse instance
+	"""
+	if not request.user.is_authenticated():
+		return ServerResponse.unauthorized()
+
+	country = request.GET.get('country', 'россия').lower()
+
+	result = requests.post('https://zadarma.com/ru/checks/call-cost/', {'number': country}, headers={'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Cookie': 'currency=RUB; lang=en;'})
+	data = json.loads(result.content)
+
+	if result.ok:
+		return ServerResponse.ok(data={'costs': data})
+
+	return ServerResponse.bad_request(data={'data': data})

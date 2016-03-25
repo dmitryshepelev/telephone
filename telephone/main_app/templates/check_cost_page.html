@@ -1,1 +1,19 @@
-<h2>check cost</h2>
+<div class="">
+	<div class="row">
+		<div class="col-md-4 content-container">
+			<div class="form-group typeahead-group">
+				<label class="control-label" for="country">Куда звоним: </label>
+				<input type="text" ng-model="selected" typeahead-on-select="onSelect($item, $model, $label, $event)" uib-typeahead="c for c in countries | filter:$viewValue | limitTo:8" class="form-control" autofocus placeholder="Введите название страны">
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div ui-grid="gridOptions" class="grid" ui-grid-auto-resize ng-style="getTableHeight()" ui-grid-pagination></div>
+			<div class="btn-group pull-right margin-t-20" ng-if="gridOptions.data.length != 0">
+				<button class="btn btn-sm-wt btn-default" ng-click="gridApi2.pagination.previousPage()" type="button"><span class="icon-arrow-left2"></span></button>
+		        <button class="btn btn-sm-wt btn-default" ng-disabled="gridApi2.pagination.getPage() == $index + 1" ng-click="gridApi2.pagination.seek($index + 1)" ng-repeat="i in getPagesArr(gridApi2.pagination.getTotalPages()) track by $index" type="button">[[$index + 1]]</button>
+				<button class="btn btn-sm-wt btn-default" ng-click="gridApi2.pagination.nextPage()" type="button"><span class="icon-arrow-right2"></span></button>
+		    </div>
+		</div>
+
+	</div>
+</div>

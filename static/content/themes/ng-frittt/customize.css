@@ -930,3 +930,14 @@ sidebar-menu .main-menu a i + span {
 #toast-container > div .toast-title {
   margin-bottom: 5px;
 }
+[uib-typeahead-popup].dropdown-menu {
+  display: block;
+}
+.content-container {
+  background-color: #f0f2f4;
+  padding: 20px;
+  margin-bottom: 20px !important;
+}
+.typeahead-group .dropdown-menu {
+  left: 20px !important;
+}

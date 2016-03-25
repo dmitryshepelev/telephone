@@ -30,7 +30,7 @@
             .state('my.cst', {
                 url: '/cst',
                 templateUrl: _baseUrl + '/cst/',
-                controller: '',
+                controller: 'CheckCallCostCtrl',
                 data: {
                     title: 'Стоимость звонка'
                 }
@@ -61,7 +61,20 @@
             });
 }
 
-    ng.module('mainApp', ['ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.autoResize', 'angular-loading-bar', 'ngAnimate', 'ui.bootstrap.position', 'toastr']);
+    ng.module('mainApp', [
+        'ui.router',
+        'ui.grid',
+        'ui.grid.pagination',
+        'ui.grid.autoResize',
+        'angular-loading-bar',
+        'ngAnimate',
+        'ui.bootstrap.position',
+        'toastr',
+        'ui.bootstrap.debounce',
+        'ui.bootstrap.typeahead',
+        'uib/template/typeahead/typeahead-popup.html',
+        'uib/template/typeahead/typeahead-match.html'
+    ]);
 
     ng.module('mainApp')
         .config(['$stateProvider', '$urlRouterProvider', '$interpolateProvider', '$httpProvider', 'cfpLoadingBarProvider', _config]);

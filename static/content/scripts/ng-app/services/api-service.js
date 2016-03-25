@@ -18,6 +18,10 @@
                 fromN = fromN ? fromN.toString() : '';
                 var url = baseUrl + 'cbcall/?fromN=' + fromN + '&toN=' + toN;
                 return $http.get(url)
+            },
+            getCostByCountry: function (country) {
+                var url = baseUrl + 'getcostbycountry/?country=' + country;
+                return $http.get(url);
             }
         }
     }

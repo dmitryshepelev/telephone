@@ -33,7 +33,7 @@
                             toastr.success('Запрос звонка на номер <strong>' + self.data.number + '</strong> успешно отправлен', toastTitle);
                         })
                         .catch(function () {
-                            toastr.error('Произошла ошибка. Повторите попытку позже', toastTitle);
+                            toastr.error('Операция временно недоступна. Повторите попытку позже', toastTitle);
                         })
                         .then(function () {
                             self.isCalling = false;
@@ -174,7 +174,7 @@
         }
 
         function onGetStatError() {
-            toastr.error('Произошла ошибка. Повторите попытку позже', 'Статистика звонков');
+            toastr.error('Операция временно недоступна. Повторите попытку позже', 'Статистика звонков');
         }
 
         function loadStat() {
