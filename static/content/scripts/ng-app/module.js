@@ -38,7 +38,7 @@
             .state('my.clb', {
                 url: '/clb',
                 templateUrl: _baseUrl + '/clb/',
-                controller: '',
+                controller: 'CbCtrl',
                 data: {
                     title: 'Обратный звонок'
                 }
@@ -73,7 +73,10 @@
         'ui.bootstrap.debounce',
         'ui.bootstrap.typeahead',
         'uib/template/typeahead/typeahead-popup.html',
-        'uib/template/typeahead/typeahead-match.html'
+        'uib/template/typeahead/typeahead-match.html',
+        'ui.bootstrap.tabs',
+        'uib/template/tabs/tabset.html',
+        'uib/template/tabs/tab.html'
     ]);
 
     ng.module('mainApp')

@@ -1142,3 +1142,41 @@ sidebar-menu {
 		left: 20px !important;
 	}
 }
+
+.tabset {
+	& > .nav {
+		margin-bottom: 20px;
+
+		& > .uib-tab {
+			border-bottom: 3px solid @success-color;
+			margin-left: 0;
+
+			&.disabled {
+				border: none;
+				& > a, & > a:focus {
+					color: #c9c9c9;
+					&:hover {
+						background-color: @background-color !important;
+						color: #c9c9c9 !important;
+					}
+				}
+			}
+
+			& > a, & > a:focus {
+				padding: 15px 20px;
+				border-radius: 0;
+				background-color: @background-color !important;
+				color: @default-text-color;
+
+				&:hover {
+					background-color: #f9f9f9 !important;
+					color: @default-text-color;
+				}
+			}
+		}
+	}
+
+	& > .tab-content {
+		.content-container
+	}
+}

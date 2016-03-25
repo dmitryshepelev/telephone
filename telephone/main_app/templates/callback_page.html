@@ -1,1 +1,36 @@
-<h3>callback</h3>
+<div class="row">
+	<div class="col-lg-5 col-md-7">
+	    <uib-tabset active="active" type="pills" class="tabset">
+		    <uib-tab index="tabs[0].idx" heading="[[ tabs[0].activeTitle ]]" active="tabs[0].isActive" disable="tabs[0].disabled">
+		        <div class="form-group">
+			        <input type="text" class="form-control" placeholder="Номер абонента" ng-model="cb.toN.number">
+		        </div>
+			    <div align="right">
+					<button class="btn btn-default btn-sm-wt" ng-click="setTab(1, 0)" ng-disabled="!cb.toN.number">Дальше <span class="icon-arrow-right2"></span></button>
+			    </div>
+	        </uib-tab>
+	        <uib-tab index="tabs[1].idx" heading="[[ tabs[1].activeTitle ]]" active="tabs[1].isActive" disable="tabs[1].disabled">
+		        <div class="form-group">
+			        <input type="text" class="form-control" placeholder="Номер абонента" ng-model="cb.fromN.number">
+		        </div>
+			    <div align="right">
+				    <button class="btn btn-default btn-sm-wt" ng-click="setTab(0, 1)"><span class="icon-arrow-left2"></span> Назад</button>
+					<button class="btn btn-default btn-sm-wt" ng-click="setTab(2, 1)" ng-disabled="!cb.fromN.number">Дальше <span class="icon-arrow-right2"></span></button>
+			    </div>
+	        </uib-tab>
+	        <uib-tab index="tabs[2].idx" heading="[[ tabs[2].activeTitle ]]" select="onThirdTabSelect($event)" active="tabs[2].isActive" disable="tabs[2].disabled">
+		        <div class="form-group">
+			        <div>
+				        <h4>[[ cb.fromN.number ]]<small>[[ cb.fromN.info.description ]] (+[[ cb.fromN.info.prefix ]])</small><span class="pull-right">[[ cb.fromN.info.price ]] [[ cb.fromN.info.currency ]]</span></h4>
+				        <h4>[[ cb.toN.number ]]<small>[[ cb.toN.info.description ]] (+[[ cb.toN.info.prefix ]])</small><span class="pull-right">[[ cb.toN.info.price ]] [[ cb.toN.info.currency ]]</span></h4>
+				        <h4>Итого:<span class="pull-right"><strong>[[ cb.fromN.info.price + cb.toN.info.price ]] [[ cb.fromN.info.currency ]]</strong></span></h4>
+			        </div>
+		        </div>
+			    <div align="right">
+				    <button class="btn btn-default btn-sm-wt" ng-click="setTab(1, 2)"><span class="icon-arrow-left2"></span> Назад</button>
+			    </div>
+	        </uib-tab>
+	    </uib-tabset>
+
+	</div>
+</div>

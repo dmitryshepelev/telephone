@@ -941,3 +941,39 @@ sidebar-menu .main-menu a i + span {
 .typeahead-group .dropdown-menu {
   left: 20px !important;
 }
+.tabset > .nav {
+  margin-bottom: 20px;
+}
+.tabset > .nav > .uib-tab {
+  border-bottom: 3px solid #1abb9c;
+  margin-left: 0;
+}
+.tabset > .nav > .uib-tab.disabled {
+  border: none;
+}
+.tabset > .nav > .uib-tab.disabled > a,
+.tabset > .nav > .uib-tab.disabled > a:focus {
+  color: #c9c9c9;
+}
+.tabset > .nav > .uib-tab.disabled > a:hover,
+.tabset > .nav > .uib-tab.disabled > a:focus:hover {
+  background-color: #f0f2f4 !important;
+  color: #c9c9c9 !important;
+}
+.tabset > .nav > .uib-tab > a,
+.tabset > .nav > .uib-tab > a:focus {
+  padding: 15px 20px;
+  border-radius: 0;
+  background-color: #f0f2f4 !important;
+  color: #222222;
+}
+.tabset > .nav > .uib-tab > a:hover,
+.tabset > .nav > .uib-tab > a:focus:hover {
+  background-color: #f9f9f9 !important;
+  color: #222222;
+}
+.tabset > .tab-content {
+  background-color: #f0f2f4;
+  padding: 20px;
+  margin-bottom: 20px !important;
+}
