@@ -5,5 +5,5 @@ urlpatterns = [
 	url(r'^getstat/$', get_statistic),
 	url(r'^getcallcost/$', get_call_cost),
 	url(r'^cbcall/$', cb_call),
-	url(r'^getcostbycountry/$', get_call_cost_by_country)
+	url(r'^getcostbycountry/$', get_call_cost_by_country),
 ]

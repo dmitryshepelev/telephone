@@ -1,0 +1,16 @@
+<div class="row content-container">
+	<div class="col-md-5 col-md-offset-3">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label class="">Введите номер счетчика</label>
+				<input type="text" required class="form-control input-lg" name="counterNumber" placeholder="Номер счетчика" autocomplete="off" />
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-default" onclick="ctrl.getScript()">Получить мой скрипт</button>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-9 col-md-offset-1">
+		<div id="code"></div>
+	</div>
+</div>

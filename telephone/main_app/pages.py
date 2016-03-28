@@ -1,13 +1,14 @@
-import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from telephone.classes.PaymentData import PaymentData
+from telephone.classes.SubscriptionData import SubscriptionData
+
 
 @require_http_methods(['GET'])
 @login_required
-@user_passes_test(lambda user: user.userprofile.date_subscribe_ended and (user.userprofile.date_subscribe_ended.date() - datetime.datetime.now().date()).days >= 0, login_url='/pay/subfee/', redirect_field_name='')
 def base(request, template):
 	"""
 	Base of sett module
@@ -69,7 +70,7 @@ def balance_page(request):
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'balance_page.html', {})
+	return render(request, 'balance_page.html', {'payment_data': PaymentData(request.user.userprofile.customer_number)})
 
 
 @login_required
@@ -80,4 +81,14 @@ def subfee_page(request):
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'subfee_page.html', {})
+	return render(request, 'subfee_page.html', {'subscription_data': SubscriptionData()})
+
+
+@login_required
+def get_widget_script_page(request):
+	"""
+	Return widget script
+	:param request:
+	:return:
+	"""
+	return render(request, 'get_widget_script_page.html', {})

@@ -7,7 +7,8 @@
             menuItems: [
                 { state: 'my.st', isActive: false },
                 { state: 'my.cst', isActive: false },
-                { state: 'my.clb', isActive: false }
+                { state: 'my.clb', isActive: false },
+                { state: 'my.gscpt', isActive: false }
             ],
 
             toggle: function () {

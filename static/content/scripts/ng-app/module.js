@@ -58,6 +58,14 @@
                 data: {
                     title: 'Пополнение счета'
                 }
+            })
+            .state('my.gscpt', {
+                url: '/gscpt',
+                templateUrl: _baseUrl + '/gscpt/',
+                controller: '',
+                data: {
+                    title: 'Получить скрипт виджета'
+                }
             });
 }
 
