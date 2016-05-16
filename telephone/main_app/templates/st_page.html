@@ -13,7 +13,7 @@
         <div class="col-sm-8">
             <div class="col-sm-4">
                 <div id="call-type-filter">
-	                Тип звонков:
+	                Тип:
 	                <div class="call-types-switcher">
                         <span class="call-type icon-arrow-up" ng-click="changeStatType('coming')" ng-class="{'call-type-active': stat.types.indexOf('coming') !== -1}" title="Исходящие"></span>
 	                    <span class="call-type icon-arrow-down" ng-click="changeStatType('incoming')" ng-class="{'call-type-active': stat.types.indexOf('incoming') !== -1}" title="Входящие"></span>
@@ -26,7 +26,7 @@
                 <switcher name="status" titles="['Только принятые', 'Все звонки', 'Только пропущенные']"></switcher>
             </div>
             <div class="col-sm-3 period-container">
-                <button type="button" ng-click="loadStat()" class="pull-right btn btn-default btn-sm-wt"><span class="icon-filter"></span> Загрузить</button>
+                <button type="button" ng-click="loadStat()" class="pull-right btn btn-default btn-sm-wt"><span class="icon-filter"></span> Показать</button>
             </div>
         </div>
     </div>

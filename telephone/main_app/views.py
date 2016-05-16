@@ -1,9 +1,8 @@
 # coding=utf-8
 import datetime
 import json
-import os
-from io import open
 
+import requests
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, JsonResponse
@@ -11,24 +10,20 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-import requests
 
 from telephone import settings
 from telephone.admin_app.views import panel
 from telephone.classes.ApiParams import ApiParams
 from telephone.classes.Call import CallRecord, CallsStat
 from telephone.classes.FilterParams import CallsFilterParams
-from telephone.classes.MailMessage import MailMessage
 from telephone.classes.PaymentData import PaymentData
 from telephone.classes.SubscriptionData import SubscriptionData
 from telephone.main_app.models import UserProfile, WidgetScript, Callee
 from telephone.main_app.pages import base
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService
-from telephone.service_app.services.PBXDataService import PBXDataService
 from telephone.service_app.services.LogService import LogService, Code
-from telephone.tasks import add, send_mail
-
+from telephone.service_app.services.PBXDataService import PBXDataService
 
 logger = LogService()
 
@@ -92,8 +87,6 @@ def get_statistic(request, template):
 	filter_params = CallsFilterParams(request.GET)
 	calls = [CallRecord(call=call) for call in request.user.userprofile.call_set.filter(**filter_params.params).exclude(**filter_params.exclude_params).filter(filter_params.call_type_query).order_by('date')]
 	calls_stat = CallsStat(calls)
-
-	# send_mail.apply_async((MailMessage(settings.INFO_EMAIL, 'Попытка обновления статы', 'mail_stat_updated.html', {'username': request.user.username}, request.user.email),), countdown=60)
 
 	return render_to_response(template, {'calls': calls, 'calls_stat': calls_stat}, context_instance=RequestContext(request))
 

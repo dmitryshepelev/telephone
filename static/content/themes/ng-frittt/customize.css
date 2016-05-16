@@ -702,6 +702,11 @@ sidebar-menu .main-menu {
   margin-bottom: 20px;
   list-style: none;
 }
+sidebar-menu .main-menu > li.bottom {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 10px;
+}
 sidebar-menu .main-menu a {
   color: #979898;
   text-decoration: none;
