@@ -1,0 +1,52 @@
+{% block title %}
+	<title>Вход</title>
+{% endblock %}
+
+<div class="auth-block m-b-15" align="center">
+	<h2>Добро пожаловать на <a href="/">web-tel</a></h2>
+</div>
+
+<div class="row">
+	<div class="col-sm-6 m-t-15">
+		<div class="m-s-20">
+			<h3>Войдите в профиль используя логин и пароль</h3>
+			<form class="form-horizontal" name="$loginForm" novalidate>
+				{% csrf_token %}
+				<input type="hidden" id="redirect_url" ng-model="redirect_url" name="redirect_url" value="{{ redirect_url }}">
+				<div class="form-group">
+					<input class="form-control" id="username" name="username" ng-model="loginModel.username" type="text" placeholder="Логин" autofocus autocomplete="off" required="required">
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="password" name="password" ng-model="loginModel.password" type="password" placeholder="Пароль" required>
+				</div>
+				<div class="form-group">
+					<button type="button" ng-click="login()" class="btn btn-primary btn-wt pull-right auth-submit-btn">Войти</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="col-sm-6 m-t-15">
+		<div class="m-s-20">
+			<div ng-show="createdProfileRequest">
+				<h3>Заявка отправлена успешно</h3>
+				<h4>Данные для входа в Ваш профиль будут отправлены на <a href="mailto:[[ createdProfileRequest.email ]]">[[ createdProfileRequest.email ]]</a></h4>
+				<small>В случае, если вы не получили письмо в течение более 2-х дней, обратитесь в <a href="mailto:help@web-tel.ru">поддержку</a>,<br> указав номер текущей заявки: <strong>[[ createdProfileRequest.transact_id ]]</strong></small>
+			</div>
+			<div ng-show="!createdProfileRequest">
+				<h3>или отправте нам заявку на создание профиля</h3>
+				<form class="form-horizontal" name="$profileRequestForm">
+					{% csrf_token %}
+					<div class="form-group">
+						<input class="form-control" id="email" name="email" ng-model="profileRequestModel.email" type="email" placeholder="E-mail" required>
+					</div>
+					<div class="form-group">
+						<input class="form-control" id="login" name="login" ng-model="profileRequestModel.login" type="text" placeholder="Желаемый логин">
+					</div>
+					<div class="form-group">
+						<button type="button" ng-click="sendProfileRequest()" class="btn btn-primary btn-wt pull-right auth-submit-btn">Отправить</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

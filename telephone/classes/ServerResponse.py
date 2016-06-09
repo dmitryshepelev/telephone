@@ -14,9 +14,10 @@ class ServerResponse(object):
 		:param data: data
 		:return: empty object if the data is None
 		"""
-		data = data or {}
-		data.__setitem__('message', cls.__resolve_message(message))
-		return data
+		dt = {}
+		dt.__setitem__('data', data or {})
+		dt.__setitem__('message', cls.__resolve_message(message))
+		return dt
 
 	@classmethod
 	def __resolve_message(cls, message):

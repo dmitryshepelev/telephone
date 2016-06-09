@@ -68,6 +68,7 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'django.middleware.security.SecurityMiddleware',
+	'telephone.middlewares.RequestBodyParserMiddleware'
 )
 
 ROOT_URLCONF = 'telephone.urls'
@@ -124,6 +125,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATICFILES_DIRS = (
+	'telephone/auth_app/scripts/',
+
 	'static/content/fonts',
 	'static/content/themes/',
 	# 'static/content/scripts/coffee',
@@ -149,7 +152,7 @@ TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR,  'static/email_templates'),
 )
 
-LOGIN_URL = '/auth/login/'
+LOGIN_URL = '/auth/'
 
 S_KEY = 'e6eddf38406a4fa03d09'
 

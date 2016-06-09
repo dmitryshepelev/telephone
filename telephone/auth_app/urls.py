@@ -1,8 +1,15 @@
 from django.conf.urls import url
-from telephone.auth_app.views import login, logout_user, new_profile_request
+
+from telephone.auth_app.api import login, profile_request
+from telephone.auth_app.views import login_page, logout_user, base, ui_view
 
 urlpatterns = [
-	url(r'^login/$', login, {'template': 'login.html'}),
-	url(r'^newProfileRequest/$', new_profile_request, {'template': 'new_profile_request_succeed.html'}),
+	url(r'^$', base),
+	url(r'^uiview/$', ui_view),
+	url(r'^login/$', login_page),
+
+	url(r'api/login/$', login),
+	url(r'api/profile_request/$', profile_request),
+
 	url(r'^logout/$', logout_user, {}),
 ]

@@ -137,6 +137,9 @@ input[type="checkbox"]:checked + label {
   border: 1px solid #d9534f !important;
   padding-left: 17px;
 }
+.warning {
+  border-color: #f0ad4e !important;
+}
 input[required] {
   border-left: 2px solid #1abb9c;
 }
@@ -256,6 +259,13 @@ table th:hover {
   line-height: 1.5 !important;
   border-radius: 2px !important;
   margin: 0 !important;
+}
+.btn-wt {
+  padding: 7px 20px !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  border-radius: 2px !important;
+  margin: 0 0 10px 0 !important;
 }
 .btn-danger-wt {
   color: #FFF;
@@ -383,6 +393,14 @@ select {
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(26, 187, 156, 0.6) !important;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(26, 187, 156, 0.6) !important;
+}
+.form-control:focus.error {
+  box-shadow: inset 0 1px 1px rgba(217, 83, 79, 0.075), 0 0 8px rgba(217, 83, 79, 0.6) !important;
+  border-color: #d9534f !important;
+}
+.form-control:focus.warning {
+  box-shadow: inset 0 1px 1px rgba(58, 0, 27, 0.075), 0 0 8px rgba(240, 173, 78, 0.61) !important;
+  border-color: #f0ad4e !important;
 }
 .block-container-wt {
   padding-top: 5%;
@@ -986,4 +1004,27 @@ sidebar-menu .main-menu a i + span {
   border: 1px solid #1abb9c;
   background-color: rgba(26, 187, 156, 0.25);
   padding: 5px;
+}
+.m-b-15 {
+  margin-bottom: 15px;
+}
+.m-b-25 {
+  margin-bottom: 25px;
+}
+.m-t-15 {
+  margin-top: 15px;
+}
+.m-s-10 {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.m-s-20 {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.form-control {
+  border: 1px solid rgba(26, 187, 156, 0.5);
+}
+.shadow-0-0 {
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
 }

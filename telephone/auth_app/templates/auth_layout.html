@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="$AuthApp" ng-cloak>
+<head lang="en">
+    <meta charset="UTF-8">
+	{% block title %}
+	{% endblock %}
+    {% load staticfiles %}
+	<script type="text/javascript" src="{% static "libs/angular-1.5.2.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "libs/angular-ui-router-0.2.15.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "libs/angular-animate.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "libs/angular-toastr.min.js" %}"></script>
+
+    <script type="text/javascript" src="{% static "scripts/libs/validate.js" %}"></script>
+    <script type="text/javascript" src="{% static "scripts/libs/toastr.js" %}"></script>
+{#	<script type="text/javascript" src="{% static "libs/angular-local-storage.js" %}"></script>#}
+{#	<script type="text/javascript" src="{% static "libs/angular-animate.min.js" %}"></script>#}
+
+{#    <script type="text/javascript" src="{% static "libs/angular-loading-bar.js" %}"></script>#}
+{#	<script type="text/javascript" src="{% static "libs/angular-ui-tooltip.js" %}"></script>#}
+{#	<script type="text/javascript" src="{% static "libs/angular-ui-stackedMap.js" %}"></script>#}
+{#	<script type="text/javascript" src="{% static "libs/angular-ui-tpls-1.3.2.min.js" %}"></script>#}
+{#    <script type="text/javascript" src="{% static "libs/angular-ui-datetimepicker.min.js" %}"></script>#}
+{##}
+{#	<script type="text/javascript" src="{% static "app/services-module.js" %}"></script>#}
+{#	<script type="text/javascript" src="{% static "app/services/validate-service.js" %}"></script>#}
+{#	<script type="text/javascript" src="{% static "app/services/toastr-service.js" %}"></script>#}
+{#    <script type="text/javascript" src="{% static "app/directives/page-title-directive.js" %}"></script>#}
+{##}
+	<script type="text/javascript" src="{% static "app/auth-app.js" %}"></script>
+	<script type="text/javascript" src="{% static "app/controllers/login-controller.js" %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/bootstrap.css" %}" />
+	<link rel="stylesheet" type="text/css" href="{% static "ng-frittt/site.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "ng-frittt/customize.css" %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/varaibles.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/icons.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'ng-frittt/toastr.css' %}" />
+
+	<link rel="icon" type="image/png" href="{% static 'images/favicon.ico' %}">
+	{% block resources %}
+
+	{% endblock %}
+</head>
+
+<body>
+<div class="container">
+	<input type="hidden" id="redirect_url" autocomplete="off" value="{{ redirect_url }}">
+	<div class="page-container" style="margin: 10% 0">
+		<div align="center" class="m-b-25">
+			<a href="/">
+				<img src="{% static 'images/logo-new.png' %}">
+			</a>
+
+		</div>
+		<div class="main-content shadow-0-0" style="display: block">
+		    {% block content %}
+
+		    {% endblock %}
+		</div>
+	</div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                {% block footer %}
+                {% endblock %}
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
