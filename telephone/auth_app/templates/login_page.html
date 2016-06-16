@@ -34,7 +34,7 @@
 			</div>
 			<div ng-show="!createdProfileRequest">
 				<h3>или отправте нам заявку на создание профиля</h3>
-				<form class="form-horizontal" name="$profileRequestForm">
+				<form class="form-horizontal" name="$profileRequestForm" novalidate>
 					{% csrf_token %}
 					<div class="form-group">
 						<input class="form-control" id="email" name="email" ng-model="profileRequestModel.email" type="email" placeholder="E-mail" required>
