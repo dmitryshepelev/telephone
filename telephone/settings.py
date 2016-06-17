@@ -51,11 +51,11 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	'telephone.main_app.templatetags',
-	'telephone.main_app',
+	# 'telephone.main_app.templatetags',
+	# 'telephone.main_app',
 	'telephone.auth_app',
-	'telephone.service_app',
-	'telephone.admin_app',
+	# 'telephone.service_app',
+	# 'telephone.admin_app',
 	# 'celery',
 	'telephone.my_app'
 )
@@ -69,7 +69,6 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 	'django.middleware.security.SecurityMiddleware',
-	'telephone.middlewares.RequestBodyParserMiddleware'
 )
 
 ROOT_URLCONF = 'telephone.urls'
@@ -99,7 +98,7 @@ WSGI_APPLICATION = 'telephone.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-		'NAME': 'telephonedb' if DEBUG else 'videomesrf',
+		'NAME': 'webtel_db' if DEBUG else 'videomesrf',
 		'USER': 'postgres' if DEBUG else 'videomesrf',
 		'PASSWORD': 'qwaszx@1',
 		'HOST': 'localhost' if DEBUG else 'pg.sweb.ru',

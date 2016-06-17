@@ -7,10 +7,12 @@ from telephone.auth_app.forms import AuthUserForm, ProfileRequestForm
 from telephone.auth_app.services import auth
 from telephone.classes.Message import Message
 from telephone.classes.ProfileRequest import ProfileRequest
+from telephone.decorators import parse_request_body
 from telephone.service_app.services.DBService import DBService
 
 
 @require_http_methods(['POST'])
+@parse_request_body()
 def login(request):
 	"""
 	Controller to show login page
@@ -38,6 +40,7 @@ def login(request):
 
 
 @require_http_methods(['POST'])
+@parse_request_body()
 def profile_request(request):
 	"""
 	Controller to create profile request
