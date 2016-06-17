@@ -4,7 +4,7 @@ from django.db.models import Max
 import pytz
 from telephone import settings
 
-from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.libs.ServiceResponse import ServiceResponse
 from telephone.main_app.models import Call, Callee, SubscribeTransaction, TransactionStatus, ProfileRequestTransaction, \
 	RegisteredCallback, IncomingInfo
 from telephone.service_app.services.LogService import LogService, Code

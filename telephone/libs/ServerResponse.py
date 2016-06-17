@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from telephone.api.server_errors import ServerErrorText
-from telephone.classes.Message import MessageTypes
+from telephone.libs.Message import MessageTypes
 
 
 class ServerResponse(object):

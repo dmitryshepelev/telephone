@@ -1,10 +1,19 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
-from telephone.libs.PaymentData import PaymentData
-from telephone.libs.SubscriptionData import SubscriptionData
+
+def main_resolver(request):
+	"""
+	Controller to show main page
+	:param request: HTTP GET request
+	:param templates: html templates
+	:return: HttpResponse instance
+	"""
+	if request.user.is_authenticated() and request.user.is_superuser:
+		# return panel(request, templates[0])
+		pass
+	return base(request, 'my_base.html')
 
 
 @require_http_methods(['GET'])

@@ -12,16 +12,16 @@
 		<sidebar-menu>
 			<ul class="main-menu">
 				<li>
-					<a ui-sref="[[ sidebar.menuItems[0].state ]]" ng-class="{'active': sidebar.menuItems[0].isActive }"><i class="icon-stats-bars"></i><span ng-if="!sidebar.isCollapsed">Статистика</span></a>
+					<a ui-sref="my.st" ng-class="{'active': sidebar.menuItems[0].isActive }"><i class="icon-stats-bars"></i><span ng-if="!sidebar.isCollapsed">Статистика</span></a>
 				</li>
 				<li>
-					<a ui-sref="[[ sidebar.menuItems[1].state ]]" ng-class="{'active': sidebar.menuItems[1].isActive }"><i class="icon-coin-dollar"></i><span ng-if="!sidebar.isCollapsed">Узнать стоимость</span></a>
+					<a ui-sref="my.cst" ng-class="{'active': sidebar.menuItems[1].isActive }"><i class="icon-coin-dollar"></i><span ng-if="!sidebar.isCollapsed">Узнать стоимость</span></a>
 				</li>
 				<li>
-					<a ui-sref="[[ sidebar.menuItems[2].state ]]" ng-class="{'active': sidebar.menuItems[2].isActive }"><i class="icon-phone"></i><span ng-if="!sidebar.isCollapsed">Обратный звонок</span></a>
+					<a ui-sref="my.clb" ng-class="{'active': sidebar.menuItems[2].isActive }"><i class="icon-phone"></i><span ng-if="!sidebar.isCollapsed">Обратный звонок</span></a>
 				</li>
 				<li>
-					<a ui-sref="[[ sidebar.menuItems[3].state ]]" ng-class="{'active': sidebar.menuItems[3].isActive }"><i class="icon-embed2"></i><span ng-if="!sidebar.isCollapsed">Получить скрипт</span></a>
+					<a ui-sref="my.gscpt" ng-class="{'active': sidebar.menuItems[3].isActive }"><i class="icon-embed2"></i><span ng-if="!sidebar.isCollapsed">Получить скрипт</span></a>
 				</li>
 				<li class="bottom">
 					<a href="" ng-click="sidebar.toggle()" ng-class="{'active': sidebar.menuItems[3].isActive }"><i ng-class="{'icon-arrow-left2': !sidebar.isCollapsed, 'icon-arrow-right2': sidebar.isCollapsed}"></i><span ng-if="!sidebar.isCollapsed">Спрятать меню</span></a>
@@ -31,16 +31,9 @@
 	</div>
 	<div class="main-content">
 		<nav class="navbar user-info-navbar fixed" role="navigation">
-			<ul class="user-info-menu left-links list-inline list-unstyled nav navbar-nav">
-{#				<li class="text-grey-wt">#}
-{#					<a href="" ng-click="sidebar.toggle()">#}
-{#						<i class="icon-list2"></i>#}
-{#					</a>#}
-{#				</li>#}
-			</ul>
 			{% load subscr_state_tags %}
 			<ul class="user-info-menu right-links list-inline list-unstyled nav navbar-nav">
-				{% profile_info_phone 'text-grey-wt' '/#/sf/' 'my.sf' %}
+{#				{% profile_info_phone 'text-grey-wt' '/#/sf/' 'my.sf' %}#}
 				{% profile_info_cash 'text-grey-wt' '/#/blc/' 'my.blc' %}
 				<li class="text-grey-wt"><a href="/auth/logout/">Выход</a></li>
 			</ul>

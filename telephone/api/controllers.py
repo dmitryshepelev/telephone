@@ -1,10 +1,9 @@
 # coding=utf-8
 import json
 import requests
-from telephone.classes.ServerResponse import ServerResponse
-from telephone.classes.ApiParams import ApiParams
-from telephone.classes.Call import CallRecord, CallsStat
-from telephone.classes.FilterParams import CallsFilterParams
+from telephone.libs.ApiParams import ApiParams
+from telephone.libs.Call import CallRecord, CallsStat
+from telephone.libs.FilterParams import CallsFilterParams
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.PBXDataService import PBXDataService
 
@@ -16,6 +15,7 @@ def get_statistic(request):
 	:param template: html template
 	:return: json format
 	"""
+	from telephone.libs.ServerResponse import ServerResponse
 	if not request.user.is_authenticated():
 		return ServerResponse.unauthorized()
 
@@ -41,6 +41,7 @@ def get_call_cost(request):
 	:param request: HTTP request
 	:return: HttpResponse Instance
 	"""
+	from telephone.libs.ServerResponse import ServerResponse
 	if not request.user.is_authenticated():
 		return ServerResponse.unauthorized()
 
@@ -65,6 +66,7 @@ def cb_call(request):
 	:param request: HTTP request
 	:return: HttpResponse instance
 	"""
+	from telephone.libs.ServerResponse import ServerResponse
 	if not request.user.is_authenticated():
 		return ServerResponse.unauthorized()
 
@@ -89,6 +91,7 @@ def get_call_cost_by_country(request):
 	:param request: HTTP request
 	:return: HttpResponse instance
 	"""
+	from telephone.libs.ServerResponse import ServerResponse
 	if not request.user.is_authenticated():
 		return ServerResponse.unauthorized()
 

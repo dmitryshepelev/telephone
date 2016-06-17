@@ -4,11 +4,11 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from telephone import settings
-from telephone.classes.MailMessage import MailMessage
+from telephone.libs.MailMessage import MailMessage
 
-from telephone.classes.forms.NewUserForm import NewUserForm
-from telephone.classes.view_models.ProfileRequestTransaction import ProfileRequestTransactionVM
-from telephone.classes.view_models.SubscribeTransaction import SubscribeTransactionVM
+from telephone.libs.forms.NewUserForm import NewUserForm
+from telephone.libs.view_models.ProfileRequestTransaction import ProfileRequestTransactionVM
+from telephone.libs.view_models.SubscribeTransaction import SubscribeTransactionVM
 from telephone.main_app.models import SubscribeTransaction, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.DBService import DBService

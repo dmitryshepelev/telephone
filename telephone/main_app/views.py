@@ -13,11 +13,11 @@ from django.views.decorators.http import require_http_methods
 
 from telephone import settings
 from telephone.admin_app.views import panel
-from telephone.classes.ApiParams import ApiParams
-from telephone.classes.Call import CallRecord, CallsStat
-from telephone.classes.FilterParams import CallsFilterParams
-from telephone.classes.PaymentData import PaymentData
-from telephone.classes.SubscriptionData import SubscriptionData
+from telephone.libs.ApiParams import ApiParams
+from telephone.libs.Call import CallRecord, CallsStat
+from telephone.libs.FilterParams import CallsFilterParams
+from telephone.libs.PaymentData import PaymentData
+from telephone.libs.SubscriptionData import SubscriptionData
 from telephone.main_app.models import UserProfile, WidgetScript, Callee
 from telephone.main_app.pages import base
 from telephone.service_app.services.CommonService import CommonService

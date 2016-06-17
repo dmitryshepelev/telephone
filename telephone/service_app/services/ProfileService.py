@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 import pytz
 
-from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.libs.ServiceResponse import ServiceResponse
 from telephone.main_app.models import UserProfile, WidgetScript
 from telephone.service_app.services.CommonService import CommonService
 

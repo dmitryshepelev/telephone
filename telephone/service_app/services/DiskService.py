@@ -1,8 +1,8 @@
 import json
 import requests
 from telephone import settings
-from telephone.classes.File import File
-from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.libs.File import File
+from telephone.libs.ServiceResponse import ServiceResponse
 from telephone.service_app.services.LogService import LogService, Code
 
 

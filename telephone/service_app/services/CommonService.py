@@ -14,7 +14,7 @@ from django.utils import crypto
 from pydub import AudioSegment
 
 from telephone import settings
-from telephone.classes.File import File
+from telephone.libs.File import File
 from telephone.service_app.services.LogService import LogService, Code
 
 

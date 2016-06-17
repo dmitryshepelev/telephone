@@ -7,10 +7,40 @@
 
         $interpolateProvider.startSymbol('[[');
         $interpolateProvider.endSymbol(']]');
-
+        
         $httpProvider.defaults.xsrfCookieName = 'csrftoken';
         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+        $httpProvider.interceptors.push(function ($q, $ToastrService) {
+            function showMessage(message) {
+                if (message.text) {
+                    $ToastrService[message.type || 'info'](message.text);
+                }
+            }
+            
+            function set_detData_attr(response) {
+                response.getData = function () {
+                    return this.data.data || {};
+                }
+            }
 
+            return {
+                'response': function (response) {
+                    if (response.data.message) {
+                        showMessage(response.data.message)
+                    }
+                    set_detData_attr(response);
+                    return response || $q.when(response);
+                },
+                'responseError': function(rejection) {
+                    if (rejection.data.message) {
+                        showMessage(rejection.data.message)
+                    }
+                    set_detData_attr(rejection);
+                    return $q.reject(rejection);
+                }
+            }
+        });
+        
         $urlRouterProvider.when('', '/st');
         $stateProvider
             .state('my', {
@@ -75,16 +105,7 @@
         'ui.grid.pagination',
         'ui.grid.autoResize',
         'angular-loading-bar',
-        'ngAnimate',
-        'ui.bootstrap.position',
-        'toastr',
-        'ui.bootstrap.debounce',
-        'ui.bootstrap.typeahead',
-        'uib/template/typeahead/typeahead-popup.html',
-        'uib/template/typeahead/typeahead-match.html',
-        'ui.bootstrap.tabs',
-        'uib/template/tabs/tabset.html',
-        'uib/template/tabs/tab.html'
+        '$toastr'
     ]);
 
     ng.module('mainApp')

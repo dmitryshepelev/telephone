@@ -22,6 +22,9 @@
             getCostByCountry: function (country) {
                 var url = baseUrl + 'getcostbycountry/?country=' + country;
                 return $http.get(url);
+            },
+            getPBXinfo: function () {
+                return $http.get(baseUrl + 'get_pbx_info/');
             }
         }
     }

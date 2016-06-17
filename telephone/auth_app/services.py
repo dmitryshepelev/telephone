@@ -14,9 +14,9 @@ def auth(username, password):
 	auth_user = authenticate(username = username, password = password)
 	if auth_user is not None:
 
-		if not auth_user.is_superuser and (not auth_user.last_login or not auth_user.userprofile.sip):
-			auth_user.userprofile.sip = PBXDataService.get_pbx_sip(auth_user)
-			auth_user.userprofile.save()
+		# if not auth_user.is_superuser and (not auth_user.last_login or not auth_user.userprofile.sip):
+		# 	auth_user.userprofile.sip = PBXDataService.get_pbx_sip(auth_user)
+		# 	auth_user.userprofile.save()
 
 		return auth_user
 

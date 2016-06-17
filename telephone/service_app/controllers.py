@@ -8,11 +8,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from django.views.decorators.http import require_http_methods
 
-from telephone.classes.MailParameters import MailParameters
-from telephone.classes.Modals import Modal
-from telephone.classes.search_models.ProfileRequestTransactionSM import ProfileRequestTransactionSM
-from telephone.classes.search_models.ProfileSM import ProfileSM
-from telephone.classes.search_models.SubscribeTransactionSM import SubscribeTransactionSM
+from telephone.libs.MailParameters import MailParameters
+from telephone.libs.Modals import Modal
+from telephone.libs.search_models.ProfileRequestTransactionSM import ProfileRequestTransactionSM
+from telephone.libs.search_models.ProfileSM import ProfileSM
+from telephone.libs.search_models.SubscribeTransactionSM import SubscribeTransactionSM
 from telephone.main_app.models import SubscribeTransaction, ProfileRequestTransaction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.ApiService import ApiService

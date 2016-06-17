@@ -1,6 +1,7 @@
 # coding=utf-8
 from unittest import TestCase
-from telephone.main_app.templatetags.subscr_state_tags import ending_resolver
+
+from telephone.my_app.templatetags import ending_resolver
 
 
 class TestEndingResolver(TestCase):

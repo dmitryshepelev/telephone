@@ -8,7 +8,8 @@ from telephone.main_app.views import get_statistic, get_call_record, pay, \
 
 
 urlpatterns = [
-	url(r'^$', main_resolver, {'templates': ['panel.html', 'page_base.html']}),
+	url(r'^$', main_resolver, {'templates': ['panel.html', 'my_base.html']}),
+
 	url(r'^getCalls/$', get_statistic, {'template': 'calls-table.html'}),
 	url(r'^getCallRecord/$', get_call_record),
 	url(r'^getCallCost/$', get_call_cost),

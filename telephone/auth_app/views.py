@@ -2,8 +2,6 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from telephone.service_app.services.LogService import LogService
-
 
 def base(request):
 	"""
@@ -41,4 +39,4 @@ def logout_user(request):
 	:return: redirect to the main page
 	"""
 	logout(request)
-	return redirect('/auth/login/')
+	return redirect('/auth/')

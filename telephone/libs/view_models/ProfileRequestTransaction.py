@@ -1,5 +1,5 @@
 import inspect
-from telephone.classes.TransactAction import TransactAction
+from telephone.libs.TransactAction import TransactAction
 from telephone.service_app.services.LogService import LogService, Code
 
 

@@ -1,9 +1,9 @@
-(function (ng) {
+(function (angular) {
 
-    function _uiViewCtrl($scope, $state, $titleSrv) {
+    function _uiViewCtrl($scope, $state, $titleSrv, $apiSrv) {
 
         $scope.sidebar = {
-            isCollapsed: false,
+            isCollapsed: true,
             menuItems: [
                 { state: 'my.st', isActive: false },
                 { state: 'my.cst', isActive: false },
@@ -39,11 +39,22 @@
         $scope.$on('$stateChangeSuccess', onStateChangeSuccess);
 
         setActiveState();
+
+        function loadInitData() {
+
+            $apiSrv.getPBXinfo()
+                .then(function (data) {
+                    console.log(data);
+                })
+                .catch()
+        }
+
+        loadInitData()
     }
 
-    _uiViewCtrl.$inject = ['$scope', '$state', '$titleSrv'];
+    _uiViewCtrl.$inject = ['$scope', '$state', '$titleSrv', '$apiSrv'];
 
-    ng.module('mainApp')
+    angular.module('mainApp')
         .controller('UiViewCtrl', _uiViewCtrl)
 
 })(angular);

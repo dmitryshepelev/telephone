@@ -6,10 +6,10 @@ import json
 import requests
 
 from telephone import settings
-from telephone.classes.ApiParams import ApiParams
-from telephone.classes.Call import Call, CallRecord, CallPBX
-from telephone.classes.File import File
-from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.libs.ApiParams import ApiParams
+from telephone.libs.Call import Call, CallRecord, CallPBX
+from telephone.libs.File import File
+from telephone.libs.ServiceResponse import ServiceResponse
 from telephone.main_app.models import RedirectNumbers, RegisteredCallback
 from telephone.service_app.services.CommonService import CommonService, CallsConstants
 from telephone.service_app.services.DBService import DBService

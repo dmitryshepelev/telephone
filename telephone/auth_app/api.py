@@ -5,8 +5,8 @@ from django.views.decorators.http import require_http_methods
 from telephone.auth_app.errors import AuthorizeError
 from telephone.auth_app.forms import AuthUserForm, ProfileRequestForm
 from telephone.auth_app.services import auth
-from telephone.classes.Message import Message
-from telephone.classes.ProfileRequest import ProfileRequest
+from telephone.libs.Message import Message
+from telephone.libs.ProfileRequest import ProfileRequest
 from telephone.decorators import parse_request_body
 from telephone.service_app.services.DBService import DBService
 
@@ -19,7 +19,7 @@ def login(request):
 	:param request: HTTP GET request
 	:return: HttpResponse
 	"""
-	from telephone.classes.ServerResponse import ServerResponse
+	from telephone.libs.ServerResponse import ServerResponse
 
 	redirect_property_name = 'redirect_url'
 
@@ -47,7 +47,7 @@ def profile_request(request):
 	:param request:
 	:return:
 	"""
-	from telephone.classes.ServerResponse import ServerResponse
+	from telephone.libs.ServerResponse import ServerResponse
 
 	form = ProfileRequestForm(request.body_data)
 

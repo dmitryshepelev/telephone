@@ -126,6 +126,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = (
 	'telephone/auth_app/scripts/',
+	'telephone/my_app/scripts/',
 
 	'static/content/fonts',
 	'static/content/themes/',
@@ -155,6 +156,14 @@ TEMPLATE_DIRS = (
 LOGIN_URL = '/auth/'
 
 S_KEY = 'e6eddf38406a4fa03d09'
+
+PBX = {
+	'host': 'https://api.zadarma.com/',
+	'version': 'v1',
+	'urls': {
+		'balance': '/info/balance/',
+	}
+}
 
 API_URLS = {
 	'api': {

@@ -2,8 +2,8 @@
 import inspect
 import datetime
 from telephone import settings
-from telephone.classes.MailMessage import MailMessage
-from telephone.classes.TransactAction import TransactAction
+from telephone.libs.MailMessage import MailMessage
+from telephone.libs.TransactAction import TransactAction
 from telephone.service_app.services.CommonService import CommonService
 from telephone.service_app.services.LogService import LogService, Code
 from telephone.service_app.services.ProfileService import ProfileService

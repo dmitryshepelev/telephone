@@ -2,8 +2,8 @@ import json
 import requests
 import datetime
 from telephone import settings
-from telephone.classes.MailParameters import MailboxParameters
-from telephone.classes.ServiceResponse import ServiceResponse
+from telephone.libs.MailParameters import MailboxParameters
+from telephone.libs.ServiceResponse import ServiceResponse
 from telephone.service_app.services.CommonService import CommonService
 
 

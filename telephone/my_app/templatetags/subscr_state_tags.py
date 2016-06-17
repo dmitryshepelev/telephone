@@ -2,6 +2,7 @@
 import datetime
 from django import template
 from telephone import settings
+from telephone.my_app.services.PBXService import PBXService
 from telephone.service_app.services.PBXDataService import PBXDataService
 
 register = template.Library()
@@ -65,7 +66,8 @@ def profile_info_phone(context, cls, url, state=None):
 def profile_info_cash(context, cls, url, state=None):
 	user = context['user']
 
-	balance = PBXDataService.get_pbx_account_balance(user)
+	service = PBXService(user.pbx)
+	balance = service.get_balance()
 
 	return {
 		'cash': {
