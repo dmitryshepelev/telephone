@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from telephone.my_app.api import get_pbx_info
+from telephone.my_app.api import get_pbx_info, get_stat
 from telephone.my_app.views import *
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
 	url(r'^blc/$', balance_page),
 	url(r'^gscpt/$', get_widget_script_page),
 
-	url(r'api/get_pbx_info/$', get_pbx_info),
+	url(r'api/getpbxinfo/$', get_pbx_info),
+	url(r'api/getstat/$', get_stat),
 ]

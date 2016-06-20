@@ -2,12 +2,16 @@ import hashlib
 import json
 import random
 from collections import defaultdict
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.db import models
+from django.db.models import Max
 from django.utils import timezone
+
+from telephone.my_app.utils import DateTimeUtil
 
 
 class ModelBase(models.Model):
@@ -233,6 +237,20 @@ class Subscription(ModelBase):
 	class Meta:
 		app_label = 'my_app'
 
+	def get_end_date(self):
+		"""
+		Returns the date of the subscription end
+		:return:
+		"""
+		return self.start_date + relativedelta(days = self.duration)
+
+	def days_remain(self):
+		"""
+		Return the number of days that remain to the end of the subscription
+		:return:
+		"""
+		return (self.get_end_date() - DateTimeUtil.convert_to_UTC(datetime.now())).days
+
 
 class YandexProfile(ModelBase):
 	yandex_email = models.EmailField(max_length = 50)
@@ -243,3 +261,15 @@ class YandexProfile(ModelBase):
 
 	class Meta:
 		app_label = 'my_app'
+
+
+def get_current_subscription(self):
+	"""
+	Returns current subscription
+	:param self:
+	:return:
+	"""
+	return self.subscription_set.annotate(max_date = Max('creation_datetime')).last()
+
+
+User.get_current_subscription = get_current_subscription

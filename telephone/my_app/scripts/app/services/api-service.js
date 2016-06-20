@@ -1,11 +1,18 @@
 (function (ng) {
 
-    function _apiSrv($http) {
+    function _apiSrv($http, $commonSrv) {
         var baseUrl = '/api/';
 
         return {
-            getStat: function (q) {
-                var url = baseUrl + 'getstat/' + q || '';
+            getStat: function (params) {
+                var defaultParams = {
+                    start: new Date().getTime(),
+                    end: new Date().getTime(),
+                    status: 0,
+                    call_type: ''
+                };
+                var queryString = $commonSrv.getQueryStringFromParams(params || {}, defaultParams);
+                var url = baseUrl + 'getstat/' + queryString;
                 return $http.get(url);
             },
             getCallCost: function (n) {
@@ -24,12 +31,12 @@
                 return $http.get(url);
             },
             getPBXinfo: function () {
-                return $http.get(baseUrl + 'get_pbx_info/');
+                return $http.get(baseUrl + 'getpbxinfo/');
             }
         }
     }
 
-    _apiSrv.$inject = ['$http'];
+    _apiSrv.$inject = ['$http', '$commonSrv'];
 
     ng.module('mainApp')
         .factory('$apiSrv', _apiSrv)

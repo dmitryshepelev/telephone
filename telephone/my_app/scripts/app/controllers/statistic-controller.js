@@ -187,7 +187,7 @@
             ];
             var q = '?' + params.join('&');
 
-            $apiSrv.getStat(q)
+            $apiSrv.getStat()
                 .success(onGetStatSuccess)
                 .error(onGetStatError);
         }

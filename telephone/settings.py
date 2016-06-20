@@ -162,6 +162,8 @@ PBX = {
 	'version': 'v1',
 	'urls': {
 		'balance': '/info/balance/',
+		'common_stat': '/statistics/',
+		'pbx_stat': '/statistics/pbx/'
 	}
 }
 
