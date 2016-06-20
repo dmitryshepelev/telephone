@@ -4,6 +4,8 @@ import tzlocal
 
 import pytz
 
+from telephone import settings
+
 
 class DateTimeUtil(object):
 
@@ -62,3 +64,16 @@ class DateTimeUtil(object):
 		"""
 		DateTimeUtil.check_type(date)
 		return date.strftime('%Y-%m-%d %H-%M-%S')
+
+	@staticmethod
+	def equals(date_1, date_2, with_sec):
+		"""
+		Check if the dates are equals with error
+		:param date_1: DateTime
+		:param date_2: DateTime
+		:param with_sec: comparison by secs
+		:return: Boolean
+		"""
+		if with_sec:
+			return abs(date_1 - date_2).seconds <= settings.TIME_CORRECTION_SEC
+		return date_1.date() == date_2.date() and date_1.hour == date_2.hour and abs(date_1.minute - date_2.minute) <= settings.TIME_CORRECTION_MIN

@@ -202,7 +202,7 @@ class RedirectNumber(ModelBase):
 	pbx = models.ForeignKey(PBX, to_field = 'guid', on_delete = models.CASCADE)
 
 	class Meta:
-		app_label = 'main_app'
+		app_label = 'my_app'
 
 
 class RegisteredCallback(ModelBase):
