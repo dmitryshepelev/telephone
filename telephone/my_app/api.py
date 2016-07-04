@@ -40,4 +40,4 @@ def get_stat(request):
 	service = PBXService(user.pbx)
 	stat = service.get_stat(stat_params)
 
-	return ServerResponse.ok()
+	return ServerResponse.ok(data = {'calls': stat})

@@ -11,6 +11,7 @@ from telephone.libs.Call import Call, CallRecord, CallPBX
 from telephone.libs.File import File
 from telephone.libs.ServiceResponse import ServiceResponse
 from telephone.main_app.models import RedirectNumbers, RegisteredCallback
+from telephone.my_app.models import PBXCall
 from telephone.service_app.services.CommonService import CommonService, CallsConstants
 from telephone.service_app.services.DBService import DBService
 from telephone.service_app.services.DiskService import DiskService
@@ -417,6 +418,7 @@ class PBXDataService():
 
 						# save to db if not
 						if not stat_record:
+							PBXCall.objects.create_call()
 							result = DBService.create_call(a, userprofile)
 
 							if not result.is_success:

@@ -10,6 +10,7 @@ from datetime import datetime
 from django.utils import timezone
 
 from telephone import settings
+from telephone.my_app.models import PBXCall
 from telephone.my_app.services.ServiceBase import ServiceBase, ServiceResultError
 from telephone.my_app.utils import DateTimeUtil
 
@@ -35,7 +36,7 @@ class Call():
 		self.call_type = None
 		self.is_callback = False
 
-		self.__is_first_call = False
+		self.is_first_call = False
 
 		self.merged = False
 
@@ -316,6 +317,213 @@ class PBXService(ServiceBase):
 
 		return coming + incoming + internal
 
+	def __find_in_pbx_typed(self, common_call, pbx_typed, with_seconds = True):
+		"""
+		Find suitable call in pbx_typed by date
+		:param common_call:
+		:param pbx_typed:
+		:return:
+		"""
+		calls = filter(lambda x: DateTimeUtil.equals(x.date, common_call.date, with_seconds), pbx_typed)
+		if len(calls) == 1:
+			return calls[0]
+
+		return None
+
+	def __merge_calls(self, common_stat_list, stat_pbx_typed):
+		"""
+		Merge calls
+		:param common_stat_list:
+		:param stat_pbx_typed:
+		:return:
+		"""
+		merged = []
+
+		# Находим строку вида АТС - Номер А
+		pbx_caller_calls = filter(lambda x: str(x.caller) == self.__pbx.phone_number and not PBXService.is_number_known(self.__pbx, x.to), common_stat_list.calls)
+		# начинаем проверку не является ли она калбеком
+		for pcc in pbx_caller_calls:
+
+			call = Call()
+
+			# Если ей нет соответствия во второй таблице, значит двустрочный калбек
+			# Второй вид двустрочного калбека, это у которого вторая строка имеет вид Номер А - Номер Б
+			second_row = filter(
+				lambda x: str(x.caller) == str(pcc.to) and DateTimeUtil.equals(x.date, pcc.callstart, False), common_stat_list.calls)
+
+			if len(second_row) == 1:
+				# страка может иметь соответствующий входящий во второй таблице, может не иметь.
+				# Если имеет, то записи должны упоминатся номера  А и Б
+				second_row = second_row[0]
+				pbx_call = self.__find_in_pbx_typed(second_row, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed), False)
+				if pbx_call:
+					call = pbx_call
+					call.clid = second_row.destination
+					call.destination = pbx_call.clid
+					call.description = pcc.description
+					call.bill_seconds = pcc.bill_seconds
+					call.cost = pcc.cost + second_row.cost
+					call.bill_cost = pcc.bill_cost + second_row.bill_cost
+					call.currency = pcc.currency
+					call.sip = second_row.destination
+					call.disposition = pcc.disposition
+					pbx_call.merged = True
+				else:
+					call.call_id = pcc.call_id
+					call.clid = pcc.sip
+					call.sip = second_row.destination
+					call.date = pcc.callstart
+					call.destination = pcc.to
+					call.disposition = pcc.disposition
+
+					call.description = pcc.description
+					call.bill_seconds = pcc.bill_seconds
+					call.cost = pcc.cost + second_row.cost
+					call.bill_cost = pcc.bill_cost + second_row.bill_cost
+					call.currency = pcc.currency
+				call.call_type = CallsConstants.COMING
+				call.is_callback = True
+				pcc.merged = True
+				second_row.merged = True
+				merged.append(call)
+				continue
+
+			# При первом варианте: двустрочный калбек. Он бывает двух видов в котором вторая строка(фактически она первая)
+			# имеет вид АТС - Номер Б, находим её.
+			second_row = filter(lambda x: str(x.caller) == str(self.__pbx.phone_number) and DateTimeUtil.equals(x.date, pcc.callstart, False) and not str(x.destination) == str(pcc.to), common_stat_list.calls)
+
+			if len(second_row) == 1:
+				# Ей должна соответствовать запись о входящем звонке в которой содержится номер А.
+				# Если это так - значит всё это колбек(исходящий)
+				second_row = second_row[0]
+				pbx_call = self.__find_in_pbx_typed(second_row, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed), False)
+				if pbx_call:
+					call = pbx_call
+					call.call_type = CallsConstants.COMING
+					call.sip = second_row.destination
+					call.destination = pcc.to
+					call.description = pcc.description
+					call.bill_seconds = pcc.bill_seconds
+					call.cost = pcc.cost + second_row.cost
+					call.bill_cost = pcc.bill_cost + second_row.bill_cost
+					call.currency = pcc.currency
+					call.disposition = pcc.disposition
+					call.is_callback = True
+					merged.append(call)
+					pcc.merged = True
+					pbx_call.merged = True
+					continue
+
+			# искаем однострочный
+			pbx_call = self.__find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'coming', stat_pbx_typed))
+			if pbx_call:
+				# Если соответствие есть - и это исходящий, значит это не калбек, а обычный исходящий звонок.
+				call = pbx_call
+				call.call_type = CallsConstants.COMING
+				call.disposition = pcc.disposition
+				call.description = pcc.description
+				call.bill_seconds = pcc.bill_seconds
+				call.cost = pcc.cost
+				call.bill_cost = pcc.bill_cost
+				call.currency = pcc.currency
+				merged.append(call)
+				pcc.merged = True
+				pbx_call.merged = True
+				continue
+
+			pbx_call = self.__find_in_pbx_typed(pcc, filter(lambda x: x.call_type == 'incoming', stat_pbx_typed), False)
+			if pbx_call:
+				# Если соответствие есть, это входящий. значит однострочный калбек.
+				call = pbx_call
+				call.call_type = CallsConstants.COMING
+				call.disposition = pcc.disposition
+				call.destination = pcc.to
+				call.sip = pbx_call.destination
+				call.clid = pbx_call.destination
+				call.description = pcc.description
+				call.bill_seconds = pcc.bill_seconds
+				call.cost = pcc.cost
+				call.bill_cost = pcc.bill_cost
+				call.currency = pcc.currency
+				call.is_callback = True
+				merged.append(call)
+				pcc.merged = True
+				pbx_call.merged = True
+				continue
+
+		return merged
+
+	def __parse_other_calls(self, common_stat_list, stat_pbx_typed):
+		"""
+		Parse other calls
+		:param stat_pbx_typed:
+		:return:
+		"""
+		parsed = []
+
+		for spt in stat_pbx_typed:
+
+			call = Call()
+
+			call_common = filter(lambda x: DateTimeUtil.equals(x.callstart, spt.date, True), common_stat_list.calls)
+
+			if len(call_common) > 0:
+				call_common = call_common[0]
+				call = spt
+				call.description = call_common.description,
+				call.bill_seconds = call_common.billseconds,
+				call.cost = call_common.cost,
+				call.bill_cost = call_common.billcost,
+				call.currency = call_common.currency
+				parsed.append(call)
+				# call_common.merged = True
+				spt.merged = True
+			else:
+				if len(str(spt.sip)) == 3 and len(str(spt.destination)) == 3:
+					spt.call_type = CallsConstants.INTERNAL
+				call = spt
+				spt.merged = True
+				parsed.append(call)
+
+		return parsed
+
+	def __update_calls_list_by_type(self, stat, *args):
+		"""
+		Update calls table of each call type
+		:param stat: existing stat
+		:param args: calls lists
+		:return:
+		"""
+		# message = '{row_to_update} row(s) to be inserted. '
+		update_errors = []
+		total_rows_to_update = 0
+
+		for arg in args:
+			if len(arg) != 0:
+				call_type = arg[0].call_type
+				user_stat = stat.filter(call_type = call_type)
+
+				row_to_update = len(arg) - len(user_stat)
+				if row_to_update > 0:
+					total_rows_to_update += row_to_update
+
+					for a in arg:
+						# check if current call already exist
+						stat_record = stat.filter(call_id = a.call_id)
+
+						# save to db if not
+						if not stat_record:
+							result = PBXCall.objects.create_call(a, self)
+
+							if not result.is_success:
+								update_errors.append((result.data, result.message,))
+
+		if len(update_errors) > 0:
+			# Update calls list succeed with errors
+			pass
+
+		return {}
+
 	@staticmethod
 	def is_number_known(pbx, number):
 		"""
@@ -359,4 +567,17 @@ class PBXService(ServiceBase):
 		pbx_stat_list = self.__get_pbx_stat(start = params.start, end = params.end)
 
 		parsed_calls = self.__parse_calls(pbx_stat_list)
+		merged_calls = self.__merge_calls(common_stat_list, parsed_calls)
+		other_calls = self.__parse_other_calls(common_stat_list, parsed_calls)
+
+		calls = merged_calls + other_calls
+		existing_calls = self.__pbx.pbxcall_set.filter(date__gte=params.start, date__lte=params.end)
+
+		self.__update_calls_list_by_type(
+			existing_calls,
+			filter(lambda x: x.call_type == 'incoming', calls),
+			filter(lambda x: x.call_type == 'coming', calls),
+			filter(lambda x: x.call_type == 'internal', calls),
+		)
+
 		return {}

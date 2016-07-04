@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import User
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Max
 from django.utils import timezone
@@ -135,10 +136,43 @@ class PBX(ModelBase):
 		app_label = 'my_app'
 
 
+class CallerManager(models.Manager):
+	"""
+	Caller manager
+	"""
+	def create_caller(self, sip, pbx_id, call_datetime, description = None):
+		"""
+		Create a callee entity if not exist. Else update date of first call
+		:param callee: Callee instance
+		:return: Callee instance
+		"""
+		try:
+			# Get existing callee entity by its phone number
+			exs_callee = self.get(pbx_id = pbx_id, sip = sip)
+			# check if existing callee first call date over current callee first call date
+			# If true that means current call of callee was before existing and existing needs to be updated with a new date
+			if exs_callee.first_call_datetime > call_datetime:
+				exs_callee.first_call_datetime = call_datetime
+				exs_callee.save()
+			# Else just return existing callee
+			return exs_callee
+		except ObjectDoesNotExist as e:
+			# Create a new callee
+			caller = self.create(
+				sip = sip,
+				description = description,
+				pbx_id = pbx_id
+			)
+			return caller
+
+
 class Caller(ModelBase):
 	sip = models.CharField(max_length = 20)
 	description = models.CharField(max_length = 1000, null = True)
 	pbx = models.ForeignKey(PBX, to_field = 'guid')
+	first_call_datetime = models.DateTimeField()
+
+	objects = CallerManager()
 
 	class Meta:
 		app_label = 'my_app'
@@ -162,6 +196,40 @@ class CallType(ModelBase):
 		app_label = 'my_app'
 
 
+class PBXCallManager(models.Manager):
+	"""
+	PBXCall manager
+	"""
+	def create_call(self, call, pbx):
+		"""
+		Create pbx call
+		:return:
+		"""
+		if (isinstance(call.destination, str) or isinstance(call.destination, unicode)) and 'w00e' in call.destination:
+			call.destination = call.destination[4:]
+
+		if (isinstance(call.sip, str) or isinstance(call.sip, unicode)) and 'w00e' in call.sip:
+			call.sip = call.sip[4:]
+
+		caller = Caller.objects.create_caller(call.sip, pbx.guid, call.date, call.description)
+
+		call = PBXCall(
+			call_id = call.call_id,
+			date = call.date,
+			destination = call.destination,
+			disposition = call.disposition,
+			bill_seconds = call.bill_seconds,
+			cost = call.cost,
+			bill_cost = call.bill_cost,
+			currency = call.currency,
+			pbx_id = pbx.id,
+			caller = caller,
+			call_type = call.call_type
+		)
+		# create Call Instance
+		return call.save()
+
+
 class PBXCall(ModelBase):
 	call_id = models.CharField(max_length = 30)
 	date = models.DateTimeField(null = True)
@@ -174,9 +242,12 @@ class PBXCall(ModelBase):
 	caller = models.ForeignKey(Caller, to_field = 'guid', on_delete = models.CASCADE)
 	status = models.ForeignKey(CallStatus, to_field = 'guid', on_delete = models.CASCADE)
 	type = models.ForeignKey(CallType, to_field = 'guid', on_delete = models.CASCADE)
+	pbx = models.ForeignKey(PBX, to_field = 'guid')
+
+	objects = PBXCallManager()
 
 	class Meta:
-		app_label = 'main_app'
+		app_label = 'my_app'
 
 
 class WidgetScript(ModelBase):

@@ -5,7 +5,7 @@ from telephone.libs.ApiParams import ApiParams
 from telephone.libs.Call import CallRecord, CallsStat
 from telephone.libs.FilterParams import CallsFilterParams
 from telephone.service_app.services.CommonService import CommonService
-from telephone.service_app.services.PBXDataService import PBXDataService
+# from telephone.service_app.services.PBXDataService import PBXDataService
 
 
 def get_statistic(request):
