@@ -1,6 +1,8 @@
 # coding=utf-8
+import email
 import hashlib
 import hmac
+import imaplib
 import json
 import urllib
 from collections import OrderedDict, namedtuple
@@ -10,15 +12,17 @@ from datetime import datetime
 from django.utils import timezone
 
 from telephone import settings
+from telephone.libs.File import File
 from telephone.my_app.models import PBXCall, CallType, Caller, CallStatus
 from telephone.my_app.services.ServiceBase import ServiceBase, ServiceResultError
+from telephone.my_app.services.YandexDiskService import YandexDiskService
 from telephone.my_app.utils import DateTimeUtil
 
 
 StatParams = namedtuple('StatParams', ['start', 'end', 'status', 'call_type'])
 
 
-class Call():
+class Call:
 	def __init__(self):
 		self.call_id = None
 		self.clid = None
@@ -146,6 +150,8 @@ class PBXCallList(CallList):
 
 
 class PBXService(ServiceBase):
+	_ResponseError = namedtuple('ResponseError', ['status', 'message'])
+
 	def __init__(self, pbx_model):
 		self.__pbx = pbx_model
 
@@ -528,6 +534,97 @@ class PBXService(ServiceBase):
 
 		return {}
 
+	def __get_audio_from_mailbox(self, call_id):
+		"""
+		Check user mailbox to find the record
+		:param call_id: id of the call
+		:param user: current logged user
+		:return: filename
+		"""
+		username = self.__pbx.user.yandex.yandex_email
+		password = self.__pbx.user.yandex.password_email
+		imap_server = 'imap.yandex.ru'
+		header_start = 'audio/mp3; name="'
+		call_audio = None
+
+		try:
+			# connect to mailbox
+			mailbox = imaplib.IMAP4_SSL(imap_server)
+			mailbox.login(username, password)
+			mailbox.select('INBOX')
+
+			for msg_id in range(len(mailbox.search(None, 'ALL')[1][0].split()), 0, -1):
+				message = email.message_from_string(mailbox.fetch(msg_id, '(RFC822)')[1][0][1])
+				for part in message.get_payload():
+					if isinstance(part, email.message.Message):
+						header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
+						if header and len(header) > 0:
+							filename = header[0].strip(header_start)
+							call_audio = File(part.get_payload(decode = True), filename)
+							break
+				if call_audio:
+					break
+			mailbox.logout()
+		except Exception as e:
+			pass
+
+		return call_audio
+
+	def __load_call_record_file(self, call):
+		"""
+		Load audio, convert, upload to disk and update db with filename
+		:param call: Call instance
+		:param user: current user
+		:return: File instance
+		"""
+		# get audio
+		call_audio = self.__get_audio_from_mailbox(call.call_id)
+		if not call_audio:
+			return None
+		#
+		# # convert audio
+		# # write temp file
+		# path = CommonService.write_temp_file(call_audio)
+		# if not path:
+		# 	return None
+		#
+		# call_audio.path = path
+		#
+		# # convert wav to mp3
+		#
+		# call_audio_mp3 = CommonService.convert_to_mp3(call_audio)
+		# if not call_audio_mp3:
+		# 	return None
+		call_audio_mp3 = call_audio
+
+		# upload new file to Disk
+		disk_service = YandexDiskService(self.__pbx.user.yandexprofile)
+		disk_service.upload(call_audio_mp3)
+
+		filename = call_audio_mp3.filename
+		# delete mp3 file form filesystem and save to db
+		# CommonService.delete_temp_file(filename)
+
+		call.record_filename = filename
+		call.save()
+
+		return call_audio_mp3
+
+	def __get_call_record_file_dwn_link(self, call):
+		"""
+		Get call record download link by call
+		:param call:
+		:return:
+		"""
+		filename = call.record_filename
+		if not filename:
+			record_file = self.__load_call_record_file(call)
+			filename = record_file.filename
+
+		disk_service = YandexDiskService(self.__pbx.user.yandexprofile)
+		link = disk_service.get_download_link(filename)
+		return link
+
 	@staticmethod
 	def is_number_known(pbx, number):
 		"""
@@ -583,4 +680,33 @@ class PBXService(ServiceBase):
 			filter(lambda x: x.call_type == 'coming', calls),
 			filter(lambda x: x.call_type == 'internal', calls),
 		)
+
+	def get_call_cost(self, number):
+		"""
+		Get call cost
+		:param number:
+		:return:
+		"""
+		self.__method = settings.PBX['urls']['call_cost']
+
+		url = self.__get_url(number = number)
+		sign = self.__get_sign(number = number)
+		headers = self.__get_authorization_header(sign)
+
+		response = requests.get(url, headers = headers)
+		content = json.loads(response.content)
+
+		if response.ok:
+			return content['info']
+
+		raise ServiceResultError(response.status_code, self._ResponseError(**content))
+
+	def get_call_record_file(self, call):
+		"""
+		Gets call's record file
+		"""
+		link = self.__get_call_record_file_dwn_link(call)
+
+		disk_service = YandexDiskService(self.__pbx.user.yandexprofile)
+		return disk_service.download(link)
 

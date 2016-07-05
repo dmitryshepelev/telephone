@@ -62,17 +62,17 @@
             columnDefs: [
                 { name: 'num', maxWidth: 20, displayName: '', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.renderContainers.body.visibleRowCache.indexOf(row) + 1 ]]</div>' },
                 { name: 'date', displayName: 'Дата', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.date|date:"dd.MM.yyyy HH:mm:ss":"+0000" ]]</div>' },
-                { name: 'call_type', maxWidth: 20, displayName: '', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents"><span class="[[ grid.appScope.formatType(grid, row) ]]" title="[[ grid.appScope.formatTypeLoclze(grid, row) ]]"></span></div>' },
-                { name: 'sip', minWidth: 200, displayName: 'Номер звонящего', enableColumnMenu: false, cellTemplate: '<div popover ng-click="grid.appScope.onSipCellClick($event, row)" class="pointer ui-grid-cell-contents" ng-class="{\'text-bold\': row.entity.is_first_call}">[[ row.entity.sip ]]</div>' },
-                { name: 'destination', displayName: 'Номер ответа', enableColumnMenu: false },
+                { name: 'type', maxWidth: 20, displayName: '', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents"><span class="[[ grid.appScope.formatType(grid, row) ]]" title="[[ grid.appScope.formatTypeLoclze(grid, row) ]]"></span></div>' },
+                { name: 'sip', minWidth: 200, displayName: 'Номер звонящего', enableColumnMenu: false, cellTemplate: '<div popover ng-click="grid.appScope.onSipCellClick($event, row)" class="pointer ui-grid-cell-contents" ng-class="{\'text-bold\': row.entity.is_first_call}">[[ row.entity.caller.sip ]]</div>' },
+                { name: 'destination', displayName: 'Номер ответа', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.destination || "-" ]]</div>' },
                 { name: 'bill_seconds', displayName: 'Время разговора', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatSec(grid, row) ]]</div>' },
-                { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<div data-call-id="[[ row.entity.call_id ]]">' +
+                { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<div ng-show="row.entity.status.name == \'answered\'" data-call-id="[[ row.entity.call_id ]]">' +
 		                    '<button class="btn-xs-wt btn btn-default margin-tb-10 margin-r-5" onclick="audio.action(event)"><span onclick="audio.action(event)" class="icon-play"></span></button>' +
 		                    '<button class="btn-xs-wt btn btn-default margin-tb-10" onclick="audio.download(event)"><span class="icon-download"></span></button>' +
 		                '</div>' },
                 { name: 'cost', displayName: 'Цена минуты', enableColumnMenu: false },
-                { name: 'bill_cost', displayName: 'Стоимость', enableColumnMenu: false },
-                { name: 'description', displayName: 'Описание', enableColumnMenu: false }
+                { name: 'bill_cost', displayName: 'Стоимость', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatCost(grid, row) ]]</div>' },
+                { name: 'description', displayName: 'Описание', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.caller.description || "-" ]]</div>' }
             ],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
@@ -81,13 +81,14 @@
 
         $scope.onSipCellClick = function ($event, row) {
             var el = $($event.target);
-            var sip = row.entity.sip;
+            var sip = row.entity.caller.sip;
             $apiSrv.getCallCost(sip)
-                .success(function (response) {
-                    $scope.cbPopover.data.price = response.info.price + ' ' + response.info.currency;
-                    $scope.cbPopover.data.description = response.info.description;
+                .success(function (result) {
+                    var callCostInfo = result.data.call_cost_info;
+                    $scope.cbPopover.data.price = callCostInfo.price + ' ' + callCostInfo.currency;
+                    $scope.cbPopover.data.description = callCostInfo.description;
                     $scope.cbPopover.data.number = sip;
-                    $scope.cbPopover.data.prefix = response.info.prefix;
+                    $scope.cbPopover.data.prefix = callCostInfo.prefix;
 
                     if (!$scope.cbPopover.isShown) {
                         $scope.cbPopover.show();
@@ -140,8 +141,8 @@
         };
 
         $scope.formatType = function (grid, row) {
-            var type = row.entity.call_type;
-            var disp = row.entity.disposition;
+            var type = row.entity.type.name;
+            var disp = row.entity.status.name;
 
             var icon = 'icon-' + (type === 'incoming' ? 'arrow-down' : (type === 'coming' ? 'arrow-up' : 'loop'));
             var status = 'text-' + (disp === 'answered' ? 'success' : 'error');
@@ -149,8 +150,15 @@
             return icon + ' ' + status;
         };
 
+        $scope.formatCost = function (grid, row) {
+            var value = row.entity.bill_cost;
+            if (!value) return '-';
+            return Math.round(value * 100) / 100;
+        };
+
         $scope.formatSec = function(grid, row) {
             var value = row.entity.bill_seconds;
+            if (!value) return '-';
             var min = Math.floor(value / 60);
             var sec = value - min * 60;
             return (min > 0 ? min + ' мин ' : '') + (sec + ' сек');
@@ -168,8 +176,8 @@
             loadStat()
         };
 
-        function onGetStatSuccess(response) {
-            $scope.stat.calls = response.calls || [];
+        function onGetStatSuccess(result) {
+            $scope.stat.calls = result.data.calls || [];
             $scope.gridOptions = { data: $scope.stat.calls };
         }
 
@@ -178,14 +186,14 @@
         }
 
         function loadStat() {
-            var status = $('input.pseudo-hidden[name=status]').val();
-            var params = [
-                'start=' + $scope.stat.period.start || new Date().toRightDatetimeString(),
-                'end=' + $scope.stat.period.end || new Date().toRightDatetimeString(),
-                'status=' + (Number(status).toString() == 'NaN' ? status : (status == 0 ? 2 : status - 1)),
-                'call_type=' + $scope.stat.types.join(' ')
-            ];
-            var q = '?' + params.join('&');
+            // var status = $('input.pseudo-hidden[name=status]').val();
+            // var params = [
+            //     'start=' + $scope.stat.period.start || new Date().toRightDatetimeString(),
+            //     'end=' + $scope.stat.period.end || new Date().toRightDatetimeString(),
+            //     'status=' + (Number(status).toString() == 'NaN' ? status : (status == 0 ? 2 : status - 1)),
+            //     'call_type=' + $scope.stat.types.join(' ')
+            // ];
+            // var q = '?' + params.join('&');
 
             $apiSrv.getStat()
                 .success(onGetStatSuccess)

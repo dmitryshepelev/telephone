@@ -163,7 +163,18 @@ PBX = {
 	'urls': {
 		'balance': '/info/balance/',
 		'common_stat': '/statistics/',
-		'pbx_stat': '/statistics/pbx/'
+		'pbx_stat': '/statistics/pbx/',
+		'call_cost': '/info/price/'
+	}
+}
+
+YANDEX = {
+	'disk': {
+		'default_dir_name': 'pbxrec',
+		'host': 'https://cloud-api.yandex.net/v1/disk/resources',
+		'create_dir': '?path=',
+		'upload_link': '/upload?path=',
+		'download_link': '/download?path=',
 	}
 }
 
@@ -204,8 +215,6 @@ API_URLS = {
 		'create_folder': '?path='
 	}
 }
-
-DISK_UPLOAD_FOLDER = 'pbxrec'
 
 TEMP_DIR = 'static/temp/'
 

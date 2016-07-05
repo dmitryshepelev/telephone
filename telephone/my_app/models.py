@@ -304,6 +304,29 @@ class PBXCall(ModelBase):
 	class Meta:
 		app_label = 'my_app'
 
+	@property
+	def is_first_call(self):
+		"""
+		Getter of __is_first_call
+		:return: is_first_call value
+		"""
+		return self.date == self.caller.first_call_datetime
+
+	def serialize(self, format = 'json', include_fields = (), exclude_fields = (), use_natural_foreign_keys = True,
+					use_natural_primary_keys = True):
+		"""
+		Overrides base class method
+		:param format:
+		:param include_fields:
+		:param exclude_fields:
+		:param use_natural_foreign_keys:
+		:param use_natural_primary_keys:
+		:return:
+		"""
+		serialized = super(PBXCall, self).serialize(format, include_fields, exclude_fields, use_natural_foreign_keys, use_natural_primary_keys)
+		serialized['is_first_call'] = self.is_first_call
+		return serialized
+
 
 class WidgetScript(ModelBase):
 	pbx = models.ForeignKey(PBX, to_field = 'guid', on_delete = models.CASCADE)
