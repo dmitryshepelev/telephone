@@ -135,6 +135,21 @@ class PBX(ModelBase):
 	class Meta:
 		app_label = 'my_app'
 
+	def natural_key(self, *args, **kwargs):
+		"""
+		Overrides base class method
+		:param args:
+		:param kwargs:
+		:return:
+		"""
+		self_keys = {
+			'user': self.user.username,
+			'phone_number': self.phone_number,
+			'sip': self.sip
+		}
+		natural_keys = super(PBX, self).natural_key(self_keys)
+		return natural_keys
+
 
 class CallerManager(models.Manager):
 	"""
@@ -146,6 +161,7 @@ class CallerManager(models.Manager):
 		:param callee: Callee instance
 		:return: Callee instance
 		"""
+		call_datetime = DateTimeUtil.convert_to_UTC(call_datetime)
 		try:
 			# Get existing callee entity by its phone number
 			exs_callee = self.get(pbx_id = pbx_id, sip = sip)
@@ -160,8 +176,9 @@ class CallerManager(models.Manager):
 			# Create a new callee
 			caller = self.create(
 				sip = sip,
-				description = description,
-				pbx_id = pbx_id
+				description = description[0] if isinstance(description, tuple) else description,
+				pbx_id = pbx_id,
+				first_call_datetime = call_datetime
 			)
 			return caller
 
@@ -177,12 +194,40 @@ class Caller(ModelBase):
 	class Meta:
 		app_label = 'my_app'
 
+	def natural_key(self, *args, **kwargs):
+		"""
+		Overrides base class method
+		:param args:
+		:param kwargs:
+		:return:
+		"""
+		self_keys = {
+			'sip': self.sip,
+			'description': self.description,
+			'first_call_datetime': self.first_call_datetime
+		}
+		natural_keys = super(Caller, self).natural_key(self_keys)
+		return natural_keys
+
 
 class CallStatus(ModelBase):
 	name = models.CharField(max_length = 50)
 
 	class Meta:
 		app_label = 'my_app'
+
+	def natural_key(self, *args, **kwargs):
+		"""
+		Overrides base class method
+		:param args:
+		:param kwargs:
+		:return:
+		"""
+		self_keys = {
+			'name': self.name,
+		}
+		natural_keys = super(CallStatus, self).natural_key(self_keys)
+		return natural_keys
 
 
 class CallType(ModelBase):
@@ -195,12 +240,25 @@ class CallType(ModelBase):
 	class Meta:
 		app_label = 'my_app'
 
+	def natural_key(self, *args, **kwargs):
+		"""
+		Overrides base class method
+		:param args:
+		:param kwargs:
+		:return:
+		"""
+		self_keys = {
+			'name': self.name,
+		}
+		natural_keys = super(CallType, self).natural_key(self_keys)
+		return natural_keys
+
 
 class PBXCallManager(models.Manager):
 	"""
 	PBXCall manager
 	"""
-	def create_call(self, call, pbx):
+	def create_call(self, call, caller_id, pbx_id, type_id, status_id):
 		"""
 		Create pbx call
 		:return:
@@ -211,22 +269,19 @@ class PBXCallManager(models.Manager):
 		if (isinstance(call.sip, str) or isinstance(call.sip, unicode)) and 'w00e' in call.sip:
 			call.sip = call.sip[4:]
 
-		caller = Caller.objects.create_caller(call.sip, pbx.guid, call.date, call.description)
-
 		call = PBXCall(
 			call_id = call.call_id,
-			date = call.date,
+			date = DateTimeUtil.convert_to_UTC(call.date),
 			destination = call.destination,
-			disposition = call.disposition,
-			bill_seconds = call.bill_seconds,
-			cost = call.cost,
-			bill_cost = call.bill_cost,
+			bill_seconds = int(call.bill_seconds[0] if isinstance(call.bill_seconds, tuple) else call.bill_seconds),
+			cost = float(call.cost[0] if isinstance(call.cost, tuple) else call.cost),
+			bill_cost = float(call.bill_cost[0] if isinstance(call.bill_cost, tuple) else call.bill_cost),
 			currency = call.currency,
-			pbx_id = pbx.id,
-			caller = caller,
-			call_type = call.call_type
+			pbx_id = pbx_id,
+			caller_id = caller_id,
+			type_id = type_id,
+			status_id = status_id
 		)
-		# create Call Instance
 		return call.save()
 
 

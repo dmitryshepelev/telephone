@@ -38,6 +38,8 @@ def get_stat(request):
 	)
 
 	service = PBXService(user.pbx)
-	stat = service.get_stat(stat_params)
+	service.update_stat(stat_params)
 
-	return ServerResponse.ok(data = {'calls': stat})
+	calls = user.pbx.pbxcall_set.filter(date__gte = stat_params.start, date__lte = stat_params.end)
+
+	return ServerResponse.ok(data = {'calls': [call.serialize() for call in calls]})

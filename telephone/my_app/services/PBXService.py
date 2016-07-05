@@ -10,7 +10,7 @@ from datetime import datetime
 from django.utils import timezone
 
 from telephone import settings
-from telephone.my_app.models import PBXCall
+from telephone.my_app.models import PBXCall, CallType, Caller, CallStatus
 from telephone.my_app.services.ServiceBase import ServiceBase, ServiceResultError
 from telephone.my_app.utils import DateTimeUtil
 
@@ -495,28 +495,32 @@ class PBXService(ServiceBase):
 		:return:
 		"""
 		# message = '{row_to_update} row(s) to be inserted. '
+		UpdateError = namedtuple('UpdateError', ['call', 'error'])
 		update_errors = []
 		total_rows_to_update = 0
 
 		for arg in args:
 			if len(arg) != 0:
 				call_type = arg[0].call_type
-				user_stat = stat.filter(call_type = call_type)
+				user_stat = stat.filter(type__name = call_type)
 
 				row_to_update = len(arg) - len(user_stat)
 				if row_to_update > 0:
 					total_rows_to_update += row_to_update
 
+					call_type_instance = CallType.objects.get_or_create(name = call_type)[0]
 					for a in arg:
 						# check if current call already exist
 						stat_record = stat.filter(call_id = a.call_id)
 
 						# save to db if not
 						if not stat_record:
-							result = PBXCall.objects.create_call(a, self)
-
-							if not result.is_success:
-								update_errors.append((result.data, result.message,))
+							caller = Caller.objects.create_caller(a.sip, self.__pbx.guid, a.date, a.description)
+							call_status = CallStatus.objects.get_or_create(name = a.disposition)[0]
+							try:
+								call = PBXCall.objects.create_call(a, caller.guid, self.__pbx.guid, call_type_instance.guid, call_status.guid)
+							except Exception as e:
+								update_errors.append(UpdateError(a, e))
 
 		if len(update_errors) > 0:
 			# Update calls list succeed with errors
@@ -553,7 +557,7 @@ class PBXService(ServiceBase):
 
 		raise ServiceResultError(response.status_code, content)
 
-	def get_stat(self, params = StatParams(None, None, 0, '')):
+	def update_stat(self, params = StatParams(None, None, 0, '')):
 		"""
 		Update statistic
 		:return:
@@ -580,4 +584,3 @@ class PBXService(ServiceBase):
 			filter(lambda x: x.call_type == 'internal', calls),
 		)
 
-		return {}
