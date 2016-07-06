@@ -32,6 +32,10 @@
             },
             getPBXinfo: function () {
                 return $http.get(baseUrl + 'getpbxinfo/');
+            },
+            downloadCRUrl: baseUrl + 'getcrfile/?cid=',
+            getCallRecordFile: function (callId) {
+                return $http.get(this.downloadCRUrl + callId);
             }
         }
     }

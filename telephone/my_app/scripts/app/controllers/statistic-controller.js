@@ -1,6 +1,6 @@
 (function (ng) {
 
-    function _stCtrl($scope, $apiSrv, toastr, $timeout) {
+    function _stCtrl($scope, $apiSrv, toastr, $timeout, $window, $trackManager) {
 
         $scope.stat = {
             period: {
@@ -66,10 +66,11 @@
                 { name: 'sip', minWidth: 200, displayName: 'Номер звонящего', enableColumnMenu: false, cellTemplate: '<div popover ng-click="grid.appScope.onSipCellClick($event, row)" class="pointer ui-grid-cell-contents" ng-class="{\'text-bold\': row.entity.is_first_call}">[[ row.entity.caller.sip ]]</div>' },
                 { name: 'destination', displayName: 'Номер ответа', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.destination || "-" ]]</div>' },
                 { name: 'bill_seconds', displayName: 'Время разговора', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatSec(grid, row) ]]</div>' },
-                { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<div ng-show="row.entity.status.name == \'answered\'" data-call-id="[[ row.entity.call_id ]]">' +
-		                    '<button class="btn-xs-wt btn btn-default margin-tb-10 margin-r-5" onclick="audio.action(event)"><span onclick="audio.action(event)" class="icon-play"></span></button>' +
-		                    '<button class="btn-xs-wt btn btn-default margin-tb-10" onclick="audio.download(event)"><span class="icon-download"></span></button>' +
-		                '</div>' },
+                // { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<div ng-show="row.entity.status.name == \'answered\'" data-call-id="[[ row.entity.call_id ]]">' +
+		         //            '<button class="btn-xs-wt btn btn-default margin-tb-10 margin-r-5" ng-click="grid.appScope.audioManager(grid, row)"><span onclick="audio.action(event)" class="icon-play"></span></button>' +
+		         //            '<button class="btn-xs-wt btn btn-default margin-tb-10" ng-click="grid.appScope.downloadRecord(grid, row)"><span class="icon-download"></span></button>' +
+		         //        '</div>' },
+                { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<track-buttons track-id="[[ row.entity.call_id ]]" ng-show="row.entity.status.name == \'answered\'"></track-buttons>' },
                 { name: 'cost', displayName: 'Цена минуты', enableColumnMenu: false },
                 { name: 'bill_cost', displayName: 'Стоимость', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatCost(grid, row) ]]</div>' },
                 { name: 'description', displayName: 'Описание', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.caller.description || "-" ]]</div>' }
@@ -203,7 +204,7 @@
         loadStat();
     }
 
-    _stCtrl.$inject = ['$scope', '$apiSrv', 'toastr', '$timeout'];
+    _stCtrl.$inject = ['$scope', '$apiSrv', 'toastr', '$timeout', '$window', '$trackManager'];
 
     ng.module('mainApp')
         .controller('StCtrl', _stCtrl)

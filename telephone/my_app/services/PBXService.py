@@ -541,10 +541,10 @@ class PBXService(ServiceBase):
 		:param user: current logged user
 		:return: filename
 		"""
-		username = self.__pbx.user.yandex.yandex_email
-		password = self.__pbx.user.yandex.password_email
+		username = self.__pbx.user.yandexprofile.yandex_email
+		password = self.__pbx.user.yandexprofile.yandex_password
 		imap_server = 'imap.yandex.ru'
-		header_start = 'audio/mp3; name="'
+		header_start = 'audio/wav; name="'
 		call_audio = None
 
 		try:
@@ -555,15 +555,17 @@ class PBXService(ServiceBase):
 
 			for msg_id in range(len(mailbox.search(None, 'ALL')[1][0].split()), 0, -1):
 				message = email.message_from_string(mailbox.fetch(msg_id, '(RFC822)')[1][0][1])
-				for part in message.get_payload():
-					if isinstance(part, email.message.Message):
-						header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
-						if header and len(header) > 0:
-							filename = header[0].strip(header_start)
-							call_audio = File(part.get_payload(decode = True), filename)
-							break
-				if call_audio:
-					break
+				parts = message.get_payload()
+				if isinstance(parts, list):
+					for part in message.get_payload():
+						if isinstance(part, email.message.Message):
+							header = filter(lambda x: x.startswith(header_start) and x.find(call_id) > 0, part.values())
+							if header and len(header) > 0:
+								filename = header[0].strip(header_start)
+								call_audio = File(part.get_payload(decode = True), filename)
+								break
+					if call_audio:
+						break
 			mailbox.logout()
 		except Exception as e:
 			pass

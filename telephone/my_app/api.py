@@ -78,7 +78,7 @@ def get_call_record_file(request):
 	:param request:
 	:return:
 	"""
-	call_id = request.GET.get('call_id', None)
+	call_id = request.GET.get('cid', None)
 	if not call_id:
 		return ServerResponse.bad_request(message = Message.error('Неправильно заданы параметры'))
 
@@ -94,6 +94,6 @@ def get_call_record_file(request):
 	file_instance.filename = call_id
 
 	response = HttpResponse(content_type = 'audio/mp3')
-	response['Content-Disposition'] = 'attachment; filename=record-{username}-{filename}'.format(username = request.user.username, filename = file_instance.filename)
+	response['Content-Disposition'] = 'attachment; filename=record-{username}-{filename}.mp3'.format(username = request.user.username, filename = file_instance.filename)
 	response.content = file_instance.content
 	return response
