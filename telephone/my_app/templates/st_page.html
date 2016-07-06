@@ -1,5 +1,50 @@
-<div ui-grid="gridOptions" class="grid" ui-grid-auto-resize ng-style="getTableHeight()" ui-grid-pagination></div>
+<div class="row filter-container">
+	<div class="col-md-2">
+		<label>Дата начала:</label>
+		<div class="input-group">
+			<input type="text" class="form-control input-sm" uib-datepicker-popup="dd.MM.yyyy" ng-model="statParams.startDate" is-open="startDateCalendar.opened" show-button-bar="false" datepicker-options="startDateCalendar.opts" />
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-sm-wt btn-default" ng-click="startDateCalendar.open()"><i class="icon-calendar"></i></button>
+			</span>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<label>Дата конца:</label>
+		<div class="input-group">
+			<input type="text" class="form-control input-sm" uib-datepicker-popup="dd.MM.yyyy" ng-model="statParams.endDate" is-open="endDateCalendar.opened" show-button-bar="false" datepicker-options="endDateCalendar.opts" />
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-sm-wt btn-default" ng-click="endDateCalendar.open()"><i class="icon-calendar"></i></button>
+			</span>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<label>Тип звонков:</label>
+		<div id="call-type-filter">
+            <div class="call-types-switcher">
+                <span class="call-type icon-arrow-up" ng-click="changeStatType('outgoing')" ng-class="{'call-type-active': statParams.types.indexOf('outgoing') !== -1}" title="Исходящие"></span>
+                <span class="call-type icon-arrow-down" ng-click="changeStatType('incoming')" ng-class="{'call-type-active': statParams.types.indexOf('incoming') !== -1}" title="Входящие"></span>
+                <span class="call-type icon-loop" ng-click="changeStatType('internal')" ng-class="{'call-type-active': statParams.types.indexOf('internal') !== -1}" title="Внутренние"></span>
+            </div>
+            <input type="hidden" class="pseudo-hidden" name="call_type" value="" ng-model="statParams.types" autocomplete="off"/>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<label>Статус звонков:</label>
+		<div class="button-group">
+			<input type="radio" id="missed" value="1" ng-model="statParams.status">
+			<label for="missed">Пропущенные</label>
+			<input type="radio" id="all" value="0" ng-model="statParams.status">
+			<label for="all">Все</label>
+			<input type="radio" id="answered" value="2" ng-model="statParams.status">
+			<label for="answered">Отвеченные</label>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<button type="button" ng-click="loadStat()" class="pull-right btn btn-default"><span class="icon-filter"></span> Показать</button>
+	</div>
+</div>
 
+<div ui-grid="gridOptions" class="grid" ui-grid-auto-resize ng-style="getTableHeight()" ui-grid-pagination></div>
 {#<div>#}
 {#	<div class="row margin-0 main-content-container">#}
 {#        <div class="col-sm-4">#}

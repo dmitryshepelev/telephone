@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
-
+from django.db.models import Q
 from telephone.decorators import api_authorized
 from telephone.libs.Message import Message
 from telephone.libs.ServerResponse import ServerResponse
@@ -45,7 +45,8 @@ def get_stat(request):
 	service = PBXService(user.pbx)
 	service.update_stat(stat_params)
 
-	calls = user.pbx.pbxcall_set.filter(date__gte = stat_params.start, date__lte = stat_params.end)
+	type_filter = reduce(lambda q, x: q | Q(type__name = x), stat_params.call_type.split(' '), Q())
+	calls = user.pbx.pbxcall_set.filter(date__gte = stat_params.start, date__lte = stat_params.end).filter(type_filter)
 
 	return ServerResponse.ok(data = {'calls': [call.serialize() for call in calls]})
 

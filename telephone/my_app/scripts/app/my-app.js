@@ -1,5 +1,5 @@
 (function (ng) {
-    function _config($stateProvider, $urlRouterProvider, $interpolateProvider, $httpProvider, cfpLoadingBarProvider, $AudioManager) {
+    function _config($stateProvider, $urlRouterProvider, $interpolateProvider, $httpProvider, cfpLoadingBarProvider) {
         var _baseUrl = '';
 
         cfpLoadingBarProvider.includeSpinner = false;
@@ -106,7 +106,8 @@
         'ui.grid.autoResize',
         'angular-loading-bar',
         '$toastr',
-        '$AudioManager'
+        '$AudioManager',
+        'ui.bootstrap'
     ]);
 
     ng.module('mainApp')

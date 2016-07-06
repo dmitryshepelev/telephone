@@ -1028,3 +1028,77 @@ sidebar-menu .main-menu a i + span {
 .shadow-0-0 {
   box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
 }
+.uib-datepicker button {
+  margin: 0;
+  background-color: transparent;
+  color: #222222 !important;
+  border: none;
+  box-shadow: none;
+  padding: 0.6em;
+}
+.uib-datepicker button.btn-info {
+  color: #222222 !important;
+}
+.uib-datepicker button.uib-left:before {
+  content: "<";
+}
+.uib-datepicker button.uib-right:before {
+  content: ">";
+}
+.uib-datepicker button:disabled {
+  color: #e1e1e1 !important;
+}
+.uib-datepicker button:hover,
+.uib-datepicker button:active,
+.uib-datepicker button:focus {
+  background-color: transparent;
+  color: #1abb9c !important;
+  box-shadow: none;
+}
+.uib-datepicker button.active {
+  background-color: transparent;
+  border: 1px solid #1abb9c;
+  box-shadow: none;
+  color: #1abb9c !important;
+}
+.button-group {
+  margin-bottom: 0.8em;
+}
+.button-group input[type='radio'] {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.button-group input[type='radio']:checked + label {
+  background-color: #1abb9c;
+  color: white;
+}
+.button-group input[type='checkbox'] {
+  visibility: hidden;
+}
+.button-group input[type='checkbox']:checked + label:after {
+  opacity: 1;
+}
+.button-group label {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  background-color: white;
+  border: none;
+  color: #222222;
+  width: 25%;
+  text-align: center;
+  padding: 5px 0;
+  margin-right: -4px;
+  cursor: pointer;
+  min-width: 100px;
+}
+.button-group label:hover {
+  color: #1abb9c;
+}
+.filter-container {
+  background-color: #F0F2F4;
+  padding: 1em 0.5em 0.5em 0.5em;
+  margin-left: 0;
+  margin-right: 0;
+}

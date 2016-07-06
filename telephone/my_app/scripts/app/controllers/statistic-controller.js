@@ -1,6 +1,6 @@
 (function (ng) {
 
-    function _stCtrl($scope, $apiSrv, toastr, $timeout, $window, $trackManager) {
+    function _stCtrl($scope, $apiSrv, toastr, $timeout) {
 
         $scope.stat = {
             period: {
@@ -10,6 +10,35 @@
             types: [],
             calls: [],
             stat: {}
+        };
+        
+        $scope.statParams = {
+            startDate: new Date(),
+            endDate: new Date(),
+            status: 0,
+            types: []
+        };
+        
+        $scope.startDateCalendar = {
+            opts: {
+                maxDate: $scope.statParams.endDate,
+                showWeeks: false
+            },
+            opened: false,
+            open: function () {
+                this.opened = true;
+            }
+        };
+
+        $scope.endDateCalendar = {
+            opts: {
+                minDate: $scope.statParams.startDate,
+                showWeeks: false
+            },
+            opened: false,
+            open: function () {
+                this.opened = true;
+            }
         };
 
         $scope.cbPopover = {
@@ -66,10 +95,6 @@
                 { name: 'sip', minWidth: 200, displayName: 'Номер звонящего', enableColumnMenu: false, cellTemplate: '<div popover ng-click="grid.appScope.onSipCellClick($event, row)" class="pointer ui-grid-cell-contents" ng-class="{\'text-bold\': row.entity.is_first_call}">[[ row.entity.caller.sip ]]</div>' },
                 { name: 'destination', displayName: 'Номер ответа', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ row.entity.destination || "-" ]]</div>' },
                 { name: 'bill_seconds', displayName: 'Время разговора', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatSec(grid, row) ]]</div>' },
-                // { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<div ng-show="row.entity.status.name == \'answered\'" data-call-id="[[ row.entity.call_id ]]">' +
-		         //            '<button class="btn-xs-wt btn btn-default margin-tb-10 margin-r-5" ng-click="grid.appScope.audioManager(grid, row)"><span onclick="audio.action(event)" class="icon-play"></span></button>' +
-		         //            '<button class="btn-xs-wt btn btn-default margin-tb-10" ng-click="grid.appScope.downloadRecord(grid, row)"><span class="icon-download"></span></button>' +
-		         //        '</div>' },
                 { name: 'rec', maxWidth: 80, minWidth: 80,  displayName: '', enableColumnMenu: false, cellTemplate: '<track-buttons track-id="[[ row.entity.call_id ]]" ng-show="row.entity.status.name == \'answered\'"></track-buttons>' },
                 { name: 'cost', displayName: 'Цена минуты', enableColumnMenu: false },
                 { name: 'bill_cost', displayName: 'Стоимость', enableColumnMenu: false, cellTemplate: '<div class="ui-grid-cell-contents">[[ grid.appScope.formatCost(grid, row) ]]</div>' },
@@ -101,11 +126,12 @@
         };
 
         $scope.changeStatType = function (type) {
-            var index = $scope.stat.types.indexOf(type);
+            console.log(type);
+            var index = $scope.statParams.types.indexOf(type);
             if (index > -1) {
-                $scope.stat.types.splice(index, 1);
+                $scope.statParams.types.splice(index, 1);
             } else {
-                $scope.stat.types.push(type);
+                $scope.statParams.types.push(type);
             }
         };
 
@@ -187,16 +213,13 @@
         }
 
         function loadStat() {
-            // var status = $('input.pseudo-hidden[name=status]').val();
-            // var params = [
-            //     'start=' + $scope.stat.period.start || new Date().toRightDatetimeString(),
-            //     'end=' + $scope.stat.period.end || new Date().toRightDatetimeString(),
-            //     'status=' + (Number(status).toString() == 'NaN' ? status : (status == 0 ? 2 : status - 1)),
-            //     'call_type=' + $scope.stat.types.join(' ')
-            // ];
-            // var q = '?' + params.join('&');
-
-            $apiSrv.getStat()
+            var params = {
+                start: $scope.statParams.startDate.getTime(),
+                end: $scope.statParams.endDate.getTime(),
+                status: $scope.statParams.status,
+                call_type: $scope.statParams.types.join(' ')
+            };
+            $apiSrv.getStat(params)
                 .success(onGetStatSuccess)
                 .error(onGetStatError);
         }
@@ -204,7 +227,7 @@
         loadStat();
     }
 
-    _stCtrl.$inject = ['$scope', '$apiSrv', 'toastr', '$timeout', '$window', '$trackManager'];
+    _stCtrl.$inject = ['$scope', '$apiSrv', 'toastr', '$timeout'];
 
     ng.module('mainApp')
         .controller('StCtrl', _stCtrl)

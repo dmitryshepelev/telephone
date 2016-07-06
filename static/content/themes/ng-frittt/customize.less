@@ -1244,3 +1244,95 @@ sidebar-menu {
 .shadow-0-0 {
 	box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.10);
 }
+
+.uib-datepicker {
+	& button {
+		margin: 0;
+		background-color: transparent;
+		color: @default-text-color !important;
+		border: none;
+		box-shadow: none;
+		padding: 0.6em;
+
+		&.btn-info {
+			color: @default-text-color !important;
+		}
+
+		&.uib-left {
+			&:before {
+				content: "<";
+			}
+		}
+
+		&.uib-right {
+			&:before {
+				content: ">";
+			}
+		}
+
+		&:disabled {
+			color: @default-text-color-inverse !important;
+		}
+
+		&:hover, &:active, &:focus {
+			background-color: transparent;
+			color: @default-color !important;
+			box-shadow: none;
+		}
+
+		&.active {
+			background-color: transparent;
+			border: 1px solid @default-color;
+			box-shadow: none;
+			color: @default-color !important;
+		}
+	}
+}
+
+.button-group {
+	margin-bottom: 0.8em;
+
+	input[type='radio'] {
+		width: 0;
+		height: 0;
+		display: none;
+
+		&:checked + label {
+			background-color: @default-color;
+			color: white;
+		}
+	}
+
+	input[type='checkbox'] {
+    	visibility: hidden;
+	    &:checked + label:after {
+      		opacity: 1;
+    	}
+	}
+
+	label {
+		display: -moz-inline-box;
+		-moz-box-orient: vertical;
+		display: inline-block;
+		background-color: white;
+		border: none;
+		color: @default-text-color;
+		width: 25%;
+		text-align: center;
+		padding: 5px 0;
+		margin-right: -4px;
+		cursor: pointer;
+		min-width: 100px;
+
+		&:hover {
+			color: @default-color;
+		}
+	}
+}
+
+.filter-container {
+	background-color: #F0F2F4;
+	padding: 1em 0.5em 0.5em 0.5em;
+	margin-left: 0;
+	margin-right: 0;
+}

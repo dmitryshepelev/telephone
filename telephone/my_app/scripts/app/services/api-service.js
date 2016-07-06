@@ -6,7 +6,7 @@
         return {
             getStat: function (params) {
                 var defaultParams = {
-                    start: 1466717871090, // new Date().getTime(),
+                    start: new Date().getTime(),
                     end: new Date().getTime(),
                     status: 0,
                     call_type: ''
