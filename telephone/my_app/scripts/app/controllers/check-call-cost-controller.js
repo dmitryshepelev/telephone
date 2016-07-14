@@ -40,8 +40,8 @@
             rowHeight: 40,
             data: [],
             columnDefs: [
-                { name: 'name', displayName: 'Описание', enableColumnMenu: false },
-                { name: 'price', displayName: 'Цена минуты', enableColumnMenu: false, maxWidth: 200, minWidth: 100 }
+                { name: 'operator', displayName: 'Описание', enableColumnMenu: false },
+                { name: 'cost', displayName: 'Цена минуты', enableColumnMenu: false, maxWidth: 200, minWidth: 100 }
             ],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi2 = gridApi;
@@ -51,14 +51,8 @@
         $scope.onSelect = function ($item, $model, $label, $event) {
             $apiSrv.getCostByCountry($item || '')
                 .then(function (response) {
-                    var costs = response.data.costs;
-                    var gridData = [];
-
-                    costs.data.forEach(function (item, i) {
-                        gridData.push({ name: item.country, price: item.cost_5 })
-                    });
-
-                    $scope.gridOptions.data = gridData;
+                    console.log(response);
+                    $scope.gridOptions.data = response.data.data.costs;
                 })
                 .catch(function () {
                     toastr.error('Операция временно недоступна. Повторите попытку позже', 'Стоимость звонка')

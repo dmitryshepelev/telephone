@@ -21,6 +21,36 @@ from telephone.my_app.services.YandexDiskService import YandexDiskService
 from telephone.my_app.utils import DateTimeUtil
 
 
+class CountryCallsPriceList:
+	def __init__(self, rows):
+		self.__country = rows[0]['country']
+		self.__rows = rows
+
+	@property
+	def country(self):
+		"""
+		Getter of __country
+		:return: country value
+		"""
+		return self.__country
+
+	@property
+	def length(self):
+		"""
+		Getter of __length
+		:return: length value
+		"""
+		return len(self.__rows)
+
+	@property
+	def price_list(self):
+		"""
+		Getter of __pricelist
+		:return: pricelist value
+		"""
+		return [{'operator': r['country'], 'cost': r['cost_5']} for r in self.__rows]
+
+
 StatParams = namedtuple('StatParams', ['start', 'end', 'status', 'call_type'])
 
 
@@ -745,3 +775,22 @@ class PBXService(ServiceBase):
 		disk_service = YandexDiskService(self.__pbx.user.yandexprofile)
 		return disk_service.download(link)
 
+	def get_costs_by_country(self, country):
+		"""
+		Get costs list by country
+		:param country:
+		:return:
+		"""
+		country = country.lower()
+		response = requests.post(
+			'https://zadarma.com/ru/checks/call-cost/',
+			{'number': country},
+			headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Cookie': 'currency=RUB; lang=en;'}
+		)
+
+		if response.ok:
+			data = json.loads(response.content)
+			rows = data['data'][0]['rows']
+			return CountryCallsPriceList(rows)
+
+		raise ServiceResultError(response.status_code)

@@ -100,3 +100,23 @@ def get_call_record_file(request):
 	response['Content-Disposition'] = 'attachment; filename=record-{username}-{filename}.mp3'.format(username = request.user.username, filename = file_instance.filename)
 	response.content = file_instance.content
 	return response
+
+
+@require_http_methods(['GET'])
+@api_authorized()
+def get_costs_by_country(request):
+	"""
+	Get cost price list by country
+	:param request:
+	:return:
+	"""
+	country = request.GET.get('country', None)
+	if not country:
+		return ServerResponse.bad_request(message = Message.error('Не указана страна для запроса'))
+
+	pbx = request.user.pbx
+
+	service = PBXService(pbx)
+	price_list = service.get_costs_by_country(country)
+
+	return ServerResponse.ok(data = {'country': price_list.country, 'costs': price_list.price_list})

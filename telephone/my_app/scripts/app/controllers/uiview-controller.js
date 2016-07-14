@@ -44,7 +44,7 @@
 
             $apiSrv.getPBXinfo()
                 .then(function (data) {
-                    console.log(data);
+
                 })
                 .catch()
         }

@@ -126,7 +126,6 @@
         };
 
         $scope.changeStatType = function (type) {
-            console.log(type);
             var index = $scope.statParams.types.indexOf(type);
             if (index > -1) {
                 $scope.statParams.types.splice(index, 1);
