@@ -9,6 +9,8 @@ from collections import OrderedDict, namedtuple
 
 import requests
 from datetime import datetime
+
+from django.db.models import Q
 from django.utils import timezone
 
 from telephone import settings
@@ -20,6 +22,37 @@ from telephone.my_app.utils import DateTimeUtil
 
 
 StatParams = namedtuple('StatParams', ['start', 'end', 'status', 'call_type'])
+
+
+class CallStatusQuery:
+	def __init__(self, call_status):
+		self.__status = int(call_status)
+
+	@property
+	def query(self):
+		"""
+		Getter of __query
+		:return: query value
+		"""
+		if self.__status == 0:
+			return Q()
+		if self.__status == 1:
+			return ~Q(status__name = 'answered')
+		if self.__status == 2:
+			return Q(status__name = 'answered')
+
+
+class CallTypeQuery:
+	def __init__(self, call_type):
+		self.__type = call_type or 'incoming internal outgoing'
+
+	@property
+	def query(self):
+		"""
+		Getter of __query
+		:return: query value
+		"""
+		return reduce(lambda q, x: q | Q(type__name = x), self.__type.split(' '), Q())
 
 
 class Call:

@@ -7,7 +7,7 @@ from django.db.models import Q
 from telephone.decorators import api_authorized
 from telephone.libs.Message import Message
 from telephone.libs.ServerResponse import ServerResponse
-from telephone.my_app.services.PBXService import PBXService, StatParams
+from telephone.my_app.services.PBXService import PBXService, StatParams, CallStatusQuery, CallTypeQuery
 from telephone.my_app.services.ServiceBase import ServiceResultError
 from telephone.my_app.utils import DateTimeUtil
 
@@ -45,8 +45,10 @@ def get_stat(request):
 	service = PBXService(user.pbx)
 	service.update_stat(stat_params)
 
-	type_filter = reduce(lambda q, x: q | Q(type__name = x), stat_params.call_type.split(' '), Q())
-	calls = user.pbx.pbxcall_set.filter(date__gte = stat_params.start, date__lte = stat_params.end).filter(type_filter)
+	status_query = CallStatusQuery(stat_params.status)
+	types_query = CallTypeQuery(stat_params.call_type)
+
+	calls = user.pbx.pbxcall_set.filter(types_query.query, status_query.query, date__gte = stat_params.start, date__lte = stat_params.end)
 
 	return ServerResponse.ok(data = {'calls': [call.serialize() for call in calls]})
 
