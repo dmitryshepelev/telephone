@@ -22,6 +22,7 @@ def get_pbx_info(request):
 	"""
 	data = {
 		'username': request.user.username,
+		'phone': request.user.pbx.phone_number
 	}
 	return ServerResponse.ok(data = data)
 

@@ -1,37 +1,70 @@
 <div class="row">
-	<div class="col-lg-6 col-md-8">
-	    <uib-tabset active="active" type="pills" class="tabset">
-		    <uib-tab index="tabs[0].idx" heading="[[ tabs[0].activeTitle ]]" active="tabs[0].isActive" disable="tabs[0].disabled || cb.isCalling">
-		        <div class="form-group">
-			        <input type="text" class="form-control" placeholder="Номер абонента" ng-model="cb.toN.number">
-		        </div>
-			    <div align="right">
-					<button class="btn btn-default btn-sm-wt" ng-click="setTab(1, 0)" ng-disabled="!cb.toN.number">Дальше <span class="icon-arrow-right2"></span></button>
-			    </div>
-	        </uib-tab>
-	        <uib-tab index="tabs[1].idx" heading="[[ tabs[1].activeTitle ]]" active="tabs[1].isActive" disable="tabs[1].disabled || cb.isCalling">
-		        <div class="form-group">
-			        <input type="text" class="form-control" placeholder="Номер абонента" ng-model="cb.fromN.number">
-		        </div>
-			    <div align="right">
-				    <button class="btn btn-link-wt btn-sm-wt" ng-click="setTab(0, 1)"><span class="icon-arrow-left2"></span> Назад</button>
-					<button class="btn btn-default btn-sm-wt" ng-click="setTab(2, 1)" ng-disabled="!cb.fromN.number">Дальше <span class="icon-arrow-right2"></span></button>
-			    </div>
-	        </uib-tab>
-	        <uib-tab index="tabs[2].idx" heading="[[ tabs[2].activeTitle ]]" select="onThirdTabSelect($event)" active="tabs[2].isActive" disable="tabs[2].disabled || cb.isCalling">
-		        <div class="form-group">
-			        <div>
-				        <h4>[[ cb.fromN.number ]]<small>[[ cb.fromN.info.description ]] (+[[ cb.fromN.info.prefix ]])</small><span class="pull-right">[[ cb.fromN.info.price ]] [[ cb.fromN.info.currency ]]</span></h4>
-				        <h4>[[ cb.toN.number ]]<small>[[ cb.toN.info.description ]] (+[[ cb.toN.info.prefix ]])</small><span class="pull-right">[[ cb.toN.info.price ]] [[ cb.toN.info.currency ]]</span></h4>
-				        <h4>Итого:<span class="pull-right"><strong>[[ cb.fromN.info.price + cb.toN.info.price ]] [[ cb.fromN.info.currency ]]</strong></span></h4>
-			        </div>
-		        </div>
-			    <div align="right">
-				    <button class="btn btn-link-wt btn-sm-wt" ng-click="setTab(1, 2)" ng-disabled="cb.isCalling"><span class="icon-arrow-left2"></span> Назад</button>
-				    <button class="btn btn-default btn-sm-wt" ng-click="cb.call()" ng-disabled="cb.isFormError || cb.isCalling">Позвонить <span class="icon-phone"></span></button>
-			    </div>
-	        </uib-tab>
-	    </uib-tabset>
-		<div style="margin-bottom: 15px;" class="cb-wt-info" align="center" ng-if="cb.isCalling">Выполняется соединение...</div>
+	<div class="col-lg-5 col-md-9 cb-container">
+		<form novalidate name="cbForm">
+			<div class="form-group">
+				<label class="">Кому звоним:</label>
+				<div class="input-group">
+					<span class="input-group-addon">+</span>
+					<input name="to" ng-model="cb.toN.number" ng-model-options="{debounce: 1000}" class="form-control cb-phone-input" placeholder="XXXXXXXXX" autofocus="on">
+					<span ng-show="cb.toN.info" class="input-group-addon cb-phone-addon">[[ cb.toN.info.description ]] | [[ cb.toN.info.price ]] [[ cb.toN.info.currency ]]</span>
+				</div>
+			</div>
+			<div class="form-group cb-divider">
+				<div class="cb-divider-item">
+					<a ng-click="cb.swap()"><span class="icon-loop2"></span> Поменять местами</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="cb-label">Откуда звоним: <small><a title="Вставить свой номер" ng-click="cb.setSelfNumber()"><span class="icon-home3"></span></a></small></label>
+				<div class="input-group">
+					<span class="input-group-addon">+</span>
+					<input name="from" ng-model="cb.fromN.number" ng-model-options="{debounce: 1000}" class="form-control cb-phone-input" placeholder="XXXXXXXXX">
+					<span ng-show="cb.fromN.info" class="input-group-addon cb-phone-addon">[[ cb.fromN.info.description ]] | [[ cb.fromN.info.price ]] [[ cb.fromN.info.currency ]]</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<button class="btn btn-default" type="button" ng-disabled="!cb.isReady"><span class="icon-phone"></span> Позвонить</button>
+				<span class="pull-right cb-total-cost">[[ cb.getTotalCost() ]]</span>
+			</div>
+		</form>
 	</div>
 </div>
+
+{##}
+{#<div class="row">#}
+{#	<div class="col-lg-6 col-md-8">#}
+{#	    <uib-tabset active="active" type="pills" class="tabset">#}
+{#		    <uib-tab index="tabs[0].idx" heading="[[ tabs[0].activeTitle ]]" active="tabs[0].isActive" disable="tabs[0].disabled || cb.isCalling">#}
+{#		        <div class="form-group">#}
+{#			        <input type="text" class="form-control" placeholder="Номер абонента" ng-model="cb.toN.number">#}
+{#		        </div>#}
+{#			    <div align="right">#}
+{#					<button class="btn btn-default btn-sm-wt" ng-click="setTab(1, 0)" ng-disabled="!cb.toN.number">Дальше <span class="icon-arrow-right2"></span></button>#}
+{#			    </div>#}
+{#	        </uib-tab>#}
+{#	        <uib-tab index="tabs[1].idx" heading="[[ tabs[1].activeTitle ]]" active="tabs[1].isActive" disable="tabs[1].disabled || cb.isCalling">#}
+{#		        <div class="form-group">#}
+{#			        <input type="text" class="form-control" placeholder="Номер абонента" ng-model="cb.fromN.number">#}
+{#		        </div>#}
+{#			    <div align="right">#}
+{#				    <button class="btn btn-link-wt btn-sm-wt" ng-click="setTab(0, 1)"><span class="icon-arrow-left2"></span> Назад</button>#}
+{#					<button class="btn btn-default btn-sm-wt" ng-click="setTab(2, 1)" ng-disabled="!cb.fromN.number">Дальше <span class="icon-arrow-right2"></span></button>#}
+{#			    </div>#}
+{#	        </uib-tab>#}
+{#	        <uib-tab index="tabs[2].idx" heading="[[ tabs[2].activeTitle ]]" select="onThirdTabSelect($event)" active="tabs[2].isActive" disable="tabs[2].disabled || cb.isCalling">#}
+{#		        <div class="form-group">#}
+{#			        <div>#}
+{#				        <h4>[[ cb.fromN.number ]]<small>[[ cb.fromN.info.description ]] (+[[ cb.fromN.info.prefix ]])</small><span class="pull-right">[[ cb.fromN.info.price ]] [[ cb.fromN.info.currency ]]</span></h4>#}
+{#				        <h4>[[ cb.toN.number ]]<small>[[ cb.toN.info.description ]] (+[[ cb.toN.info.prefix ]])</small><span class="pull-right">[[ cb.toN.info.price ]] [[ cb.toN.info.currency ]]</span></h4>#}
+{#				        <h4>Итого:<span class="pull-right"><strong>[[ cb.fromN.info.price + cb.toN.info.price ]] [[ cb.fromN.info.currency ]]</strong></span></h4>#}
+{#			        </div>#}
+{#		        </div>#}
+{#			    <div align="right">#}
+{#				    <button class="btn btn-link-wt btn-sm-wt" ng-click="setTab(1, 2)" ng-disabled="cb.isCalling"><span class="icon-arrow-left2"></span> Назад</button>#}
+{#				    <button class="btn btn-default btn-sm-wt" ng-click="cb.call()" ng-disabled="cb.isFormError || cb.isCalling">Позвонить <span class="icon-phone"></span></button>#}
+{#			    </div>#}
+{#	        </uib-tab>#}
+{#	    </uib-tabset>#}
+{#		<div style="margin-bottom: 15px;" class="cb-wt-info" align="center" ng-if="cb.isCalling">Выполняется соединение...</div>#}
+{#	</div>#}
+{#</div>#}

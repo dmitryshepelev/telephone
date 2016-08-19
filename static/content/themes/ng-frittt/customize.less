@@ -1336,3 +1336,67 @@ sidebar-menu {
 	margin-left: 0;
 	margin-right: 0;
 }
+
+.cb-container {
+	background-color: white;
+	padding: 1.5em 1em;
+
+	& .form-group {
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.cb-divider {
+	& > .cb-divider-item {
+		padding: 0 1em;
+		& > a {
+			color: @default-text-color-inverse;
+
+			&:focus, &:hover {
+				color: @default-color;
+				text-decoration: none;
+				cursor: pointer;
+			}
+
+		}
+	}
+}
+
+.cb-phone-input {
+	border-left: none;
+	border-right: none;
+
+	&:focus {
+		box-shadow: none !important;
+		border-color: rgba(26, 187, 156, 0.5) !important;
+		//border-bottom: 3px;
+	}
+}
+
+.cb-phone-addon {
+	background: white;
+	color: @default-color;
+	border: 1px solid rgba(26, 187, 156, 0.5);
+}
+
+.cb-total-cost {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 23px 0;
+}
+
+.cb-label {
+	& > small {
+		& > a {
+			color: @default-text-color-inverse;
+
+			&:focus, &:hover {
+				color: @default-color;
+				text-decoration: none;
+				cursor: pointer;
+			}
+		}
+	}
+}

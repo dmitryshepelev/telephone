@@ -1102,3 +1102,49 @@ sidebar-menu .main-menu a i + span {
   margin-left: 0;
   margin-right: 0;
 }
+.cb-container {
+  background-color: white;
+  padding: 1.5em 1em;
+}
+.cb-container .form-group:last-child {
+  margin-bottom: 0;
+}
+.cb-divider > .cb-divider-item {
+  padding: 0 1em;
+}
+.cb-divider > .cb-divider-item > a {
+  color: #e1e1e1;
+}
+.cb-divider > .cb-divider-item > a:focus,
+.cb-divider > .cb-divider-item > a:hover {
+  color: #1abb9c;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cb-phone-input {
+  border-left: none;
+  border-right: none;
+}
+.cb-phone-input:focus {
+  box-shadow: none !important;
+  border-color: rgba(26, 187, 156, 0.5) !important;
+}
+.cb-phone-addon {
+  background: white;
+  color: #1abb9c;
+  border: 1px solid rgba(26, 187, 156, 0.5);
+}
+.cb-total-cost {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 23px 0;
+}
+.cb-label > small > a {
+  color: #e1e1e1;
+}
+.cb-label > small > a:focus,
+.cb-label > small > a:hover {
+  color: #1abb9c;
+  text-decoration: none;
+  cursor: pointer;
+}

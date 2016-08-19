@@ -111,7 +111,8 @@
     ]);
 
     ng.module('mainApp')
-        .config(['$stateProvider', '$urlRouterProvider', '$interpolateProvider', '$httpProvider', 'cfpLoadingBarProvider', _config]);
+        .config(['$stateProvider', '$urlRouterProvider', '$interpolateProvider', '$httpProvider', 'cfpLoadingBarProvider', _config])
+        .value('$valPBXData', {});
 
 
 })(angular);

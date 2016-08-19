@@ -1,6 +1,6 @@
 (function (angular) {
 
-    function _uiViewCtrl($scope, $state, $titleSrv, $apiSrv) {
+    function _uiViewCtrl($scope, $state, $titleSrv, $apiSrv, $valPBXData) {
 
         $scope.sidebar = {
             isCollapsed: true,
@@ -41,10 +41,10 @@
         setActiveState();
 
         function loadInitData() {
-
             $apiSrv.getPBXinfo()
                 .then(function (data) {
-
+                    $valPBXData.username = data.data.data.username;
+                    $valPBXData.phone = data.data.data.phone;
                 })
                 .catch()
         }
@@ -52,7 +52,7 @@
         loadInitData()
     }
 
-    _uiViewCtrl.$inject = ['$scope', '$state', '$titleSrv', '$apiSrv'];
+    _uiViewCtrl.$inject = ['$scope', '$state', '$titleSrv', '$apiSrv', '$valPBXData'];
 
     angular.module('mainApp')
         .controller('UiViewCtrl', _uiViewCtrl)
