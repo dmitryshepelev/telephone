@@ -76,7 +76,7 @@
             .state('my.sf', {
                 url: '/sf',
                 templateUrl: _baseUrl + '/sf/',
-                controller: '',
+                controller: 'sfCtrl',
                 data: {
                     title: 'Продление подписки'
                 }
@@ -92,7 +92,7 @@
             .state('my.gscpt', {
                 url: '/gscpt',
                 templateUrl: _baseUrl + '/gscpt/',
-                controller: '',
+                controller: 'wsCtrl',
                 data: {
                     title: 'Получить скрипт виджета'
                 }

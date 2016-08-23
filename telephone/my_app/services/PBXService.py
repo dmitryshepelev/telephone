@@ -11,6 +11,8 @@ import requests
 from datetime import datetime
 
 from django.db.models import Q
+from django.template import Context
+from django.template.loader import get_template
 from django.utils import timezone
 
 from telephone import settings
@@ -794,3 +796,15 @@ class PBXService(ServiceBase):
 			return CountryCallsPriceList(rows)
 
 		raise ServiceResultError(response.status_code)
+
+	def generate_widget_script(self, counter_number):
+		"""
+		Generates ws
+		:param counter_number:
+		:return:
+		"""
+		ws = self.__pbx.get_widget_script()
+
+		template = get_template(settings.WS_SCRIPT_TEMPLATE_NAME)
+		ctx = Context({'widget_guid': ws.guid, 'counter_number': counter_number})
+		return template.render(ctx)

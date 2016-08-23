@@ -36,6 +36,10 @@
             downloadCRUrl: baseUrl + 'getcrfile/?cid=',
             getCallRecordFile: function (callId) {
                 return $http.get(this.downloadCRUrl + callId);
+            },
+            getWsScript: function (counterNumber) {
+                var url = baseUrl + 'getwsscript/?counter_number=' + counterNumber || '';
+                return $http.get(url);
             }
         }
     }

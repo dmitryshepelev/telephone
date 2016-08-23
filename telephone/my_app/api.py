@@ -121,3 +121,24 @@ def get_costs_by_country(request):
 	price_list = service.get_costs_by_country(country)
 
 	return ServerResponse.ok(data = {'country': price_list.country, 'costs': price_list.price_list})
+
+
+@require_http_methods(['GET'])
+@api_authorized()
+def get_ws_script(request):
+	"""
+	Gets ws script text
+	:param request:
+	:return:
+	"""
+	counter_number = request.GET.get('counter_number', None)
+
+	if not counter_number:
+		return ServerResponse.bad_request(message = Message.error('Укажите номер счетчика'))
+
+	pbx = request.user.pbx
+
+	service = PBXService(pbx)
+	widget_script = service.generate_widget_script(counter_number)
+
+	return ServerResponse.ok(data = {'ws': widget_script})

@@ -150,6 +150,23 @@ class PBX(ModelBase):
 		natural_keys = super(PBX, self).natural_key(self_keys)
 		return natural_keys
 
+	def get_widget_script(self):
+		"""
+		Returns WidgetScript instance of current user
+		:param self:
+		:return:
+		"""
+		scripts = self.widgetscript_set.all()
+		if len(scripts) == 0:
+			ws = WidgetScript.objects.create(pbx_id = self.guid)
+			return ws
+
+		if len(scripts) == 1:
+			return scripts[0]
+
+		else:
+			raise ValueError('Multiple script instance found')
+
 
 class CallerManager(models.Manager):
 	"""

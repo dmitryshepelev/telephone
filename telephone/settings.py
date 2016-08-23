@@ -239,6 +239,8 @@ DATETIME_FORMAT_ALTER = '%Y-%m-%d %H:%M:%S'
 DATETIME_FORMAT_START = '%Y-%m-%d 00:00:00'
 DATETIME_FORMAT_END = '%Y-%m-%d 23:59:59'
 
+WS_SCRIPT_TEMPLATE_NAME = 'ws_code.html'
+
 LOGGING = {
 	'version': 1,
 	'disable_existing_loggers': False,
