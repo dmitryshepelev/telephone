@@ -1,6 +1,10 @@
+import uuid
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+
+from telephone import settings
 
 
 def main_resolver(request):
@@ -79,7 +83,9 @@ def balance_page(request):
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'balance_page.html', {'payment_data': PaymentData(request.user.userprofile.customer_number)})
+	payment_data = settings.PAYMENT_DATA
+	payment_data['customer_number'] = request.user.pbx.customer_number
+	return render(request, 'balance_page.html', {'payment_data': payment_data})
 
 
 @login_required
@@ -90,7 +96,9 @@ def subfee_page(request):
 	:param request: http request
 	:return: HttpResponse
 	"""
-	return render(request, 'subfee_page.html', {'subscription_data': SubscriptionData()})
+	subscription_data = settings.SUBSCRIPTION_DATA
+	subscription_data['label'] = str(uuid.uuid4())
+	return render(request, 'subfee_page.html', {'subscription_data': subscription_data})
 
 
 @login_required

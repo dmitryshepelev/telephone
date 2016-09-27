@@ -15,6 +15,7 @@ import os
 import string
 import time
 import datetime
+import uuid
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -225,8 +226,6 @@ O_AUTH_ID = '52a0d804d54b45ef8c309088af6d444d'
 
 O_AUTH_SECRET = '962a08aad3974d3395c140a77b0f26ac'
 
-W_NUMBER = '41001864034525'
-
 CORS_ORIGIN_ALLOW_ALL = (
 	'*'
 )
@@ -240,6 +239,27 @@ DATETIME_FORMAT_START = '%Y-%m-%d 00:00:00'
 DATETIME_FORMAT_END = '%Y-%m-%d 23:59:59'
 
 WS_SCRIPT_TEMPLATE_NAME = 'ws_code.html'
+
+PAYMENT_DATA = {
+	'scid': '5703',
+	'shop_id': '13582',
+	'sum': '50',
+	'customer_number': ''
+}
+
+W_NUMBER = '41001864034525'
+DEFAULT_SUBSCRIPTION_PAYMENT = 500
+DEFAULT_SUBCRIPTION_PAYMENT_TYPE = 'PC'
+SUBSCRIPTION_DATA = {
+	'receiver': W_NUMBER,
+	'form_comment': 'form comment',
+	'short_dest': 'short_dest',
+	'quickpay_form': 'shop',
+	'targets': 'targets',
+	'sum': DEFAULT_SUBSCRIPTION_PAYMENT,
+	'payment_type': DEFAULT_SUBCRIPTION_PAYMENT_TYPE,
+	'label': ''
+}
 
 LOGGING = {
 	'version': 1,

@@ -1,9 +1,6 @@
-<div class="row content-container">
-	<div class="col-lg-6 col-md-8">
-		<div>
-			<h2>Оформить подписку</h2>
-		</div>
-		<form class="form-horizontal" target="_blank" method="post" onsubmit="controller.subscribe()" action="https://money.yandex.ru/quickpay/confirm.xml" novalidate>
+<div class="row">
+	<div class="col-lg-5 col-md-9 cb-container">
+		<form target="_blank" method="post" action="https://money.yandex.ru/quickpay/confirm.xml" novalidate>
 			{% csrf_token %}
 			<input type="hidden" id="receiver" name="receiver" value="{{ subscription_data.receiver }}" />
 			<input type="hidden" id="formcomment" name="formcomment" value="{{ subscription_data.form_comment }}" />
@@ -12,27 +9,59 @@
 			<input type="hidden" id="quickpay-form" name="quickpay-form" value="{{ subscription_data.quickpay_form }}" />
 			<input type="hidden" id="targets" name="targets" value="{{ subscription_data.targets }}" />
 			<div class="form-group">
-				<input name="sum" id="sum" type="hidden" value="{{ subscription_data.sum }}" />
-				<select class="form-control input-lg" onchange="controller.onSubscrChange(event)" id="duration" name="duration">
-					<option value="1">1 месяц - 500 руб.</option>
-					<option value="2">2 месяца - 1000 руб.</option>
-					<option value="3">3 месяца - 1500 руб.</option>
-					<option value="6">6 месяцев - 3000 руб.</option>
-				</select>
+				<input name="sum" id="sum" type="hidden" ng-model="vm.selectedOption().value" />
+				<div class="btn-group wt-select-group" role="group">
+					<input ng-repeat="option in vm.options"  type="button" class="btn btn-default" ng-class="{'selected': option.isSelected }" ng-click="vm.selectOption(option)" ng-model="option.value" value="[[ option.monthCount ]]" />
+				</div>
 			</div>
 			<div class="form-group margin-0">
 				<div class="btn-group">
 					<button class="btn payment-btn margin-0 selected" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="PC"><img src="/static/content/images/yamoney.png"></button>
 					<button class="btn payment-btn margin-0" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="AC"><img src="/static/content/images/any-card.png"></button>
 					<input id="paymentType" name="paymentType" type="hidden" value="{{ subscription_data.payment_type }}"/>
-					<button type="submit" class="btn btn-primary margin-0">Оплатить</button>
+					<button type="submit" class="btn btn-primary margin-0">Оплатить</button> [[ vm.selectedOption().value ]] руб.
 				</div>
 			</div>
 		</form>
 	</div>
 </div>
 
-{% load staticfiles %}
-<script type="application/javascript" src="{% static "services.js" %}"></script>
-<script type="application/javascript" src="{% static "pay-controller.js" %}"></script>
-<script type="application/javascript" src="{% static "models/subscribtion-data-model.js" %}"></script>
+
+{#<div class="row content-container">#}
+{#	<div class="col-lg-6 col-md-8">#}
+{#		<div>#}
+{#			<h2>Оформить подписку</h2>#}
+{#		</div>#}
+{#		<form class="form-horizontal" target="_blank" method="post" onsubmit="controller.subscribe()" action="https://money.yandex.ru/quickpay/confirm.xml" novalidate>#}
+{#			{% csrf_token %}#}
+{#			<input type="hidden" id="receiver" name="receiver" value="{{ subscription_data.receiver }}" />#}
+{#			<input type="hidden" id="formcomment" name="formcomment" value="{{ subscription_data.form_comment }}" />#}
+{#			<input type="hidden" id="short-dest" name="short-dest" value="{{ subscription_data.short_dest }}" />#}
+{#			<input type="hidden" id="label" name="label" value="{{ subscription_data.label }}" required />#}
+{#			<input type="hidden" id="quickpay-form" name="quickpay-form" value="{{ subscription_data.quickpay_form }}" />#}
+{#			<input type="hidden" id="targets" name="targets" value="{{ subscription_data.targets }}" />#}
+{#			<div class="form-group">#}
+{#				<input name="sum" id="sum" type="hidden" value="{{ subscription_data.sum }}" />#}
+{#				<select class="form-control input-lg" onchange="controller.onSubscrChange(event)" id="duration" name="duration">#}
+{#					<option value="1">1 месяц - 500 руб.</option>#}
+{#					<option value="2">2 месяца - 1000 руб.</option>#}
+{#					<option value="3">3 месяца - 1500 руб.</option>#}
+{#					<option value="6">6 месяцев - 3000 руб.</option>#}
+{#				</select>#}
+{#			</div>#}
+{#			<div class="form-group margin-0">#}
+{#				<div class="btn-group">#}
+{#					<button class="btn payment-btn margin-0 selected" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="PC"><img src="/static/content/images/yamoney.png"></button>#}
+{#					<button class="btn payment-btn margin-0" type="button" onclick="controller.onPaymentTypeChange(event)" data-value="AC"><img src="/static/content/images/any-card.png"></button>#}
+{#					<input id="paymentType" name="paymentType" type="hidden" value="{{ subscription_data.payment_type }}"/>#}
+{#					<button type="submit" class="btn btn-primary margin-0">Оплатить</button>#}
+{#				</div>#}
+{#			</div>#}
+{#		</form>#}
+{#	</div>#}
+{#</div>#}
+{##}
+{#{% load staticfiles %}#}
+{#<script type="application/javascript" src="{% static "services.js" %}"></script>#}
+{#<script type="application/javascript" src="{% static "pay-controller.js" %}"></script>#}
+{#<script type="application/javascript" src="{% static "models/subscribtion-data-model.js" %}"></script>#}

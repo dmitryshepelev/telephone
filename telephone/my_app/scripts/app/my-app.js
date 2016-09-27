@@ -84,7 +84,7 @@
             .state('my.blc', {
                 url: '/blc',
                 templateUrl: _baseUrl + '/blc/',
-                controller: '',
+                controller: 'blcCtrl',
                 data: {
                     title: 'Пополнение счета'
                 }

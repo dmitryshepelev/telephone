@@ -1400,3 +1400,46 @@ sidebar-menu {
 		}
 	}
 }
+
+.wt-select-group {
+
+	& > input[type=button] {
+		background-color: transparent;
+		border: 1px solid @default-text-color-inverse;
+		box-shadow: none;
+		-webkit-box-shadow: none;
+		color: @default-text-color-inverse !important;
+		margin: 0 !important;
+		border-left: 0;
+		border-right: 0;
+		border-radius: 0 !important;
+
+		&.selected {
+			background-color: @default-color !important;
+			color: white !important;
+			border-color: @default-color !important;
+
+			&:hover {
+				color: white !important;
+				border-color: @default-color !important;
+			}
+		}
+
+		&:first-child {
+			border-left: 1px solid;
+			border-bottom-left-radius: 0.4em !important;
+			border-top-left-radius: 0.4em !important;
+		}
+
+		&:last-child {
+			border-right: 1px solid;
+			border-bottom-right-radius: 0.4em !important;
+			border-top-right-radius: 0.4em !important;
+		}
+
+		&:hover {
+			border-color: @default-text-color-inverse !important;
+			color: @default-color !important;
+		}
+	}
+}
